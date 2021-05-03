@@ -706,6 +706,12 @@ select.cpe-input {
 	cursor:var(--cpe-auto-cursor);
 }
 
+.cpe-input::placeholder { /* Standard */
+  color:inherit;
+  opacity:0.8;
+}
+
+
 
 .cpe-input.cpe-is-alternate {
   --button-color-content-bg-mix-light:var(--link-color-content-bg-mix-light);
