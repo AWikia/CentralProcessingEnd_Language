@@ -92,7 +92,7 @@ function VisualStyleCompile() {
 /* Changes Sitename */
 function UpdateSitename() {
     var x = document.getElementById("311");
-    var y = $(".mpisto-input.sitename").val();
+    var y = $(".cpe-input.sitename").val();
     if (y === '') {
 		var y = 'Untitled';
 		console.log('No Sitename is used. Untitled will be used as a fallback')
@@ -1656,22 +1656,11 @@ var emphasiscolor2 = chroma.mix(border_color, button_color, MW18HoverThreshold*2
 document.querySelector('html').style.setProperty("--emphasis-bg", emphasiscolor);
 document.querySelector('html').style.setProperty("--accent-bg", emphasiscolor2);
 
-if ($("html.contrast").length) {
-	$('meta[name*="theme-color"]').attr("content", chroma(getComputedStyle(document.querySelector('html')).getPropertyValue("--dropdown-bg")));
-} else {
-	$('meta[name*="theme-color"]').attr("content", chroma(getComputedStyle(document.querySelector('html')).getPropertyValue("--emphasis-bg")));
-/*
-	if ($(".headroom--not-top").length) {
-		$('meta[name*="theme-color"]').attr("content", chroma(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-bg")));
-	} else {
-		$('meta[name*="theme-color"]').attr("content", chroma(getComputedStyle(document.querySelector('body')).getPropertyValue("--emphasis-bg")));
-	}
-*/
-}
-CheckBG()
+ThemeColorMetaTag();
 
 /* Cursor Theme */
 if (refresh === true) {
+	CheckBG()
 	CheckAdapt()
 	colortheme($('body').attr("wikitheme"))
 	if ($("body.options").length) {
