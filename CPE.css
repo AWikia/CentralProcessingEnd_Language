@@ -663,6 +663,71 @@ cursor:var(--cpe-auto-cursor);
 
 
 
+/* Input Boxes */
+.cpe-input {
+    transition:background-color 200ms, border-color 200ms, outline-offset 50ms, outline-color 200ms, color 200ms, box-shadow 200ms;
+    font-size:13px;
+    font-family:var(--secondary-font);
+    font-weight:600;
+    color:var(--content-color);
+    padding:7px 12px;
+    border-radius:var(--button-radius);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    vertical-align:middle;
+    line-height:16px;
+    border:0px solid;
+    border-color:var(--button-color);
+    background-color:var(--content-bg);
+    outline:2px solid transparent;
+    outline-offset:0px;
+    box-sizing:content-box;
+    min-height:18px;
+    box-shadow:0 0 1.5px 1.5px var(--content-bg);
+    margin:2.5px;
+    cursor:var(--cpe-text-cursor);
+    min-width:200px;
+}
+
+
+.cpe-input:hover {
+    background-color:var(--button-color-content-bg-mix-light);
+    box-shadow:0 0 1.5px 1.5px var(--button-color-content-bg-mix-light);
+}
+
+.cpe-input:focus {
+    background-color:var(--button-color-content-bg-mix);
+    box-shadow:0 0 1.5px 1.5px var(--button-color-content-bg-mix);
+}
+
+
+select.cpe-input {
+	cursor:var(--cpe-auto-cursor);
+}
+
+
+.cpe-input.cpe-is-alternate {
+  --button-color-content-bg-mix-light:var(--link-color-content-bg-mix-light);
+  --button-color-content-bg-mix:var(--link-color-content-bg-mix);
+}
+
+
+.cpe-input.cpe-is-borderline {
+  --button-color-content-bg-mix-light:var(--content-border-content-bg-mix-light);
+  --button-color-content-bg-mix:var(--content-border-content-bg-mix);
+}
+
+.cpe-input.cpe-is-headline {
+  --button-color-content-bg-mix-light:var(--background-color-content-bg-mix-light);
+  --button-color-content-bg-mix:var(--background-color-content-bg-mix);
+}
+
+.cpe-input.cpe-is-titleline {
+  --button-color-content-bg-mix-light:var(--community-header-bg-content-bg-mix-light);
+  --button-color-content-bg-mix:var(--community-header-bg-content-bg-mix);
+}
+
 
 /** Buttons **/
 /* Primary */
@@ -1668,7 +1733,7 @@ input[type="checkbox"], input[type="radio"] {
 --checkbox-checked-shadow:var(--checkbox-active-bg);
 --checkbox-checked-shadow-hover:var(--checkbox-active-bg);
 --checkbox-checked-text:var(--checkbox-active-bg);
-  box-shadow:0 0 2px 1px var(--checkbox-unchecked-shadow);
+  box-shadow:0 0 1px 1px var(--checkbox-unchecked-shadow);
   padding:1,5px;
   background-color:var(--checkbox-unchecked-bg);
   color:var(--checkbox-active-bg);
