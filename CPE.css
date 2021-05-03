@@ -665,6 +665,10 @@ cursor:var(--cpe-auto-cursor);
 
 /* Input Boxes */
 .cpe-input {
+	--input-box-color:var(--content-bg);
+	--input-box-hover:var(--button-color-content-bg-mix-light);
+	--input-box-focus:var(--button-color-content-bg-mix);
+	--input-box-solid:var(--button-color);
     transition:background-color 200ms, border-color 200ms, outline-offset 50ms, outline-color 200ms, color 200ms, box-shadow 200ms;
     font-size:13px;
     font-family:var(--secondary-font);
@@ -677,14 +681,12 @@ cursor:var(--cpe-auto-cursor);
     justify-content:center;
     vertical-align:middle;
     line-height:16px;
-    border:0px solid;
-    border-color:var(--button-color);
-    background-color:var(--content-bg);
+    background-color:var(--input-box-color);
     outline:2px solid transparent;
     outline-offset:0px;
     box-sizing:content-box;
     min-height:18px;
-    box-shadow:0 0 1.5px 1.5px var(--content-bg);
+    box-shadow:0 0 1.5px 1.5px var(--input-box-color);
     margin:2.5px;
     cursor:var(--cpe-text-cursor);
     min-width:200px;
@@ -692,13 +694,13 @@ cursor:var(--cpe-auto-cursor);
 
 
 .cpe-input:hover {
-    background-color:var(--button-color-content-bg-mix-light);
-    box-shadow:0 0 1.5px 1.5px var(--button-color-content-bg-mix-light);
+    background-color:var(--input-box-hover);
+    box-shadow:0 0 1.5px 1.5px var(--input-box-hover);
 }
 
 .cpe-input:focus {
-    background-color:var(--button-color-content-bg-mix);
-    box-shadow:0 0 1.5px 1.5px var(--button-color-content-bg-mix);
+    background-color:var(--input-box-focus);
+    box-shadow:0 0 1.5px 1.5px var(--input-box-focus);
 }
 
 
@@ -714,24 +716,28 @@ select.cpe-input {
 
 
 .cpe-input.cpe-is-alternate {
-  --button-color-content-bg-mix-light:var(--link-color-content-bg-mix-light);
-  --button-color-content-bg-mix:var(--link-color-content-bg-mix);
+  --input-box-solid:rgb(var(--link-color));
+  --input-box-hover:var(--link-color-content-bg-mix-light);
+  --input-box-focus:var(--link-color-content-bg-mix);
 }
 
 
 .cpe-input.cpe-is-borderline {
-  --button-color-content-bg-mix-light:var(--content-border-content-bg-mix-light);
-  --button-color-content-bg-mix:var(--content-border-content-bg-mix);
+  --input-box-solid:var(--content-border);
+  --input-box-hover:var(--content-border-content-bg-mix-light);
+  --input-box-focus:var(--content-border-content-bg-mix);
 }
 
 .cpe-input.cpe-is-headline {
-  --button-color-content-bg-mix-light:var(--background-color-content-bg-mix-light);
-  --button-color-content-bg-mix:var(--background-color-content-bg-mix);
+  --input-box-solid:var(--background-color);
+  --input-box-hover:var(--background-color-content-bg-mix-light);
+  --input-box-focus:var(--background-color-content-bg-mix);
 }
 
 .cpe-input.cpe-is-titleline {
-  --button-color-content-bg-mix-light:var(--community-header-bg-content-bg-mix-light);
-  --button-color-content-bg-mix:var(--community-header-bg-content-bg-mix);
+  --input-box-solid:rgb(var(--community-header-bg));
+  --input-box-hover:var(--community-header-bg-content-bg-mix-light);
+  --input-box-focus:var(--community-header-bg-content-bg-mix);
 }
 
 
