@@ -196,7 +196,7 @@ if  ($("body.mpisto-2018").length) {
 		window.MW18ContrastNotice = true;
 		AddFloatingBanner("You're currently using a high contrast theme on your device. You may want to use the High Contrast visual style found in the <b>Visual Styles</b> dropdown in the page header so as to have a consistent high contrast experience.",'message','contrastbanner')  
 	} else {
-		if (!($(".top-gap #contrastbanner").length)) {
+		if ( (!($(".top-gap #contrastbanner").length)) && ($('html').attr("visualtheme") !== 'contrast'  )) {
 			window.MW18ContrastNotice = false;
 		}
 	}
