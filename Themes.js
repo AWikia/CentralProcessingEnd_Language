@@ -6,9 +6,9 @@ window.MW18HoverThreshold = 0.25;
 window.MW18ContrastNotice = false;
 
 /* Visual Themes */
-var visualThemes = ['basic','contrast','contrast','basic'];
-var visualColors = ['standard','standard','forcedcolors','lunacolors'];
-var visualThemeNames = ['Basic','High Contrast','High Contrast (Forced Colors)','Basic (XP Luna Colors)'];
+var visualThemes = ['basic','contrast','contrast','basic','simple'];
+var visualColors = ['standard','standard','forcedcolors','lunacolors','standard'];
+var visualThemeNames = ['Basic','High Contrast','High Contrast (Forced Colors)','Basic (XP Luna Colors)','Simple'];
 
 (function () {
 document.querySelector('html').className += " theme-A"; // We begin with the first theme selected
@@ -1234,11 +1234,11 @@ function Color2(color) {
 }
 
 function isLightColor(color) {
-	return ((chroma(color).luminance()) > MW18LightThreshold*0.01 - 0.01);
+	return ((chroma.contrast('black', color)) > MW18LightThreshold*0.09);
 }
 
 function isSuperLightColor(color) {
-	return ((chroma(color).luminance()) > window.MW18LightThreshold*0.014 - 0.01);
+	return ((chroma.contrast('black', color)) > window.MW18LightThreshold*0.126);
 }
 
 /* # is added automatically so no need to be used. Only hex values please when editing this function */
