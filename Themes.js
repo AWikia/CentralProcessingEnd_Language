@@ -1244,7 +1244,7 @@ function isSuperLightColor(color) {
 
 
 function isSuitableColor(color,color2) {
-return ((chroma.contrast(color, color2)) > MW18LightThreshold*0.08)
+return ((chroma.contrast(color, color2)) > MW18LightThreshold*0.06)
 }
 
 function isSuitableColor2(color,color2) {
