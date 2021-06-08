@@ -732,7 +732,8 @@ cursor:var(--cpe-auto-cursor);
     box-shadow:0 0 1.5px 1.5px var(--input-box-hover);
 }
 
-.cpe-input:focus {
+.cpe-input:focus,
+.cpe-select.cpe-is-active .cpe-input {
     background-color:var(--input-box-focus);
     box-shadow:0 0 1.5px 1.5px var(--input-box-focus);
 }
