@@ -721,6 +721,9 @@ cursor:var(--cpe-auto-cursor);
 
 .cpe-select .cpe-input .cpe-select__value {
 	flex:1;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
 }
 
 
