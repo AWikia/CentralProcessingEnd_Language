@@ -10,6 +10,7 @@ Catamaran = Tamil
 Noto Sans = Devanagari and Chinese
 Hind Siliguri = Bengali
 No Font (Baloo Tamma 2) = Kannada
+No Font (Baloo Tamma 2) = Kannada
 Kantumruy = Khmer
 Manjari = Malayalam
 Padauk = Myanmar
@@ -442,6 +443,7 @@ container {
 	max-width:var(--max-width);
 	position:relative;
 	display:block;
+	height:100vh;
 }
 
 
