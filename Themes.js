@@ -28,7 +28,7 @@ ColorUpdate(true);
 	}
 	if ( ($(".mpisto-gnav").length) ) {
 		$("head").append(
-		'<meta name="theme-color" content="' + chroma( getComputedStyle(document.querySelector('.mpisto-gnav')).getPropertyValue("--global-nav-color") ) + '">'
+		'<meta name="theme-color" content="' + chroma( 'rgb(' + getComputedStyle(document.querySelector('.mpisto-gnav')).getPropertyValue("--global-nav-color") + ')' ) + '">'
 		);	
 	} else {
 		$("head").append(
@@ -162,7 +162,7 @@ ContrastBanner();
 function ThemeColorMetaTag() {
 	/* Top bar for Mobile Devices */
 	if ( ($(".mpisto-gnav").length) ) {
-		$('meta[name*="theme-color"]').attr("content", chroma( getComputedStyle(document.querySelector('.mpisto-gnav')).getPropertyValue("--global-nav-color") ) );
+		$('meta[name*="theme-color"]').attr("content", chroma( 'rgb(' + getComputedStyle(document.querySelector('.mpisto-gnav')).getPropertyValue("--global-nav-color") + ')' ) );
 	} else {
 		$('meta[name*="theme-color"]').attr("content", chroma( $('body').css('background-color') ) );
 	}
