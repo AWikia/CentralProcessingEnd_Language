@@ -738,7 +738,7 @@ function PresetTheme(theme="") {
 				'006CB0', // Oasis
 				'0066cc'  // Windows 10
 				][theme2];
-	var link_bg=[
+	var header_bg=[
 				'01cdd1', // Fandom Light
 				'01cdd1', // Fandom Dark
 				'dee7e5', // CC
@@ -779,7 +779,7 @@ function PresetTheme(theme="") {
 	/* Change Colors */
 	PickColor1(body_bg);
 	UploadPicture1B(body_image);
-	PickColor2(link_bg);
+	PickColor2(header_bg);
 	PickColor3(page_bg);
 	PickColor6(link_bg);
 	PickColor7(button_bg);
