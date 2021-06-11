@@ -1201,7 +1201,8 @@ margin-left:0;
 
 /* Level A */
 .cpe-dropdown__content{
-background-color:rgba(var(--dropdown-bg-rgb),0.7);
+	--dropdown-opacity:0.7!important;
+background-color:rgba(var(--dropdown-bg-rgb),var(--dropdown-opacity));
 color:var(--content-color);
 border:1px solid var(--content-border);
 border-radius:var(--border-radius);
@@ -1378,7 +1379,8 @@ top:auto;bottom:-8px
 }
 
 .cpe-dropdown__content .cpe-list.cpe-is-linked .cpe-dropdown-level-2 .cpe-dropdown-level-2__content{
-background-color:rgba(var(--dropdown-bg-rgb),0.85);
+	--dropdown-opacity:0.85!important;
+background-color:rgba(var(--dropdown-bg-rgb),var(--dropdown-opacity));
 border:1px solid var(--content-border);
 border-radius:var(--border-radius);
 display:none;
