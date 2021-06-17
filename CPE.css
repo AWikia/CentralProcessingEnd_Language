@@ -387,6 +387,7 @@ scrollbar-color:var(--button-color) var(--background-color);
 --background-overlay:auto;
 --content-border:auto;
 --content-color:auto;
+--floating-header-bg:auto;
 --body-display:modern;
 --background-va:top;
 --background-size:cover;
@@ -580,7 +581,9 @@ body[content-color-auto*="true"] .colora-off,
 body[content-border-auto*="false"] .bordera-on,
 body[content-border-auto*="true"] .bordera-off,
 body[background-overlay-auto*="false"] .overlaya-on,
-body[background-overlay-auto*="true"] .overlaya-off { 
+body[background-overlay-auto*="true"] .overlaya-off,
+body[floating-header-bg-auto*="false"] .floatinga-on,
+body[floating-header-bg-auto*="true"] .floatinga-off { 
 	display:none!important;
 }
 
@@ -1464,6 +1467,7 @@ overflow-y:auto;
 overflow-x:visible;
 position:relative;
 z-index:1;
+  scrollbar-width:thin;
 }
 
  .cpe-dropdown__content.cpe-is-not-scrollable .cpe-list{
@@ -1967,7 +1971,7 @@ border-top:1px solid var(--content-border);}
 .headroom.headroom--not-top .top-gap .cpe-banner-notification__container#floatingbanner,
 .options #floatingbanner {
   position:fixed;
-  top:0px;
+  top:50px;
   width:inherit;
   z-index:19; /* Needed lower value to allow header dropdowns not to overlap */
 }
