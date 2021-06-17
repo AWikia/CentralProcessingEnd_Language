@@ -999,6 +999,12 @@ select.cpe-input {
   --input-box-focus:var(--content-color-content-bg-mix);
 }
 
+.cpe-input.cpe-is-intitleline {
+  --input-box-solid:var(--floting-header-bg);
+  --input-box-hover:var(--floting-header-bg-content-bg-mix-light);
+  --input-box-focus:var(--floting-header-bg-content-bg-mix);
+}
+
 
 /** Buttons **/
 /* Primary */
@@ -1158,6 +1164,16 @@ a.cpe-button, button.cpe-button {
   --button-color-text-dark:var(--content-color-text-dark);
   --button-color-content-bg-mix-light:var(--content-color-content-bg-mix-light);
   --button-color-content-bg-mix:var(--content-color-content-bg-mix);
+}
+
+.cpe-button.cpe-is-intitleline {
+  --button-color:var(--floating-header-bg);
+  --button-color-dark:var(--floating-header-dark);
+  --button-color-dark-super:var(--floating-header-dark-super);
+  --button-color-text:var(--floating-header-text);
+  --button-color-text-dark:var(--floating-header-text-dark);
+  --button-color-content-bg-mix-light:var(--floating-header-bg-content-bg-mix-light);
+  --button-color-content-bg-mix:var(--floating-header-bg-content-bg-mix);
 }
 
 
@@ -1903,6 +1919,11 @@ opacity:1;
 	--tabs-color-dark-super:var(--content-color-dark-super);
 }
 
+.cpe-tabs__tab.cpe-is-intitleline {
+	--tabs-color:var(--floating-header-bg);
+	--tabs-color-dark:var(--floating-header-dark);
+	--tabs-color-dark-super:var(--floating-header-dark-super);
+}
 
 
 /* Banners */
