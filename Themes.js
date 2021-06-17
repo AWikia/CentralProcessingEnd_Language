@@ -1566,9 +1566,9 @@ if (window.MW18darkmode === true) {
 
 if (isLightColor( getComputedStyle(document.querySelector('html')).getPropertyValue("--content-color") )) {
 document.querySelector('html').style.setProperty("--content-color-blend-light", getComputedStyle(document.querySelector('body')).getPropertyValue("--content-color"));
-document.querySelector('html').style.setProperty("--content-color-blend", content_color2);
+document.querySelector('html').style.setProperty("--content-color-blend", content_text2);
 } else {
-document.querySelector('html').style.setProperty("--content-color-blend-light", content_color2);
+document.querySelector('html').style.setProperty("--content-color-blend-light", content_text2);
 document.querySelector('html').style.setProperty("--content-color-blend", getComputedStyle(document.querySelector('body')).getPropertyValue("--content-color"));
 }
 
