@@ -509,10 +509,21 @@ body {
   margin:0 auto;
   font-family:var(--font-family), var(--foreign-fonts);
 	cursor:var(--cpe-body-cursor);
-	box-shadow:0 0 40px 0px;
 	max-width:var(--max-width);
 }
 
+
+body::after {
+	content:"";
+	width:100%;
+	max-width:var(--max-width);
+	height:100%;
+	display:block;
+	position:fixed;
+	top:0;
+	box-shadow:0 0 40px 0px;
+	background:rgba(0,0,0,0.1);	
+}
 
 container {
     color:var(--background-color-text);
@@ -818,6 +829,7 @@ text-decoration:none;
 color:var(--link-color);
 cursor:var(--cpe-hand-cursor);
 background-color:transparent;
+	caret-color:var(--caret-color);
 }
 
 a:hover {
