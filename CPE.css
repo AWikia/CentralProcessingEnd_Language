@@ -548,7 +548,7 @@ container {
 	position:fixed!Important;
 	display:block;
 	content:"";
-	z-index:0;
+	z-index:-2;
 	background-repeat:no-repeat;
 	background-attachment:local;
 	background-attachment:fixed;
@@ -628,7 +628,7 @@ body[body-display*="legacy"] .gradient-overlay-2 {
 	position:fixed!Important;
 	display:block;
 	content:"";
-	z-index:1;
+	z-index:-1;
 	background-color:var(--background-overlay);
 	-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0), black 98%);
   image-rendering:initial;                  /* CSS4 Proposed  */
@@ -645,7 +645,7 @@ body[body-display*="legacy"] .gradient-overlay-2 {
 	position:fixed!Important;
 	display:block;
 	content:"";
-	z-index:1;
+	z-index:-1;
 	background-color:var(--background-color);
 	opacity:0.75;
 	pointer-events:none;
@@ -1641,12 +1641,15 @@ margin-right:0
 transform:rotate(-90deg);
 margin-left:16px
 }
+
+/*
 .cpe-dropdown__content .cpe-list.cpe-is-linked .cpe-dropdown-level-2.cpe-is-sticked-to-parent{
 position:relative
 }
 .cpe-dropdown__content .cpe-list.cpe-is-linked .cpe-dropdown-level-2.cpe-is-sticked-to-parent .cpe-dropdown-level-2__content{
 top:auto;bottom:-8px
 }
+*/
 
 .cpe-dropdown__content .cpe-list.cpe-is-linked .cpe-dropdown-level-2 .cpe-dropdown-level-2__content{
 	--dropdown-opacity:0.85;
