@@ -531,6 +531,7 @@ container {
 	position:relative;
 	display:block;
 	height:100vh;
+	z-index:1;
 }
 
 
@@ -678,7 +679,8 @@ color:var(--button-color-text)!important;
 
 
 h1,h2,h3,h4,h5,h6 {
-margin:8px 0;
+margin:0;
+padding:8px 0;
 font-style:inherit;
 font-weight:inherit;
 }
