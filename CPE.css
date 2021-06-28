@@ -490,7 +490,6 @@ scrollbar-color:var(--scrollbar-thumb-color-1) var(--scrollbar-track-color-1);
 
 * {
 	forced-color-adjust:none;
-    position:relative;
 }
 
 html {
@@ -511,6 +510,7 @@ body {
   font-family:var(--font-family), var(--foreign-fonts);
 	cursor:var(--cpe-body-cursor);
 	max-width:var(--max-width);
+	overflow:hidden;
 }
 
 
@@ -533,6 +533,7 @@ container {
 	display:block;
 	height:100vh;
 	z-index:1;
+	overflow-y:auto;
 }
 
 
