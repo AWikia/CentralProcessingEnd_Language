@@ -1,8 +1,8 @@
 /** Primary Fonts **/
 /* 
 **
-Gothic A1 = Korean
 M PLUS 1p = Japanese and Hebrew
+Nanum Gothic = Korean
 Prompt = Thailandish
 Cairo = Arabic
 Ramabhadra = Telegu
@@ -18,16 +18,18 @@ No font (Baloo Bhaina 2) = Oriya
 Inter/Didact Gothic = Greek, Latin and Cyrillic
 **
 */
+
 @import url('https://fonts.googleapis.com/css?family=Gothic+A1:100,200,300,400,500,600,700,800,900|M+PLUS+1p:100,300,400,500,700,800,900|Prompt:100,200,300,400,500,600,700,800,900|Source+Sans+Pro:200,300,400,600,700,900&subset=cyrillic,cyrillic-ext,greek,greek-ext,hebrew,japanese,korean,latin-ext,thai,vietnamese');
 
 @import url('https://fonts.googleapis.com/css?family=Cairo:200,300,400,600,700,900|Catamaran:100,200,300,400,500,600,700,800,900|Ramabhadra|Ubuntu:300,400,500,700&subset=arabic,cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,tamil,telugu');
 
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,700|Noto+Sans+SC:100,300,400,500,700,900|Noto+Sans+TC:100,300,400,500,700,900|Noto+Sans+HK:100,300,400,500,700,900|Hind+Siliguri:300,400,500,600,700|Didact+Gothic|Kantumruy:300,400,700|Manjari:100,400,700|Padauk:400,700');
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,700|Noto+Sans+SC:100,300,400,500,700,900|Noto+Sans+TC:100,300,400,500,700,900|Noto+Sans+HK:100,300,400,500,700,900|Hind+Siliguri:300,400,500,600,700|Didact+Gothic|Kantumruy:300,400,700|Manjari:100,400,700|Padauk:400,700|Alef:400,700');
+
 /** Secondary Fonts **/
 /* 
 **
-Jua (Formerly Nanum Gothic) = Korean
 M PLUS Rounded 1c = Japanese
+Jua (Formerly Nanum Gothic) = Korean
 Mitr = Thailandish
 Mada = Arabic
 NTR = Telegu
@@ -98,6 +100,9 @@ Aleo = Latin
 /* Arimo */
 @import url('https://fonts.googleapis.com/css?family=Arimo:400,700&subset=cyrillic,cyrillic-ext,greek,greek-ext,hebrew,latin-ext,vietnamese');
 @import url('https://rsms.me/inter/inter.css');
+
+
+
 
 
 /* GTK Font (By GTK Team) */
@@ -369,7 +374,7 @@ Aleo = Latin
 
 :root {
 font-family:Trebuchet MS;
-scrollbar-color:var(--button-color) var(--background-color);
+scrollbar-color:var(--scrollbar-thumb-color-1) var(--scrollbar-track-color-1);
 /** Scrollbar Styling **/
 	/* Width */
 	--scrollbar-width:17px;
@@ -392,11 +397,13 @@ scrollbar-color:var(--button-color) var(--background-color);
 --background-va:top;
 --background-size:cover;
 --background-no-tiling:false;
+--backdrop-filter:blur(8px) sepia(12%) contrast(112%) invert(12%) grayscale(12%) saturate(112%) hue-rotate(12deg) brightness(112%);
 /* Fonts */
 --font-family:"Didact Gothic", "Inter", -apple-system, BlinkMacSystemFont;
---foreign-fonts:"Didact Gothic", "Nanum Gothic", "M PLUS 1p", "Prompt", "Cairo", "Ramabhadra", "Catamaran", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK", "Hind Siliguri", "Baloo Tamma 2", "Kantumruy", "Manjari", "Padauk", "Baloo Bhaina 2";
---secondary-foreign-fonts:"Jua","M PLUS Rounded 1c", "Mitr", "NTR", "Pavanam", "Mukta", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK", "Baloo Da 2", "Baloo Tamma 2", "Battambang", "Baloo Chettan 2", "Padauk", "Baloo Bhaina 2", "Rubik";
+--foreign-fonts:"Didact Gothic", "M PLUS 1p",  "Nanum Gothic", "Prompt", "Cairo", "Ramabhadra", "Catamaran", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK", "Hind Siliguri", "Baloo Tamma 2", "Kantumruy", "Manjari", "Padauk", "Baloo Bhaina 2", "Alef";
+--secondary-foreign-fonts:"M PLUS Rounded 1c", "Jua", "Mitr", "NTR", "Pavanam", "Mukta", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK", "Baloo Da 2", "Baloo Tamma 2", "Battambang", "Baloo Chettan 2", "Padauk", "Baloo Bhaina 2", "Rubik";
 --secondary-font:var(--custom-secondary-font), "Rubik", "Arimo", "Liberation Sans", var(--secondary-foreign-fonts);
+--caret-color:auto;
 --custom-secondary-font:"";
 --border-radius:3px;
 --wordmark-filter:initial;
@@ -481,6 +488,10 @@ scrollbar-color:var(--button-color) var(--background-color);
 }
 
 
+* {
+	forced-color-adjust:none;
+}
+
 html {
 	max-width:var(--max-width);
 	position:relative;
@@ -498,10 +509,21 @@ body {
   margin:0 auto;
   font-family:var(--font-family), var(--foreign-fonts);
 	cursor:var(--cpe-body-cursor);
-	box-shadow:0 0 40px 0px;
 	max-width:var(--max-width);
+	overflow:hidden;
 }
 
+
+body::after {
+	content:"";
+	width:100%;
+	max-width:var(--max-width);
+	height:100%;
+	display:block;
+	position:fixed;
+	top:0;
+	box-shadow:0 0 40px 0px;
+}
 
 container {
     color:var(--background-color-text);
@@ -510,12 +532,14 @@ container {
 	position:relative;
 	display:block;
 	height:100vh;
+	z-index:2;
+	overflow-y:auto;
 }
 
 
 .serif body { /* Noto Sans */
 --font-family:Aleo;
---foreign-fonts:"Vollkorn", "Song Myung", "Noto Serif JP", "Pridi", "Amiri", "Ramaraja", "Catamaran", "Martel", "Noto Serif SC", "Noto Serif TC", "Hind Siliguri", "David Libre", "Benne", "Hanuman", "Manjari", "Padauk", "Baloo Bhaina 2";
+--foreign-fonts:"Vollkorn", "Noto Serif JP", "Song Myung", "Pridi", "Amiri", "Ramaraja", "Catamaran", "Martel", "Noto Serif SC", "Noto Serif TC", "Hind Siliguri", "David Libre", "Benne", "Hanuman", "Manjari", "Padauk", "Baloo Bhaina 2";
 }
 
 .body-community-background {
@@ -525,7 +549,7 @@ container {
 	position:fixed!Important;
 	display:block;
 	content:"";
-	z-index:0;
+	z-index:-2;
 	background-repeat:no-repeat;
 	background-attachment:local;
 	background-attachment:fixed;
@@ -583,7 +607,9 @@ body[content-border-auto*="true"] .bordera-off,
 body[background-overlay-auto*="false"] .overlaya-on,
 body[background-overlay-auto*="true"] .overlaya-off,
 body[floating-header-bg-auto*="false"] .floatinga-on,
-body[floating-header-bg-auto*="true"] .floatinga-off { 
+body[floating-header-bg-auto*="true"] .floatinga-off,
+body[caret-color-auto*="false"] .careta-on,
+body[caret-color-auto*="true"] .careta-off { 
 	display:none!important;
 }
 
@@ -603,7 +629,7 @@ body[body-display*="legacy"] .gradient-overlay-2 {
 	position:fixed!Important;
 	display:block;
 	content:"";
-	z-index:1;
+	z-index:-1;
 	background-color:var(--background-overlay);
 	-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0), black 98%);
   image-rendering:initial;                  /* CSS4 Proposed  */
@@ -620,7 +646,7 @@ body[body-display*="legacy"] .gradient-overlay-2 {
 	position:fixed!Important;
 	display:block;
 	content:"";
-	z-index:1;
+	z-index:-1;
 	background-color:var(--background-color);
 	opacity:0.75;
 	pointer-events:none;
@@ -637,6 +663,7 @@ button, input {
 	box-shadow:none;
 	text-shadow:none;
 	cursor:var(--cpe-text-cursor);
+	caret-color:var(--caret-color);
 }
 
 button {
@@ -654,7 +681,8 @@ color:var(--button-color-text)!important;
 
 
 h1,h2,h3,h4,h5,h6 {
-margin:8px 0;
+margin:0;
+padding:8px 0;
 font-style:inherit;
 font-weight:inherit;
 }
@@ -804,6 +832,7 @@ text-decoration:none;
 color:var(--link-color);
 cursor:var(--cpe-hand-cursor);
 background-color:transparent;
+	caret-color:var(--caret-color);
 }
 
 a:hover {
@@ -853,6 +882,11 @@ background-color:rgba(var(--link-color-rgb), 0.5);
 }
 
 
+body[dark-mode="true"] .darkmode-off,
+body[dark-mode="false"] .darkmode-on {
+	display:none!important;
+}
+
 :not(.unset)[disabled], 
 :not(.unset):disabled, 
 html:not([visualcolors="standard"]) .forcedcolors-off {
@@ -866,10 +900,15 @@ user-select:none!important;
 cursor:var(--cpe-blocked-cursor)!important;
 }
 
+html:not([visualcolors="standard"]) {
+	--caret-color:auto!important;
+}
+
 textarea, [contenteditable] {
+	caret-color:var(--caret-color);
   cursor:var(--cpe-text-cursor);
   scrollbar-width:thin;
-  scrollbar-color:var(--content-color) transparent;
+  scrollbar-color:var(--scrollbar-thumb-color-1) var(--scrollbar-track-color-1);
 /** Scrollbar Styling **/
 	/* Width */
 	--scrollbar-width:8.5px;
@@ -901,6 +940,31 @@ font-family:monospace;
 table {
 color:inherit;
 }
+
+/* Wikiatable style */
+.wikitable {
+	line-height:1.6;
+	border:1px solid var(--content-border);
+	background-color:var(--content-bg);
+	border-collapse:collapse;
+	font-size:inherit;
+}
+
+
+.wikitable th {
+	background-color:var(--dropdown-bg);
+	font-family:var(--secondary-font), cursive;
+	font-weight:900;
+	text-align:center;
+}
+
+.wikitable th, .wikitable td {
+	border:1px solid var(--content-border);
+	padding:5px;
+	margin:1px 0;
+	text-align:center
+}
+
 
 /* Input Boxes */
 .cpe-input {
@@ -1062,21 +1126,21 @@ a.cpe-button, button.cpe-button {
 
 /* Secondary */
 .cpe-button.cpe-is-secondary {
-    border-color:var(--content-color);
+    border-color:var(--button-color);
     background-color:var(--content-bg);
     color:var(--button-color);
     box-shadow:0 0 1.5px 1.5px var(--content-bg);
 }
 
 .cpe-button.cpe-is-secondary:hover {
-    border-color:var(--content-color-dark);
+    border-color:var(--button-color-dark);
     background-color:var(--button-color-content-bg-mix-light);
     color:var(--button-color-dark);
     box-shadow:0 0 1.5px 1.5px var(--button-color-content-bg-mix-light);
 }
 
 .cpe-button.cpe-is-secondary:active, .cpe-button.cpe-is-secondary.cpe-is-active {
-    border-color:var(--content-border-dark-super);
+    border-color:var(--button-border-dark-super);
     background-color:var(--button-color-content-bg-mix);
     color:var(--button-color-dark-super); 
     box-shadow:0 0 1.5px 1.5px var(--button-color-content-bg-mix);
@@ -1423,7 +1487,7 @@ z-index:4;
 box-shadow:0 2px 6px 0 rgba(0,0,0,.2), 0 2px 6px 0 rgba(255,255,255,0.2);
 font-size:14px;
   scrollbar-width:thin;
-  scrollbar-color:var(--content-border) transparent;
+  scrollbar-color:var(--scrollbar-thumb-color-1) var(--scrollbar-track-color-1);
  /** Scrollbar Styling **/
 	/* Width */
 	--scrollbar-width:8.5px;
@@ -1545,8 +1609,8 @@ display:none!important;
   display:inline-block; 
   opacity:1; 
   pointer-events:all;
-  -webkit-backdrop-filter:blur(8px) sepia(12%) contrast(112%) invert(12%) grayscale(12%) saturate(112%) hue-rotate(12deg) brightness(112%);
-  backdrop-filter:blur(8px) sepia(12%) contrast(112%) invert(12%) grayscale(12%) saturate(112%) hue-rotate(12deg) brightness(112%);
+  -webkit-backdrop-filter:var(--backdrop-filter);
+  backdrop-filter:var(--backdrop-filter);
 }
 
 .cpe-dropdown.cpe-is-active .cpe-dropdown__toggle-chevron {transform:rotate(180deg)}
@@ -1578,12 +1642,15 @@ margin-right:0
 transform:rotate(-90deg);
 margin-left:16px
 }
+
+/*
 .cpe-dropdown__content .cpe-list.cpe-is-linked .cpe-dropdown-level-2.cpe-is-sticked-to-parent{
 position:relative
 }
 .cpe-dropdown__content .cpe-list.cpe-is-linked .cpe-dropdown-level-2.cpe-is-sticked-to-parent .cpe-dropdown-level-2__content{
 top:auto;bottom:-8px
 }
+*/
 
 .cpe-dropdown__content .cpe-list.cpe-is-linked .cpe-dropdown-level-2 .cpe-dropdown-level-2__content{
 	--dropdown-opacity:0.85;
@@ -1605,8 +1672,8 @@ font-size:12px
 display:block; 
 opacity:1;
  pointer-events:all;
- -webkit-backdrop-filter:blur(8px) sepia(12%) contrast(112%) invert(12%) grayscale(12%) saturate(112%) hue-rotate(12deg) brightness(112%);
- backdrop-filter:blur(8px) sepia(12%) contrast(112%) invert(12%) grayscale(12%) saturate(112%) hue-rotate(12deg) brightness(112%);
+ -webkit-backdrop-filter:var(--backdrop-filter);
+ backdrop-filter:var(--backdrop-filter);
 }
 
 
@@ -1938,8 +2005,8 @@ opacity:1;
 	transform-origin:top center;
 	position:relative;
 	min-height:40px;
-    -webkit-backdrop-filter:blur(8px) sepia(12%) contrast(112%) invert(12%) grayscale(12%) saturate(112%) hue-rotate(12deg) brightness(112%);
-    backdrop-filter:blur(8px) sepia(12%) contrast(112%) invert(12%) grayscale(12%) saturate(112%) hue-rotate(12deg) brightness(112%);
+    -webkit-backdrop-filter:var(--backdrop-filter);
+    backdrop-filter:var(--backdrop-filter);
 }
 
 
@@ -1992,10 +2059,9 @@ opacity:1;
 border-top:1px solid var(--content-border);}
 
 
-.headroom.headroom--not-top .top-gap .cpe-banner-notification__container#floatingbanner,
-.options #floatingbanner {
+ #floatingbanner {
   position:fixed;
-  top:50px;
+  bottom:0px;
   width:inherit;
   z-index:19; /* Needed lower value to allow header dropdowns not to overlap */
 }
@@ -2018,7 +2084,7 @@ input[type="checkbox"], input[type="radio"] {
   color:var(--checkbox-active-bg);
   border-radius:26%;
   position:relative;
-  transition:background-color 200ms, box-shadow 200ms, color 200ms, opacity 200ms;
+  transition:background-color 200ms, box-shadow 200ms, color 200ms, opacity 200ms, -webkit-mask-size 200ms, mask-size 200ms;
   height:22px;
   width:22px;
   display:inline-block;
@@ -2042,25 +2108,29 @@ input[type="checkbox"], input[type="radio"] {
 }
 
 input[type="checkbox"]::after, input[type="radio"]::after {
-display:block!important;
-content:"";
-position:absolute;
-opacity:0;
-top:0;
-left:0;
-width:100%;
-height:100%;
-box-sizing:content-box;
+    background-color: currentcolor;
+	display:block!important;
+	content:"";
+	position:absolute;
+	transition:opacity 200ms, -webkit-mask-size 200ms, mask-size 200ms;
+	opacity:0;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	box-sizing:content-box;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size:0%;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size:0%;
+
 }
 
 input[type="checkbox"]::after {
-    border:2.15px solid currentcolor;
-    border-style:hidden solid solid hidden;
-    transform:rotate(45deg);
-    width:30%;
-    height:62%;
-    top:5%;
-    left:30%;
+    -webkit-mask-image: url("https://awikia.github.io/CentralProcessingEnd_Language/Tickbox.svg");
+    mask-image: url("https://awikia.github.io/CentralProcessingEnd_Language/Tickbox.svg");
 }
 
 input[type="checkbox"]:hover::after, input[type="radio"]:hover::after {
@@ -2075,29 +2145,38 @@ input[type="checkbox"]:active::after, input[type="radio"]:active::after {
 /* These styles are not used in IE and Edge since we use the ms-check to display the square. This applies to other engines only to show a minus sign */
 input[type="checkbox"]:indeterminate::after {
     opacity:1;
+    -webkit-mask-size: 80%;
+    mask-size: 80%;
 }
 
 input[type="checkbox"]:indeterminate::after, input[type="checkbox"][indeterminate]:not(:checked)::after {
-    border-style:hidden solid hidden hidden;
-    transform:rotate(90deg);
-    left:35%;
+    -webkit-mask-image: url("https://awikia.github.io/CentralProcessingEnd_Language/Tickbox2.svg");
+    mask-image: url("https://awikia.github.io/CentralProcessingEnd_Language/Tickbox2.svg");
 }
 
 
 
 input[type="radio"]::after {
-  background-color:currentcolor;
-  border-radius:50%;
-  width:55%;
-  height:55%;
-  top:22.5%;
-  left:22.5%;
+    -webkit-mask-image: url("https://awikia.github.io/CentralProcessingEnd_Language/Tickbox3.svg");
+    mask-image: url("https://awikia.github.io/CentralProcessingEnd_Language/Tickbox3.svg");
 }
 
 
 
 input[type="checkbox"]:checked::after, input[type="radio"]:checked::after {
   opacity:1;
+}
+
+
+ input[type="radio"]:checked::after {
+    -webkit-mask-size: 60%;
+    mask-size: 60%;
+}
+
+
+input[type="checkbox"]:checked::after {
+    -webkit-mask-size: 80%;
+    mask-size: 80%;
 }
 
 
@@ -2276,4 +2355,19 @@ input[type="checkbox"]:indeterminate:active, input[type="radio"]:indeterminate:a
 	-webkit-text-size-adjust:100%;
 	-moz-text-size-adjust:100%;
 	text-size-adjust:100%;
+	--scrollbar-size:0!important;
+}
+
+.phone ::-webkit-scrollbar {
+	display:none;
+}
+
+@supports (-webkit-backdrop-filter:none;) {
+html:not(.wiki-wizard):not(.options) body{
+	overflow-y:auto!important;
+}
+
+container {
+	overflow-y:initial!impportant;
+}
 }
