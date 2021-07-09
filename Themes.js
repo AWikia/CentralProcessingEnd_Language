@@ -351,9 +351,6 @@ function colortheme(theme) {
 	if (old_dark != window.MW18darkmode) {
 		ColorUpdate(false);
 	}
-	if ($("body.options").length) {
-		CompileChosenThems()
-	}
 }
 
 function ToggleMode() {
@@ -1592,9 +1589,9 @@ function CompileChosenThems() {
 // Selection Themes
 	var highlightedItems = document.querySelectorAll(".preview-theme-wrapper.selection-theme");
 	highlightedItems.forEach(function(x) {
-	 text_color2 =	getComputedStyle(x).getPropertyValue("--window-color");
-	 text_color =	getComputedStyle(x).getPropertyValue("--window-text"); // --window_text for non selection
-	 header_color =	getComputedStyle(x).getPropertyValue("--header-color");
+	var text_color2 =	getComputedStyle(x).getPropertyValue("--window-color");
+	var text_color =	getComputedStyle(x).getPropertyValue("--content-color"); // --window_text for non selection
+	var header_color =	getComputedStyle(x).getPropertyValue("--header-color");
 	x.style.setProperty("--bg-border", getComputedStyle(document.querySelector('body')).getPropertyValue("--content-border") );
 	x.style.setProperty("--header-color-dark", ColorTest(header_color));
 	x.style.setProperty("--header-text", ColorTest(header_color,true));
@@ -1608,9 +1605,9 @@ function CompileChosenThems() {
 // Other Themes
 	var highlightedItems = document.querySelectorAll(".preview-theme-wrapper:not(.custom-theme):not(.selection-theme)");
 	highlightedItems.forEach(function(x) {
-	 text_color2 =	getComputedStyle(x).getPropertyValue("--window-color");
-	 text_color =	getComputedStyle(x).getPropertyValue("--window_text");
-	 header_color =	getComputedStyle(x).getPropertyValue("--header-color");
+	var text_color2 =	getComputedStyle(x).getPropertyValue("--window-color");
+	var text_color =	getComputedStyle(x).getPropertyValue("--window_text");
+	var header_color =	getComputedStyle(x).getPropertyValue("--header-color");
 	x.style.setProperty("--bg-border", getComputedStyle(document.querySelector('body')).getPropertyValue("--content-border") );
 	x.style.setProperty("--header-color-dark", ColorTest(header_color));
 	x.style.setProperty("--header-text", ColorTest(header_color,true));
@@ -2066,8 +2063,10 @@ if (refresh === true) {
 	colortheme($('body').attr("wikitheme"))
 	if ($("body.options").length) {
 		UpdateSet();
-		CompileChosenThems()
 	}
+}
+if ($("body.options").length) {
+	CompileChosenThems()
 }
 SocialCompile();
 if (window.MW18auto === true) {
