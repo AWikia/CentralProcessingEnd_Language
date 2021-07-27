@@ -1,4 +1,4 @@
-window.MW18auto = true;
+﻿window.MW18auto = true;
 window.MW18autoDark = false;
 window.MW18darkmode = false;
 window.MW18LightThreshold = 50;
@@ -1429,17 +1429,25 @@ function ColorTestTwin(color,color2,intensity=1,inter='hsl') {
 	return chroma.mix(color,color2,MW18HoverThreshold*intensity, inter);
 }
 
-function ColorTest(color,text=false) {
+function ColorTest(color,text=false,inv=false) {
 
 	if (isLightColor(color)) {
 		if (text === true) {
-			return '#0e191a'; // Was #000000
+			if (inv === false) {
+				return '#0e191a'; // Was #000000
+			} else {
+				return '#ffffff';
+			}
 		} else {
 			return ColorTestTwin(color,'#000000');
 		}
 	} else {
 		if (text === true) {
-			return '#ffffff';
+			if (inv === true) {
+				return '#0e191a'; // Was #000000
+			} else {
+				return '#ffffff';
+			}
 		} else {
 			return ColorTestTwin(color,'#ffffff');
 		}
