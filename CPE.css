@@ -402,7 +402,7 @@ scrollbar-color:var(--scrollbar-thumb-color-1) var(--scrollbar-track-color-1);
 }
 
 /* Fandom Variable Aliases */
-:root {
+:root body {
     --theme-body-dynamic-color-1: var(--background-color-text);
     --theme-body-dynamic-color-1--rgb: var(--background-color-text-rgb);
     --theme-body-dynamic-color-2: var(--background-color-text-dark);
@@ -623,7 +623,7 @@ body[body-display*="legacy"] .gradient-overlay-2 {
 }
 
 .gradient-overlay-2 {
-	--overlay-transparency:0.92;
+	--overlay-transparency:0.95;
 	top:0;
 	width:100%;
 	height:100%;
@@ -631,7 +631,7 @@ body[body-display*="legacy"] .gradient-overlay-2 {
 	display:block;
 	content:"";
 	z-index:-1;
-	background-image:linear-gradient(rgba(var(--background-color-rgb),0) ,rgba(var(--background-color-rgb),var(--overlay-transparency)) calc(0% + 320px));
+	background-image:linear-gradient(rgba(var(--background-color-rgb),0) ,rgba(var(--background-color-rgb),var(--overlay-transparency)) calc(0% + 330px));
   image-rendering:initial;                  /* CSS4 Proposed  */
   -qq-image-blurring:tick;                  /* 4x4 Web 1-2    */
 	max-width:var(--max-width);
@@ -641,7 +641,7 @@ body[body-display*="legacy"] .gradient-overlay-2 {
 
 
 .gradient-overlay {
-	--overlay-transparency:0.82;
+	--overlay-transparency:0.75;
 	top:0;
 	width:100%;
 	height:100%;
@@ -651,21 +651,12 @@ body[body-display*="legacy"] .gradient-overlay-2 {
 	z-index:-1;
   -webkit-backdrop-filter:var(--backdrop-filter);
   backdrop-filter:var(--backdrop-filter);
-	background-image:linear-gradient(rgba(var(--community-header-bg-rgb),var(--overlay-transparency)) 340px,rgba(var(--community-header-bg-rgb),0));
+	background-image:linear-gradient(rgba(var(--background-color-rgb),var(--overlay-transparency)) 350px,rgba(var(--background-color-rgb),0));
 	pointer-events:none;
 	max-width:var(--max-width);
 	filter:var(--global-filter);
 }
 
-@supports ((-webkit-backdrop-filter:none) or (backdrop-filter:none)) {
-	.gradient-overlay {
-		--overlay-transparency:0.72;
-	}
-	.gradient-overlay-2 {
-		--overlay-transparency:0.87;
-	}
-
-}
 
 /* Option and Headings */
 button, input {
@@ -745,7 +736,7 @@ text-shadow:none;
 }
 
 /* Scrollbars */
-body:not(.phone) ::-webkit-scrollbar {
+body:not(.touch-events) ::-webkit-scrollbar {
 width:var(--scrollbar-width);
 height:var(--scrollbar-width);
 background-color:var(--scrollbar-track-color-1);
@@ -753,7 +744,7 @@ position:relative;
 cursor:var(--cpe-auto-cursor);
 }
 
-body:not(.phone) ::-webkit-scrollbar-thumb {
+body:not(.touch-events) ::-webkit-scrollbar-thumb {
   background-color:var(--scrollbar-thumb-color-1);
   box-shadow:0 0px 0 2px inset var(--scrollbar-thumb-color-1);
   border:2px solid var(--scrollbar-track-color-1);
@@ -761,26 +752,26 @@ body:not(.phone) ::-webkit-scrollbar-thumb {
   color:var(--scrollbar-thumb-text);
 }
 
-body:not(.phone) ::-webkit-scrollbar-thumb:hover {
+body:not(.touch-events) ::-webkit-scrollbar-thumb:hover {
   background-color:var(--scrollbar-thumb-color-2);
   box-shadow:0 0px 0 2px inset var(--scrollbar-thumb-color-2);
 }
 
-body:not(.phone) ::-webkit-scrollbar-thumb:active {
+body:not(.touch-events) ::-webkit-scrollbar-thumb:active {
   background-color:var(--scrollbar-thumb-color-3);
   box-shadow:0 0px 0 2px inset var(--scrollbar-thumb-color-3);
 }
 
-body:not(.phone) ::-webkit-scrollbar-thumb:vertical {
+body:not(.touch-events) ::-webkit-scrollbar-thumb:vertical {
 	min-height:20px;
 }
 
-body:not(.phone) ::-webkit-scrollbar-thumb:horizontal {
+body:not(.touch-events) ::-webkit-scrollbar-thumb:horizontal {
 	min-width:20px;
 }
 
 
-body:not(.phone) ::-webkit-scrollbar-button {
+body:not(.touch-events) ::-webkit-scrollbar-button {
   background-color:var(--scrollbar-track-color-1);
   color:var(--scrollbar-track-text);
   background-size:75%;
@@ -792,50 +783,50 @@ body:not(.phone) ::-webkit-scrollbar-button {
 }
 
 
-body:not(.phone) ::-webkit-scrollbar-button:hover {
+body:not(.touch-events) ::-webkit-scrollbar-button:hover {
   background-color:var(--scrollbar-track-color-2);
 }
 
-body:not(.phone) ::-webkit-scrollbar-button:active {
+body:not(.touch-events) ::-webkit-scrollbar-button:active {
   background-color:var(--scrollbar-track-color-3);
 }
 
-body:not(.phone) ::-webkit-scrollbar-button:vertical:start {
+body:not(.touch-events) ::-webkit-scrollbar-button:vertical:start {
 	border-bottom-width:1px;
 	border-bottom-left-radius:var(--scrollbar-width);
 	border-bottom-right-radius:var(--scrollbar-width);
 }
 
-body:not(.phone) ::-webkit-scrollbar-button:vertical {
+body:not(.touch-events) ::-webkit-scrollbar-button:vertical {
 	border-left-width:1px;
 	border-right-width:1px;
 }
 
-body:not(.phone) ::-webkit-scrollbar-button:horizontal {
+body:not(.touch-events) ::-webkit-scrollbar-button:horizontal {
 	border-top-width:1px;
 	border-bottom-width:1px;
 }
 
-body:not(.phone) ::-webkit-scrollbar-button:vertical:end {
+body:not(.touch-events) ::-webkit-scrollbar-button:vertical:end {
 	border-top-width:1px;
 	border-top-left-radius:var(--scrollbar-width);
 	border-top-right-radius:var(--scrollbar-width);
 }
 
-body:not(.phone) ::-webkit-scrollbar-button:horizontal:start {
+body:not(.touch-events) ::-webkit-scrollbar-button:horizontal:start {
 	border-right-width:1px;
 	border-top-right-radius:var(--scrollbar-width);
 	border-bottom-right-radius:var(--scrollbar-width);
 }
 
 
-body:not(.phone) ::-webkit-scrollbar-button:horizontal:end {
+body:not(.touch-events) ::-webkit-scrollbar-button:horizontal:end {
 	border-left-width:1px;
 	border-top-left-radius:var(--scrollbar-width);
 	border-bottom-left-radius:var(--scrollbar-width);
 }
 
-body:not(.phone) ::-webkit-scrollbar-corner {
+body:not(.touch-events) ::-webkit-scrollbar-corner {
 	background-color:var(--scrollbar-track-text);
 }
 
@@ -1172,8 +1163,12 @@ a.cpe-button, button.cpe-button {
     text-decoration:none;
 }
 
-.selected .cpe-button:focus:not(:active) {
-	color:var(--button-color-text);
+.selected .cpe-button:focus:not(:active),
+.selected .cpe-button,
+.selected .cpe-button:hover,
+.selected .cpe-button:active,
+.cpe-button.cpe-is-active {
+	color:var(--button-color-text-inverted);
 }
 
 /* Secondary */
@@ -1209,9 +1204,17 @@ a.cpe-button, button.cpe-button {
 }
 
 .cpe-button.cpe-is-secondary:focus:not(:active):not(.cpe-is-active) {
-  color:var(--button-color);
-  
+  color:var(--button-color); 
 }
+
+.selected .cpe-button.cpe-is-secondary:focus:not(:active),
+.selected .cpe-button.cpe-is-secondary,
+.selected .cpe-button.cpe-is-secondary:hover,
+.selected .cpe-button.cpe-is-secondary:active,
+.cpe-button.cpe-is-secondary.cpe-is-active {
+	color:var(--button-color);
+}
+
 
 /* Text */
 .cpe-button.cpe-is-text {
@@ -1256,6 +1259,7 @@ a.cpe-button, button.cpe-button {
   --button-color-dark:var(--link-color-dark);
   --button-color-dark-super:var(--link-color-dark-super);
   --button-color-text:var(--link-color-text);
+  --button-color-text-inverted:var(--link-color-text-inverted);
   --button-color-text-dark:var(--link-color-text-dark);
   --button-color-content-bg-mix-light:var(--link-color-content-bg-mix-light);
   --button-color-content-bg-mix:var(--link-color-content-bg-mix);
@@ -1267,6 +1271,7 @@ a.cpe-button, button.cpe-button {
   --button-color-dark:var(--content-border-dark);
   --button-color-dark-super:var(--content-border-dark-super);
   --button-color-text:var(--content-border-text);
+  --button-color-text-inverted:var(--content-border-text-inverted);
   --button-color-text-dark:var(--content-border-text-dark);
   --button-color-content-bg-mix-light:var(--content-border-content-bg-mix-light);
   --button-color-content-bg-mix:var(--content-border-content-bg-mix);
@@ -1278,6 +1283,7 @@ a.cpe-button, button.cpe-button {
   --button-color-dark:var(--background-color-dark);
   --button-color-dark-super:var(--background-color-dark-super);
   --button-color-text:var(--background-color-text);
+  --button-color-text-inverted:var(--background-color-text-inverted);
   --button-color-text-dark:var(--background-color-text-dark);
   --button-color-content-bg-mix-light:var(--background-color-content-bg-mix-light);
   --button-color-content-bg-mix:var(--background-color-content-bg-mix);
@@ -1290,6 +1296,7 @@ a.cpe-button, button.cpe-button {
   --button-color-dark:var(--community-header-dark);
   --button-color-dark-super:var(--community-header-dark-super);
   --button-color-text:var(--community-header-text);
+  --button-color-text-inverted:var(--community-header-text-inverted);
   --button-color-text-dark:var(--community-header-text-dark);
   --button-color-content-bg-mix-light:var(--community-header-bg-content-bg-mix-light);
   --button-color-content-bg-mix:var(--community-header-bg-content-bg-mix);
@@ -1300,6 +1307,7 @@ a.cpe-button, button.cpe-button {
   --button-color-dark:var(--content-color-dark);
   --button-color-dark-super:var(--content-color-dark-super);
   --button-color-text:var(--content-color-text);
+  --button-color-text-inverted:var(--content-color-text-inverted);
   --button-color-text-dark:var(--content-color-text-dark);
   --button-color-content-bg-mix-light:var(--content-color-content-bg-mix-light);
   --button-color-content-bg-mix:var(--content-color-content-bg-mix);
@@ -1310,6 +1318,7 @@ a.cpe-button, button.cpe-button {
   --button-color-dark:var(--floating-header-dark);
   --button-color-dark-super:var(--floating-header-dark-super);
   --button-color-text:var(--floating-header-text);
+  --button-color-text-inverted:var(--floating-header-text-inverted);
   --button-color-text-dark:var(--floating-header-text-dark);
   --button-color-content-bg-mix-light:var(--floating-header-bg-content-bg-mix-light);
   --button-color-content-bg-mix:var(--floating-header-bg-content-bg-mix);
@@ -1380,7 +1389,10 @@ margin-left:6px;
   letter-spacing: normal;
   word-wrap: normal;
   white-space: nowrap;
+  /* @noflip */
   direction: ltr;
+  pointer-events:none;
+  vertical-align:top;
 
   /* Support for all WebKit browsers. */
   -webkit-font-smoothing: antialiased;
@@ -2102,7 +2114,7 @@ opacity:1;
 }
 
 .cpe-tabs__tab:hover {
-	color:var(--tabs-color-dark)
+	color:var(--tabs-color-dark);
 }
 
 
@@ -2507,7 +2519,7 @@ input[type="checkbox"]:indeterminate:active  {
 
 /* No Special Cursor */
 [cursor*="none"],
-.phone  {
+.touch-events  {
   --cpe-body-cursor:auto;
   --cpe-auto-cursor: default;
   --cpe-blocked-cursor:not-allowed;
@@ -2518,7 +2530,7 @@ input[type="checkbox"]:indeterminate:active  {
 
 
 /* No Special Cursor */
-.phone  {
+.touch-events  {
   --cpe-body-cursor:auto!important;
   --cpe-auto-cursor: default!important;
   --cpe-blocked-cursor:not-allowed!important;
@@ -2530,23 +2542,23 @@ input[type="checkbox"]:indeterminate:active  {
 
 /* And one more thing */
 
-.phone * {
+.touch-events * {
 	scrollbar-width:none!important;
 }
 
 
-.phone {
+.touch-events {
 	-webkit-text-size-adjust:100%;
 	-moz-text-size-adjust:100%;
 	text-size-adjust:100%;
 	--scrollbar-size:0!important;
 }
 
-html:not(.wiki-wizard):not(.options) .phone {
+html:not(.wiki-wizard):not(.options) .touch-events {
 	overflow-y:auto!important;
 }
 
-.phone container {
+.touch-events container {
 	overflow-y:initial!important;
 }
 
