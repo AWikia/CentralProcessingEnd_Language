@@ -1715,7 +1715,6 @@ function SocialCompile() {
 
 
 /* Used to udpate all dynamical variables */
-/* Used to udpate all dynamical variables */
 function ColorUpdate(refresh=true,suitcheck=false) {
 /** Page BG **/
 /* Set Vars */
@@ -1794,8 +1793,14 @@ if (getComputedStyle(document.querySelector('body')).getPropertyValue("--page-te
 	colormix = ColorTestTwin(content_color,dropdowncolor3,1.6,'rgb');
 }
 
+var dropdowncolorH = ColorTest(dropdowncolor);
+var dropdowncolorA = SuperColorTest(dropdowncolor); // Scrollbar
+
 
 document.querySelector('body').style.setProperty("--page-secondary-background-color", dropdowncolor);
+document.querySelector('body').style.setProperty("--page-secondary-background-color-hover", dropdowncolorH);
+document.querySelector('body').style.setProperty("--page-secondary-background-color-active", dropdowncolorA);
+
 document.querySelector('container').style.setProperty("--page-border-background-color", dropdowncolor2);
 if (window.MW18darkmode === true) {
 	document.querySelector('container').style.setProperty("--page-background-color", content_color);
@@ -1814,6 +1819,8 @@ document.querySelector('body').style.setProperty("--page-text-gradient-color-hov
 }
 
 
+
+
 document.querySelector('body').style.setProperty("--page-background-color-hover", content_color2);
 document.querySelector('body').style.setProperty("--page-background-color-active", content_color3); // Scrollbar
 document.querySelector('body').style.setProperty("--page-text-background-color-hover", content_text2);
@@ -1826,6 +1833,8 @@ document.querySelector('body').style.setProperty("--page-text-background-color-p
 
 // RGB
 document.querySelector('body').style.setProperty("--page-secondary-background-color-rgb", Color2(dropdowncolor));
+document.querySelector('body').style.setProperty("--page-secondary-background-color-hover-rgb", Color2(dropdowncolorH));
+document.querySelector('body').style.setProperty("--page-secondary-background-color-active-rgb", Color2(dropdowncolorA));
 document.querySelector('body').style.setProperty("--page-background-color-rgb", Color2( getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color") ));
 document.querySelector('body').style.setProperty("--page-background-color-hover-rgb", Color2(content_color2));
 document.querySelector('body').style.setProperty("--page-background-color-active-rgb", Color2(content_color3));
