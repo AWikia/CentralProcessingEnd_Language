@@ -146,8 +146,12 @@ $(' .cpe-dropdown.cpe-select .cpe-dropdown__content .cpe-list li:not(.cpe-dropdo
 /* Enable New Global Navigation - No exception for now */
 window.MW18newnavblock=false;
 (function () {
+	AliasFandomComponents();
 	UpdateCounters();
-	$(' container > main').attr('wide', 'false');
+	$(' container > main').attr('wide', false );
+	$(' container > main').attr('toolbar', false);
+	$(' container > main').attr('nav', false);
+	$(' container > main').attr('rail', false);
 	DropDownUpdate();
 	if (window.MW18newnavblock === true) {
 		return
@@ -179,6 +183,61 @@ function ToggleModule() {
 			});
 
 }
+
+/* Width Toggler */
+function ToggleWidth() {
+	if 	($(' container > main').attr('wide') == 'true') {
+		$(' container > main').attr('wide', 'false');
+	} else {
+		$(' container > main').attr('wide', 'true');
+	}
+	insertKey('content-full', $(' container > main').attr('wide') );
+}
+
+function ToggleBar() {
+	if 	($(' container > main').attr('toolbar') == 'true') {
+		$(' container > main').attr('toolbar', 'false');
+	} else {
+		$(' container > main').attr('toolbar', 'true');
+	}
+	insertKey('toolbar-full', $(' container > main').attr('toolbar') );
+}
+
+
+function ToggleNav() {
+	if 	($(' container > main').attr('nav') == 'true') {
+		$(' container > main').attr('nav', 'false');
+	} else {
+		$(' container > main').attr('nav', 'true');
+	}
+	insertKey('nav-full', $(' container > main').attr('nav') );
+}
+
+function ToggleRail() {
+	if 	($(' container > main').attr('rail') == 'true') {
+		$(' container > main').attr('rail', 'false');
+	} else {
+		$(' container > main').attr('rail', 'true');
+	}
+	insertKey('rail-full', $(' container > main').attr('rail') );
+}
+
+
+/* Aliases all components with the .wds prefix to the ones from .cpe ones */
+function AliasFandomComponents() {
+
+	var highlightedItems = document.querySelectorAll(":not(svg)[class*='wds-']");
+
+	while ($(':not(svg)[class*="wds-"]').length > 0) {
+		highlightedItems.forEach(function(x) {
+			x.className = x.className.replace("wds-midlight-aqua", "cpe-midlight-color");
+			x.className = x.className.replace("wds-", "cpe-");
+		});
+	}
+
+
+}
+
 
 /* Banners */
 function RemoveBanner() {
@@ -231,16 +290,6 @@ function AddFloatingBanner(content='Sample Content',kind='message',extraclass=''
 			'</div>' 
 	);
 
-
-}
-
-/* Width Toggler */
-function ToggleWidth() {
-	if 	($(' container > main').attr('wide') == 'true') {
-		$(' container > main').attr('wide', 'false');
-	} else {
-		$(' container > main').attr('wide', 'true');
-	}
 
 }
 
