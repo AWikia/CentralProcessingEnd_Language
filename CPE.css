@@ -374,21 +374,29 @@ Aleo = Latin
 
 :root {
 font-family:Trebuchet MS;
+/* Base Foreground Colors */
+--light-theme-foreground-color:#1e0c1b;
+--dark-theme-foreground-color:#ffffff;
 /* Aliases */
 --page-border-background-color:auto;
 --page-text-background-color:auto;
 --toolbar-background-color:auto;
---community-background-mode:modern;
---community-background-alignment:top;
+--community-background-mode:blended;
+--community-background-alignment:var(--community-background-vertical-alignment) var(--community-background-horizontal-alignment);
+--community-background-horizontal-alignment:center;
+--community-background-vertical-alignment:top;
 --community-background-size:cover;
 --community-background-no-tiling:false;
 --backdrop-filter:blur(8px) sepia(12%) contrast(112%) invert(12%) grayscale(12%) saturate(112%) hue-rotate(12deg) brightness(112%);
 /* Fonts */
---font-family:"Didact Gothic", "Inter", -apple-system, BlinkMacSystemFont;
+--main-fonts:"Didact Gothic", "Inter"; /* Empty but other languages will depend on it */
 --foreign-fonts:"Didact Gothic", "M PLUS 1p",  "Nanum Gothic", "Prompt", "Cairo", "Ramabhadra", "Catamaran", "Noto Sans", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK", "Hind Siliguri", "Baloo Tamma 2", "Kantumruy", "Manjari", "Padauk", "Baloo Bhaina 2", "Alef";
+--font-family:var(--custom-font), var(--main-fonts), var(--foreign-fonts), sans-serif;
 --secondary-foreign-fonts:"M PLUS Rounded 1c", "Jua", "Mitr", "NTR", "Pavanam", "Mukta", "Noto Sans SC", "Noto Sans TC", "Noto Sans HK", "Baloo Da 2", "Baloo Tamma 2", "Battambang", "Baloo Chettan 2", "Padauk", "Baloo Bhaina 2", "Rubik";
---secondary-font:var(--custom-secondary-font), "Rubik", "Arimo", "Liberation Sans", var(--secondary-foreign-fonts);
+--main-secondary-fonts:"Rubik", "Arimo", "Liberation Sans"; /* Empty but other languages will depend on it */
+--secondary-font:var(--custom-secondary-font), var(--main-secondary-fonts), var(--secondary-foreign-fonts);
 --caret-color:auto;
+--custom-font:"";
 --custom-secondary-font:"";
 --border-radius:3px;
 --logo-filter:opacity(1);
@@ -400,6 +408,14 @@ font-family:Trebuchet MS;
 --cpe-teadrop:url("data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI4Mi42NjY2NyIgaGVpZ2h0PSI4Mi42NjY2NyIgdmlld0JveD0iMCwwLDgyLjY2NjY3LDgyLjY2NjY3Ij4NCgk8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTk4LjY2NjY2LC0xMzguNjY2NjYpIj4NCgkJPGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsPSIjMDAwMDAwIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgc3Ryb2tlLWRhc2hhcnJheT0iIiBzdHJva2UtZGFzaG9mZnNldD0iMCIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPg0KCQkJPHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTE5OC42NjY2NywxODBjMCwtMjIuODI3NzcgNDEuMzMzMzQsLTQxLjMzMzM0IDQxLjMzMzM0LC00MS4zMzMzNGMwLDAgNDEuMzMzMzMsMTguNTA1NTcgNDEuMzMzMzMsNDEuMzMzMzRjMCwyMi44Mjc3NyAtMTguNTA1NTYsNDEuMzMzMzQgLTQxLjMzMzMzLDQxLjMzMzM0Yy0yMi44Mjc3NywwIC00MS4zMzMzNCwtMTguNTA1NTcgLTQxLjMzMzM0LC00MS4zMzMzNHoiLz4NCgkJPC9nPg0KCTwvZz4NCjwvc3ZnPg==")
 
 }
+
+@media (prefers-reduced-data:reduce) {
+	:root {
+	--main-fonts:"Helvectica Neue", "Helvetica", "Arial", sans-serif; /* Empty but other languages will depend on it */
+	--main-secondary-fonts:system-ui, BlinkMacSystemFont, -apple-system; /* Empty but other languages will depend on it */
+	}
+}
+
 /* Generic Colors */
 body {
     --alert-background-color:#dd3333;
@@ -415,6 +431,8 @@ body[dark-mode="true"] {
     --success-background-color:#51e5c4;
     --message-background-color:#a0a1a2;
 }
+
+
 
 
 /* Fandom Variable Aliases for compatibility */
@@ -511,6 +529,7 @@ body {
   --cpe-hand-cursor:url("Windows/hand.cur"), pointer;
   --global-filter:none;
 	scrollbar-color:var(--scrollbar-thumb-color-1) var(--scrollbar-track-color-1);
+	--header-size:160px;
 /** Scrollbar Styling **/
 	/* Width */
 	--scrollbar-width:17px;
@@ -525,7 +544,7 @@ body {
 	--scrollbar-thumb-color-3:var(--accent-background-color-active);
 	--scrollbar-thumb-text:var(--accent-foreground-color);
   margin:0 auto;
-  font-family:var(--font-family), var(--foreign-fonts);
+  font-family:var(--font-family);
 	cursor:var(--cpe-body-cursor);
 	max-width:var(--max-width);
 	overflow:hidden;
@@ -557,28 +576,27 @@ container {
 
 
 .serif body { /* Noto Sans */
---font-family:Aleo;
+--main-fonts:Aleo;
 --foreign-fonts:"Vollkorn", "Noto Serif JP", "Song Myung", "Pridi", "Amiri", "Ramaraja", "Catamaran", "Martel", "Noto Serif SC", "Noto Serif TC", "Hind Siliguri", "David Libre", "Benne", "Hanuman", "Manjari", "Padauk", "Baloo Bhaina 2";
 }
 
-.body-community-background {
+ .body-community-background {
+	--extra-size:var(--global-nav-size,0px);
 	top:0;
-	width:100%;
+	width:calc(100% - var(--extra-size));
 	height:100%;
+	margin-left:var(--extra-size);
 	position:fixed!Important;
 	display:block;
 	content:"";
 	z-index:-2;
 	background-repeat:no-repeat;
-	background-attachment:local;
-	background-attachment:fixed;
-	background-position:center;
-	background-position-y:var(--community-background-alignment);
+	background-position:var(--community-background-alignment);
 	background-size:cover;
 	background-image:var(--community-background-image);
 	background-color:var(--community-background-color);
 	pointer-events:none;
-	max-width:var(--max-width);
+	max-width:calc(var(--max-width) - var(--extra-size));
 	image-rendering:initial;                  /* CSS4 Proposed  */
 	-qq-image-blurring:tick;                  /* 4x4 Web 1-2    */
 	filter:var(--global-filter);
@@ -587,36 +605,37 @@ container {
 }
 
 
-body[community-background-mode*="legacy"] .body-community-background {
+body[community-background-mode*="standard"] .body-community-background {
+	height:var(--header-size);
 	background-repeat:repeat;
 }
 
-body[community-background-mode*="legacy"][community-background-size="contain"] .body-community-background {
+body[community-background-mode*="full"] .body-community-background {
+	background-repeat:repeat;
+}
+
+
+body[community-background-mode*="standard"][community-background-size="contain"] .body-community-background,
+body[community-background-mode*="full"][community-background-size="contain"] .body-community-background {
 	background-size:contain;
 }
 
-body[community-background-mode*="legacy"][community-background-size="stretched"] .body-community-background {
+
+body[community-background-mode*="standard"][community-background-size="stretched"] .body-community-background,
+body[community-background-mode*="full"][community-background-size="stretched"] .body-community-background {
 	background-size:100% 100%;
 	background-position:center;
 }
 
-body[community-background-mode*="legacy"][community-background-size="full"] .body-community-background {
+body[community-background-mode*="standard"][community-background-size="full"] .body-community-background,
+body[community-background-mode*="full"][community-background-size="full"] .body-community-background {
 	background-size:auto;
 }
 
-body[community-background-mode*="legacy"][body-no-tiling*="true"] .body-community-background {
+body[community-background-mode*="standard"][community-background-no-tiling*="true"] .body-community-background,
+body[community-background-mode*="full"][community-background-no-tiling*="true"] .body-community-background {
 	background-repeat:no-repeat;
 }
-
-@media only screen and (min-width:2000px) {
-	body[community-background-mode*="legacy"][community-background-size="stretched"] .body-community-background {
-		background-size:var(--max-width) 100%;
-	}
-	body[community-background-mode*="legacy"][community-background-size="contain"] .body-community-background {
-		background-size:var(--max-width);
-	}
-}
-
 
 
 body[page-text-background-color-auto*="false"] .colora-on,
@@ -631,16 +650,17 @@ body[caret-color-auto*="true"] .careta-off {
 }
 
 .secondary, h1, h2, h3, h4, h5, h6 {
-  font-family:var(--secondary-font), cursive;
+  font-family:var(--secondary-font), sans-serif;
 }
 
-body[community-background-mode*="legacy"] .gradient-overlay,
-body[community-background-mode*="legacy"] .gradient-overlay-2 {
+body[community-background-mode*="full"] .gradient-overlay,
+body[community-background-mode*="full"] .gradient-overlay-2,
+body[community-background-mode*="standard"] .gradient-overlay {
 	display:none!important;
 }
 
 .gradient-overlay-2 {
-	--overlay-transparency:0.95;
+	--overlay-transparency:0.9;
 	top:0;
 	width:100%;
 	height:100%;
@@ -648,7 +668,7 @@ body[community-background-mode*="legacy"] .gradient-overlay-2 {
 	display:block;
 	content:"";
 	z-index:-1;
-	background-image:linear-gradient(rgba(var(--community-background-color-rgb),0) ,rgba(var(--community-background-color-rgb),var(--overlay-transparency)) calc(0% + 350px));
+	background-image:linear-gradient(rgba(var(--community-background-color-rgb),0) ,rgba(var(--community-background-color-rgb),var(--overlay-transparency)) calc(0% + var(--header-size) ));
   image-rendering:initial;                  /* CSS4 Proposed  */
   -qq-image-blurring:tick;                  /* 4x4 Web 1-2    */
 	max-width:var(--max-width);
@@ -658,7 +678,7 @@ body[community-background-mode*="legacy"] .gradient-overlay-2 {
 
 
 .gradient-overlay {
-	--overlay-transparency:0.75;
+	--overlay-transparency:0.6;
 	top:0;
 	width:100%;
 	height:100%;
@@ -668,11 +688,17 @@ body[community-background-mode*="legacy"] .gradient-overlay-2 {
 	z-index:-1;
   -webkit-backdrop-filter:var(--backdrop-filter);
   backdrop-filter:var(--backdrop-filter);
-	background-image:linear-gradient(rgba(var(--community-background-color-rgb),var(--overlay-transparency)) 350px,rgba(var(--community-background-color-rgb),0));
+	background-image:linear-gradient(rgba(var(--community-background-color-rgb),var(--overlay-transparency)) var(--header-size),rgba(var(--community-background-color-rgb),0));
 	pointer-events:none;
 	max-width:var(--max-width);
 	filter:var(--global-filter);
 }
+
+
+body[community-background-mode*="standard"] .gradient-overlay-2 {
+	--overlay-transparency:1;
+}
+
 
 
 /* Option and Headings */
@@ -865,7 +891,7 @@ color:var(--anchor-background-color);
 a:hover,
 body a:hover,
 body a:visited:hover {
-color:var(--anchor-background-color-hover);
+color:var(--article-link-background-color-hover);
 cursor:var(--cpe-hand-cursor);
 }
 
@@ -968,12 +994,26 @@ font-family:"LCD", monospace;
 }
 
 textarea {
-	border-color: #27a0da;
+	background-color:var(--page-secondary-background-color);
+	border:1px solid var(--page-border-background-color);
+	color:var(--page-text-background-color);
+	border-radius:var(--border-radius);
 	background-image:none;
--webkit-appearance:none;
-appearance:none;
-font-family:monospace;
+	-webkit-appearance:none;
+	appearance:none;
+	font-family:monospace;
 }
+
+/*
+input {
+	background-color:var(--page-secondary-background-color);
+	border:1px solid var(--content-border);
+	border-radius:var(--border-radius);
+	background-image:none;
+	-webkit-appearance:none;
+	appearance:none;
+}
+*/
 
 table {
 color:inherit;
@@ -993,7 +1033,7 @@ body .wikitable {
 body .wikitable > tr > th,
 body .wikitable > * > tr > th {
 	background-color:var(--page-secondary-background-color);
-	font-family:var(--secondary-font), cursive;
+	font-family:var(--secondary-font), sans-serif;
 	font-weight:900;
 	text-align:center;
 }
@@ -1005,7 +1045,7 @@ body .wikitable > * > tr > td {
 	border:1px solid var(--page-border-background-color);
 	padding:5px;
 	margin:1px 0;
-	text-align:center
+/*	text-align:center; */
 }
 
 
@@ -1442,7 +1482,7 @@ margin-left:6px;
 
 
 /* Icons */
-.material-icons-outlined {
+.material-icons {
   font-family: 'Material Icons Outlined';
   font-weight: normal;
   font-style: normal;
@@ -1471,6 +1511,27 @@ margin-left:6px;
 
   /* Support for IE. */
   font-feature-settings: 'liga';
+}
+
+
+html[icon-mode="outlined"] .material-icons {
+  font-family: 'Material Icons Outlined'!important;
+}
+
+html[icon-mode="filled"] .material-icons {
+  font-family: 'Material Icons'!important;
+}
+
+html[icon-mode="rounded"] .material-icons {
+  font-family: 'Material Icons Round'!important;
+}
+
+html[icon-mode="sharp"] .material-icons {
+  font-family: 'Material Icons Sharp'!important;
+}
+
+html[icon-mode="two-tone"] .material-icons {
+  font-family: 'Material Icons Two Tone'!important;
 }
 
 
@@ -2053,13 +2114,15 @@ opacity:1;
 
 /* Floating Buttons */
 .cpe-floating-button {
-  --floating-accent-background-color:var(--page-text-background-color);
+  --floating-button-color:var(--page-text-background-color);
+  --floating-button-color-hover:var(--page-text-background-color-hover);
   --floating-button-background-color:var(--page-background-color);
   --floating-button-hover-background-color:var(--page-text-background-color-page-background-color-mix-light);
+  text-decoration:none;
   align-items: center;
   background-image:none;
   background-color:var(--floating-button-background-color);
-  color:var(--floating-accent-background-color);
+  color:var(--floating-button-color);
   box-shadow: 0 0 10px 0 rgba(26, 26, 26, 0.25), 0 0 10px rgba(240, 240, 240, 0.25);
   border-radius: 50%;
   border: 0;
@@ -2073,17 +2136,28 @@ opacity:1;
   transition-property: box-shadow, background-color, color;
   width: 38px;
 }
+
+.cpe-floating-button:visited {
+	color:var(--floating-button-color);
+}
+
+.cpe-floating-button:visited:hover {
+	color:var(--floating-button-color-hover);
+}
+
+
 .cpe-floating-button:not([disabled]),
 .cpe-floating-button:not(.cpe-is-disabled) {
   cursor:var(--cpe-hand-cursor);
 }
 .cpe-floating-button:not([disabled]):hover,
 .cpe-floating-button:not(.cpe-is-disabled):hover {
+  text-decoration:none;
   box-shadow: 0 0 10px 0 rgba(26, 26, 26, 0.5), 0 0 10px rgba(240, 240, 240, 0.5);
   background-image:none;
   background-color:var(--floating-button-hover-background-color);
   border:0;
-  color:var(--floating-accent-background-color);
+  color:var(--floating-button-color-hover);
 }
 .cpe-floating-button-group {
   display: inline-flex;
@@ -2105,12 +2179,14 @@ opacity:1;
 
 
 .cpe-floating-button.critical {
-  --floating-accent-background-color:#dd3333;
+  --floating-button-color:var(--alert-background-color);
+  --floating-button-color-hover:var(--alert-background-color-hover);
   --floating-button-hover-background-color:var(--alert-background-color-page-background-color-mix-light);
 }
 
 .cpe-floating-button.accent {
-  --floating-accent-background-color:var(--page-border-background-color);
+  --floating-button-color:var(--page-border-background-color);
+  --floating-button-color-hover:var(--page-border-background-color-hover);
   --floating-button-hover-background-color:var(--page-border-background-color-page-background-color-mix-light);
 }
 
