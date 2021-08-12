@@ -378,11 +378,6 @@ function colortheme(theme) {
 	}
 	$(".mpisto-page-header .color-modes li").removeClass('selected');
 	$(".mpisto-page-header .color-modes li." + theme).addClass('selected');
-	if (window.MW18darkmode) {
-		$('body').attr("dark-mode", isLightColor(body_bg) );
-	} else {
-		$('body').attr("dark-mode", !(isLightColor(body_bg)) );
-	}
 	if (window.MW18darkmode === true) {
 		if ($("body.options").length) {
 			document.querySelector('.rvbg1').style.setProperty("background-color", 'var(--page-text-background-color)');
@@ -401,7 +396,11 @@ function colortheme(theme) {
 	if (old_dark != window.MW18darkmode) {
 		ColorUpdate(false);
 	}
-}
+	if (window.MW18darkmode) {
+		$('body').attr("dark-mode", isLightColor(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-text-background-color")) );
+	} else {
+		$('body').attr("dark-mode", !(isLightColor(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) );
+	}
 
 /*
 function CheckDarkMode() {
@@ -1700,14 +1699,18 @@ function ColorTestTwin(color,color2,intensity=1,inter='hsl') {
 	return chroma.mix(color,color2,MW18HoverThreshold*intensity, inter);
 }
 
-function ColorTest(color,text=false,inv=false) {
-
-	if (isLightColor(color)) {
+function ColorTest(color,text=false,inv=false,dledlen=false) { // Regular Colors
+	if (dledlen === true) {
+		var color2 = getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color");
+	} else {
+		var color2 = color;
+	}
+	if (isLightColor(color2)) {
 		if (text === true) {
 			if (inv === false) {
-				return '#0e191a'; // Was #000000
+				return getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-foreground-color"); // Was #000000 and 0e191a
 			} else {
-				return '#ffffff';
+				return getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-foreground-color");
 			}
 		} else {
 			return ColorTestTwin(color,'#000000');
@@ -1715,29 +1718,36 @@ function ColorTest(color,text=false,inv=false) {
 	} else {
 		if (text === true) {
 			if (inv === true) {
-				return '#0e191a'; // Was #000000
+				return getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-foreground-color"); // Was #000000 and 0e191a
 			} else {
-				return '#ffffff';
+				return getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-foreground-color");
 			}
 		} else {
-			return ColorTestTwin(color,'#ffffff');
+			return ColorTestTwin(color, '#ffffff' );
 		}
 	}
 
 
 }
 
-function SuperColorTest(color) {
+function SuperColorTest(color) { // Double Amount
 	if (isLightColor(color)) {
-		var mix = ColorTestTwin(color,'#000000');
-		return ColorTestTwin(mix,'#000000');
+		var mix = ColorTestTwin(color, '#000000');
+		return ColorTestTwin(mix, '#000000');
 	} else {
-		var mix = ColorTestTwin(color,'#ffffff');
-		return ColorTestTwin(mix,'#ffffff');
+		var mix = ColorTestTwin(color, '#ffffff');
+		return ColorTestTwin(mix, '#ffffff');
 	}
 }
 
 
+function ColorInvert(color) {
+	var r = 255 - chroma(color).get('rgb.r');
+	var g = 255 - chroma(color).get('rgb.g');
+	var b = 255 - chroma(color).get('rgb.b');
+	var h = chroma(color).get('hsl.h');	
+	return chroma.rgb(r,g,b).set('hsl.h', h);
+}
 
 
 // Only used for link and header colors
@@ -1763,11 +1773,13 @@ function Color3(r=0,g=0,b=0) {
 
 
 function isLightColor(color) {
-	return ((chroma.contrast('#0e191a', color)) > MW18LightThreshold*0.09);
+	return ((chroma.contrast(getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-foreground-color"), color)) > MW18LightThreshold*0.1);
+//	return ((chroma(color).luminance()) > (MW18LightThreshold*0.01 - 0.001))
 }
 
 function isSuperLightColor(color) {
-	return ((chroma.contrast('#0e191a', color)) > window.MW18LightThreshold*0.126);
+	return ((chroma.contrast(getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-foreground-color"), color)) > window.MW18LightThreshold*0.12);
+//	return ( (chroma(color).luminance()) > (MW18LightThreshold*0.012 - 0.001))
 }
 
 
@@ -1791,7 +1803,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColor1(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColor1(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1807,7 +1819,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColor2(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColor2(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1822,7 +1834,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColor9(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColor9(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1837,7 +1849,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColor3(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColor3(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1851,7 +1863,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColor4(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColor4(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1865,7 +1877,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColor5(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColor5(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1881,7 +1893,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColor6(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColor6(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1896,7 +1908,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColor7(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColor7(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1910,7 +1922,7 @@ function CompileRecColors() {
 
 	for (let i = 0; i < socialAM; i++) {
 	  var color = Colors[i];
-	  var data = '<button class="cpe-button cpe-is-square color-button" onclick="PickColorCc(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
+	  var data = '<button class="cpe-button is-square color-button" onclick="PickColorCc(' + "'#" + color + "'" + ')"> <div style="border:1px solid; width:inherit; height:inherit; pointer-events:none; border-radius:50%; background-color:' + "#" +  color + ';"></div> </button>'
 	  str = str + data;
 	}
 
@@ -1972,7 +1984,7 @@ function SocialCompile() {
 	  var colormixl = ColorTestTwin(content_color,color,0.8,'rgb');
       var colormix = ColorTestTwin(content_color,color,1.6,'rgb');
 	  var name = socialV[i];
-	  var data = '.cpe-button.cpe-is-' + name + '-color{' +'--accent-background-color:' + color + '!important;' + '--accent-background-color-hover:' + ColorTest(color,false) + '!important;' + '--accent-background-color-active:' + SuperColorTest(color,false) + '!important;' + '--accent-foreground-color:' + ColorTest(color,true) + '!important;' + '--accent-foreground-color-inverted:' + ColorTest(color,true,true) + '!important;' + '--accent-foreground-color-hover:' + ColorTest(ColorTest(color,true),false) + '!important;' + '--accent-background-color-page-background-color-mix-light:' + colormixl + '!important;' + '--accent-background-color-page-background-color-mix:' + colormix + '!important;' + '}'
+	  var data = '.cpe-button.is-' + name + '-color{' +'--accent-background-color:' + color + '!important;' + '--accent-background-color-hover:' + ColorTest(color,false) + '!important;' + '--accent-background-color-active:' + SuperColorTest(color,false) + '!important;' + '--accent-foreground-color:' + ColorTest(color,true) + '!important;' + '--accent-foreground-color-inverted:' + ColorTest(color,true,true) + '!important;' + '--accent-foreground-color-hover:' + ColorTest(ColorTest(color,true),false) + '!important;' + '--accent-background-color-page-background-color-mix-light:' + colormixl + '!important;' + '--accent-background-color-page-background-color-mix:' + colormix + '!important;' + '}'
 	  str = str + data;
 	}
 
@@ -2018,31 +2030,35 @@ var content_color3 = SuperColorTest(content_color); // Scrollbar
 
 
 if ((getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color") === 'auto') ) {
-	var dropdowncolor3 = ColorTest(content_color,true);	
+	if (isLightColor(content_color)) {
+		var dropdowncolor3 = getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-text-background-color")
+	} else {
+		var dropdowncolor3 = getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-text-background-color")
+	}
 } else {
 	var dropdowncolor3 = 'inherit';
 }
 if (isSuperLightColor(content_color) && (false)) {
 	var dropdowncolor = '#ffffff';
 	if ((getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color") === 'auto')) {
-		var dropdowncolor2 = chroma.mix(content_color,'#0e191a',MW18HoverThreshold*1.32, 'hsv');
+		var dropdowncolor2 = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-text-background-color"),MW18HoverThreshold*1.32, 'hsv');
 	} else {
 		var dropdowncolor2 = 'inherit';
 	}
 
 	
 } else if (isLightColor(content_color)) {
-	var dropdowncolor = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-text-background-color"),MW18HoverThreshold*0.4, 'hsv');
+	var dropdowncolor = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-text-background-color"),MW18HoverThreshold*0.55, 'hsv');
 	if ((getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color") === 'auto')  ) {
-		var dropdowncolor2 = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-text-background-color"),MW18HoverThreshold*2.4, 'hsv');
+		var dropdowncolor2 = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-text-background-color"),MW18HoverThreshold*2.5, 'hsv');
 	} else {
 		var dropdowncolor2 = 'inherit';
 	}
 
 } else {
-	var dropdowncolor = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-text-background-color"),MW18HoverThreshold*0.4, 'hsv');
+	var dropdowncolor = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-text-background-color"),MW18HoverThreshold*0.55, 'hsv');
 	if ((getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color") === 'auto')  ) {
-		var dropdowncolor2 = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-text-background-color"),MW18HoverThreshold*2.4, 'hsv');
+		var dropdowncolor2 = chroma.mix(content_color,getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-text-background-color"),MW18HoverThreshold*2.5, 'hsv');
 	} else {
 		var dropdowncolor2 = 'inherit';
 	}
@@ -2127,9 +2143,15 @@ document.querySelector('body').style.setProperty("--page-text-gradient-color-hov
 
 
 /** Button Color **/
-// Inverted Colors Quirk
+// Liatch Quirk
 if ( (window.MW18darkmode === true) && ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) ) ) {
-	document.querySelector('container').style.setProperty("--accent-background-color", ColorTest(ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true),false,false,true));
+		document.querySelector('container').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true));
+	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('container')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('container').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('container')).getPropertyValue("--accent-background-color"),false,false,true));
+	}
+	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('container')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('container').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('container')).getPropertyValue("--accent-background-color"),false,false,true));
+	}
 } else {
 	document.querySelector('container').style.setProperty("--accent-background-color", 'inherit');
 }
@@ -2180,7 +2202,14 @@ document.querySelector('body').style.setProperty("--accent-gradient-color-hover-
 
 /** Header Color **/
 /* Set Vars */
-var header_color = getComputedStyle(document.querySelector('body')).getPropertyValue("--sticky-header-background-color");
+// Liatch Quirk
+if ( (window.MW18darkmode === true) ) {
+	document.querySelector('container').style.setProperty("--sticky-header-background-color", ColorInvert(getComputedStyle(document.querySelector('body')).getPropertyValue("--sticky-header-background-color")));
+} else {
+	document.querySelector('container').style.setProperty("--sticky-header-background-color", 'inherit');
+}
+
+var header_color = getComputedStyle(document.querySelector('container')).getPropertyValue("--sticky-header-background-color");
 var headercolor1 = ColorTest(header_color,false);
 var headercolor2 = ColorTest(header_color,true);
 var headercolor2I = ColorTest(header_color,true,true);
@@ -2224,9 +2253,15 @@ document.querySelector('body').style.setProperty("--sticky-header-gradient-color
 
 /** Link Color **/
 /* Set Vars */
-// Inverted Colors Quirk
+// Liatch Quirk
 if ( (window.MW18darkmode === true) && ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) ) ) {
-	document.querySelector('container').style.setProperty("--anchor-background-color", ColorTest(ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true),false,false,true));
+		document.querySelector('container').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true));
+	if ( !(isSuitableColor(getComputedStyle(document.querySelector('container')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('container').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('container')).getPropertyValue("--anchor-background-color"),false,false,true));
+	}
+	if ( !(isSuitableColor(getComputedStyle(document.querySelector('container')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('container').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('container')).getPropertyValue("--anchor-background-color"),false,false,true));
+	}
 } else {
 	document.querySelector('container').style.setProperty("--anchor-background-color", 'inherit');
 }
@@ -2275,11 +2310,22 @@ document.querySelector('body').style.setProperty("--anchor-gradient-color-hover-
 
 /** Content Border **/
 /* Set Vars */
-if ((getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color") === 'auto') ) {
-	var border_color =	getComputedStyle(document.querySelector('container')).getPropertyValue("--page-border-background-color");
-} else {
-	var border_color =	getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color");
+
+
+if ((getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
+	// Liatch Quirk
+	if ( (window.MW18darkmode === true) && ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) ) ) {
+		document.querySelector('container').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"),false,false,true));
+		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('container').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-border-background-color"),false,false,true));
+		}
+		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('container').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-border-background-color"),false,false,true));
+		}
+	}
 }
+
+var border_color =	getComputedStyle(document.querySelector('container')).getPropertyValue("--page-border-background-color");
 
 var bordercolor1 = ColorTest(border_color,false);
 var bordercolor3 = SuperColorTest(border_color); // Scrollbar
@@ -2322,7 +2368,14 @@ document.querySelector('body').style.setProperty("--page-border-gradient-color-h
 
 /** Body Bg **/
 /* Set Vars */
-var head_color =	getComputedStyle(document.querySelector('body')).getPropertyValue("--community-background-color");
+// Liatch Quirk
+if ( (window.MW18darkmode === true) ) {
+	document.querySelector('container').style.setProperty("--community-background-color", ColorInvert(getComputedStyle(document.querySelector('body')).getPropertyValue("--community-background-color")));
+} else {
+	document.querySelector('container').style.setProperty("--community-background-color", 'inherit');
+}
+
+var head_color =	getComputedStyle(document.querySelector('container')).getPropertyValue("--community-background-color");
 var headcolor1 = ColorTest(head_color,false);
 var headcolor3 = SuperColorTest(head_color); // Scrollbar
 var headcolor2 = ColorTest(head_color,true);
@@ -2363,7 +2416,14 @@ document.querySelector('body').style.setProperty("--community-gradient-color-hov
 
 /* Floating Header Bg */
 if ((getComputedStyle(document.querySelector('body')).getPropertyValue("--toolbar-background-color") !== 'auto')  ) {
-	var floating_header =	'inherit' ;
+	// Liatch Quirk
+	if ( (window.MW18darkmode === true) ) {
+		floating_header = ColorInvert(getComputedStyle(document.querySelector('body')).getPropertyValue("--toolbar-background-color"));
+	} else {
+		floating_header = 'inherit';
+	}
+
+
 } else {
 	var floating_header = ColorTestTwin(content_color,ColorTestTwin(header_color,button_color,1,'rgb'),2.5,'rgb');
 }
@@ -2461,9 +2521,9 @@ document.querySelector('body').style.setProperty("--page-secondary-emphasis-fore
 
 /* This goes before compiling Generic Colors or else they will think the theme is light */
 if (window.MW18darkmode) {
-	$('body').attr("dark-mode", isLightColor(content_color) );
+	$('body').attr("dark-mode", isLightColor(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-text-background-color")) );
 } else {
-	$('body').attr("dark-mode", !(isLightColor(content_color)) );
+	$('body').attr("dark-mode", !(isLightColor(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) );
 }
 
 
