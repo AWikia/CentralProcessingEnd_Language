@@ -1,4 +1,4 @@
-?/* Make SmartTVs recognize cursors */
+/* Make SmartTVs recognize cursors */
 if (navigator.userAgent.match("SmartTV")) {
 document.getElementById("Handler").className += " smart"
 }
