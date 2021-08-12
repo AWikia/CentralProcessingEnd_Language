@@ -147,22 +147,10 @@ $(' .cpe-dropdown.cpe-select .cpe-dropdown__content .cpe-list li:not(.cpe-dropdo
 window.MW18newnavblock=false;
 (function () {
 	AliasFandomComponents();
-	if (getKey('content-full') === '-1') {
-		insertKey('content-full', 'false' );
-	}
-	if (getKey('toolbar-full') === '-1') {
-		insertKey('toolbar-full', 'true' );
-	}
-	if (getKey('nav-full') === '-1') {
-		insertKey('nav-full', 'true' );
-	}
-	if (getKey('rail-full') === '-1') {
-		insertKey('rail-full', 'true' );
-	}
-	$(' container > main').attr('wide', getKey('content-full') );
-	$(' container > main').attr('toolbar', getKey('toolbar-full') );
-	$(' container > main').attr('nav', getKey('nav-full') );
-	$(' container > main').attr('rail', getKey('rail-full') );
+	$(' container > main').attr('wide', false );
+	$(' container > main').attr('toolbar', true) );
+	$(' container > main').attr('nav', true );
+	$(' container > main').attr('rail', true );
 	DropDownUpdate();
 	if (window.MW18newnavblock === true) {
 		return
