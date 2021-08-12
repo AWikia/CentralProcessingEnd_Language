@@ -1,4 +1,4 @@
-﻿window.MW18auto = true;
+window.MW18auto = true;
 window.MW18autoDark = false;
 window.MW18darkmode = false;
 window.MW18LightThreshold = 50;
@@ -2737,6 +2737,8 @@ if (suitcheck === true) {
 }
 
 }
+
+
 
 function CheckColorSuitability() {
 	if ($("body.options").length) {
