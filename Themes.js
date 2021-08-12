@@ -401,6 +401,7 @@ function colortheme(theme) {
 	} else {
 		$('body').attr("dark-mode", !(isLightColor(getComputedStyle(document.querySelector('container')).getPropertyValue("--page-background-color"))) );
 	}
+}
 
 /*
 function CheckDarkMode() {
@@ -1750,6 +1751,7 @@ function ColorInvert(color) {
 }
 
 
+
 // Only used for link and header colors
 function ColorTest2(color,text=false) {
 	return Color2(ColorTest(color,text));
@@ -1766,7 +1768,7 @@ function Color2(color) {
 	return chroma(color).get('rgb.r') + ',' + chroma(color).get('rgb.g') + ',' + chroma(color).get('rgb.b');
 }
 
-// Conversion for Hex
+// Conversion for Hex (Unused)
 function Color3(r=0,g=0,b=0) {
 	return chroma('rgb(' + r + ',' + g + ',' + b + ')' ).get('hex');
 }
@@ -2737,8 +2739,6 @@ if (suitcheck === true) {
 }
 
 }
-
-
 
 function CheckColorSuitability() {
 	if ($("body.options").length) {
