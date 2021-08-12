@@ -1,4 +1,4 @@
-﻿/* Make SmartTVs recognize cursors */
+?/* Make SmartTVs recognize cursors */
 if (navigator.userAgent.match("SmartTV")) {
 document.getElementById("Handler").className += " smart"
 }
@@ -148,7 +148,7 @@ window.MW18newnavblock=false;
 (function () {
 	AliasFandomComponents();
 	$(' container > main').attr('wide', false );
-	$(' container > main').attr('toolbar', true) );
+	$(' container > main').attr('toolbar', true);
 	$(' container > main').attr('nav', true );
 	$(' container > main').attr('rail', true );
 	DropDownUpdate();
