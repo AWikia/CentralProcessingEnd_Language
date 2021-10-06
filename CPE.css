@@ -2471,7 +2471,9 @@ opacity:1;
 
 
 .cpe-tabs__tab.is-active ,
-.cpe-tabs__tab:active {
+.cpe-tabs__tab:active,
+.cpe-dropdown:focus > .cpe-tabs__tab,
+.cpe-dropdown:focus-within > .cpe-tabs__tab {
 	color:var(--tabs-color-active);
 }
 
@@ -2479,7 +2481,7 @@ opacity:1;
 	--tabs-color-active:var(--page-text-background-color-hover); /* Regular version used elsewhere so hover version is used */
 }
 
-.cpe-tabs.is-headline {
+.cpe-tabs.is-alternate {
 	--tabs-color-active:var(--community-background-color);
 }
 
