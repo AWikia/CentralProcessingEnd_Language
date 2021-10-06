@@ -142,7 +142,7 @@
 		  <h2>Buttons</h2>
 		  In CPE, all buttons are made out of round corners and should not contain any gradient at all. We use 3 types. Primary, Secondary and Text
 		  <h3>Primary Buttons</h3>
-		  To Inject a primary button, use an element and put the <code>cpe-button</code> class in it:
+		  To Inject a primary button, use an element and put the <code>cpe-button</code> class in it. Primary buttons take advantage of Accent Background Color:
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button"><span>Primary Button</span></button>
 			  <button class="cpe-button">
@@ -155,230 +155,252 @@
 			  <span>Primary Button</span></a>
 		  </div>
 		  <h3>Secondary Buttons</h3>
-		  To Inject a secondary button, use an element and put the <code>cpe-button</code> and <code>cpe-is-secondary</code> class in it:
+		  To Inject a secondary button, use an element and put the <code>cpe-button</code> and <code>is-secondary</code> class in it. Secondary buttons take advantage of Anchor Background Color:
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-secondary"><span>Secondary Button</span></button>
-			  <button class="cpe-button cpe-is-secondary">
+			  <button class="cpe-button is-secondary"><span>Secondary Button</span></button>
+			  <button class="cpe-button is-secondary">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
 			  <span>Secondary Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-secondary">
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary">
 			  <span>Secondary Button</span></a>
 		  </div>
-		  <h3>Textural Buttons</h3>
-		  To Inject a Textural button, use an element and put the <code>cpe-button</code> and <code>cpe-is-text</code> class in it:
+		  <h3>Frameless Buttons</h3>
+		  To Inject a Frameless button, use an element and put the <code>cpe-button</code> and <code>is-text</code> class in it. Frameless buttons take advantage of Anchor Background Color:
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-text"><span>Textural Button</span></button>
-			  <button class="cpe-button cpe-is-text">
+			  <button class="cpe-button is-text"><span>Frameless Button</span></button>
+			  <button class="cpe-button is-text">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
-			  <span>Textural Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-text">
-			  <span>Textural Button</span></a>
+			  <span>Frameless Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-text">
+			  <span>Frameless Button</span></a>
+		  </div>
+		  <h3>Unaccented Color</h3>
+		  To Inject a button that takes advantage of Page Border and Page Text Background Colors instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-unaccented</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-unaccented"><span>Primary Button</span></button>
+			  <button class="cpe-button is-unaccented">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Primary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-unaccented">
+			  <span>Primary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-unaccented"><span>Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-unaccented">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-unaccented">
+			  <span>Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-text is-unaccented"><span>Frameless Button</span></button>
+			  <button class="cpe-button is-text is-unaccented">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Frameless Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-text is-unaccented">
+			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Alternate Color</h3>
-		  To Inject a button that uses link color as main color instead of button color, use an element and put the <code>cpe-button</code> and <code>cpe-is-alternate</code> classes in it. Opitionally, the <code>cpe-is-secondary</code> or <code>cpe-is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Sticky Header and Community Background Colors instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-alternate</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-alternate"><span>Primary Button</span></button>
-			  <button class="cpe-button cpe-is-alternate">
+			  <button class="cpe-button is-alternate"><span>Primary Button</span></button>
+			  <button class="cpe-button is-alternate">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
 			  <span>Primary Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-alternate">
+			  <a href="https://github.com/AWikia" class="cpe-button is-alternate">
 			  <span>Primary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-secondary cpe-is-alternate"><span>Secondary Button</span></button>
-			  <button class="cpe-button cpe-is-secondary cpe-is-alternate">
+			  <button class="cpe-button is-secondary is-alternate"><span>Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-alternate">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
 			  <span>Secondary Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-secondary cpe-is-alternate">
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-alternate">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-text cpe-is-alternate"><span>Textural Button</span></button>
-			  <button class="cpe-button cpe-is-text cpe-is-alternate">
+			  <button class="cpe-button is-text is-alternate"><span>Frameless Button</span></button>
+			  <button class="cpe-button is-text is-alternate">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
-			  <span>Textural Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-text cpe-is-alternate">
-			  <span>Textural Button</span></a>
+			  <span>Frameless Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-text is-alternate">
+			  <span>Frameless Button</span></a>
 		  </div>
-		  <h3>Borderline Color</h3>
-		  To Inject a button that uses content border color as main color instead of button color, use an element and put the <code>cpe-button</code> and <code>cpe-is-borderline</code> classes in it. Opitionally, the <code>cpe-is-secondary</code> or <code>cpe-is-text</code> classes may be added as well.
+		  <h3>Alert Color</h3>
+		  To Inject a button that takes advantage of Alert Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-alert-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-borderline"><span>Primary Button</span></button>
-			  <button class="cpe-button cpe-is-borderline">
+			  <button class="cpe-button is-alert-color"><span>Primary Button</span></button>
+			  <button class="cpe-button is-alert-color">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
 			  <span>Primary Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-borderline">
+			  <a href="https://github.com/AWikia" class="cpe-button is-alert-color">
 			  <span>Primary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-secondary cpe-is-borderline"><span>Secondary Button</span></button>
-			  <button class="cpe-button cpe-is-secondary cpe-is-borderline">
+			  <button class="cpe-button is-secondary is-alert-color"><span>Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-alert-color">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
 			  <span>Secondary Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-secondary cpe-is-borderline">
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-alert-color">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-text cpe-is-borderline"><span>Textural Button</span></button>
-			  <button class="cpe-button cpe-is-text cpe-is-borderline">
+			  <button class="cpe-button is-text is-alert-color"><span>Frameless Button</span></button>
+			  <button class="cpe-button is-text is-alert-color">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
-			  <span>Textural Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-text cpe-is-borderline">
-			  <span>Textural Button</span></a>
+			  <span>Frameless Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-text is-alert-color">
+			  <span>Frameless Button</span></a>
 		  </div>
-		  <h3>Headline Color</h3>
-		  To Inject a button that uses body background color as main color instead of button color, use an element and put the <code>cpe-button</code> and <code>cpe-is-headline</code> classes in it. Opitionally, the <code>cpe-is-secondary</code> or <code>cpe-is-text</code> classes may be added as well.
+		  <h3>Warning Color</h3>
+		  To Inject a button that takes advantage of Warning Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-warning-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-headline"><span>Primary Button</span></button>
-			  <button class="cpe-button cpe-is-headline">
+			  <button class="cpe-button is-warning-color"><span>Primary Button</span></button>
+			  <button class="cpe-button is-warning-color">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
 			  <span>Primary Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-headline">
+			  <a href="https://github.com/AWikia" class="cpe-button is-warning-color">
 			  <span>Primary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-secondary cpe-is-headline"><span>Secondary Button</span></button>
-			  <button class="cpe-button cpe-is-secondary cpe-is-headline">
+			  <button class="cpe-button is-secondary is-warning-color"><span>Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-warning-color">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
 			  <span>Secondary Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-secondary cpe-is-headline">
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-warning-color">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
-			  <button class="cpe-button cpe-is-text cpe-is-headline"><span>Textural Button</span></button>
-			  <button class="cpe-button cpe-is-text cpe-is-headline">
+			  <button class="cpe-button is-text is-warning-color"><span>Frameless Button</span></button>
+			  <button class="cpe-button is-text is-warning-color">
 			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
 		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
 		</svg>
-			  <span>Textural Button</span></button>
-			  <a href="https://github.com/AWikia" class="cpe-button cpe-is-text cpe-is-headline">
-			  <span>Textural Button</span></a>
+			  <span>Frameless Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-text is-warning-color">
+			  <span>Frameless Button</span></a>
 		  </div>
-		<h3>Social Colors</h3>
-		To inject a button with a fixed color (Social Color), you must also add <code>cpe-is-$$$-color</code> where $$$ is the name of the social color (Names are the first words in the following buttons)
+		  <h3>Success Color</h3>
+		  To Inject a button that takes advantage of Success Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-success-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
-			  <button style="margin:5px;" class="cpe-button cpe-is-facebook-color"><span>Facebook Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-googleplus-color"><span>GooglePlus Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-line-color"><span>Line Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-linkedin-color"><span>Linkedin Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-instagram-color"><span>Instagram Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-meneame-color"><span>Meneame Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-nk-color"><span>NK Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-odnoklassniki-color"><span>Odnoklassniki Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-reddit-color"><span>Reddit Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-tumblr-color"><span>Tumblr Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-twitter-color"><span>Twitter Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-vkontakte-color"><span>VKontakte Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-wykop-color"><span>Wykop Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-Weibo-color"><span>Weibo Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-youtube-color"><span>Youtube Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-discord-color"><span>Discord Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-fandom-color"><span>Fandom Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-asecure-color"><span>ASecure Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-steam-color"><span>Steam Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-spotify-color"><span>Spotify Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-twitch-color"><span>Twitch Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-qore-color"><span>Qore Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-mpisto-color"><span>Mpisto Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-splashhol-color"><span>Splashhol Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-gamepedia-color"><span>Gamepedia Color</span></button>
+			  <button class="cpe-button is-success-color"><span>Primary Button</span></button>
+			  <button class="cpe-button is-success-color">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Primary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-success-color">
+			  <span>Primary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-facebook-color"><span>Facebook Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-googleplus-color"><span>GooglePlus Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-line-color"><span>Line Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-linkedin-color"><span>Linkedin Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-instagram-color"><span>Instagram Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-meneame-color"><span>Meneame Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-nk-color"><span>NK Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-odnoklassniki-color"><span>Odnoklassniki Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-reddit-color"><span>Reddit Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-tumblr-color"><span>Tumblr Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-twitter-color"><span>Twitter Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-vkontakte-color"><span>VKontakte Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-wykop-color"><span>Wykop Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-Weibo-color"><span>Weibo Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-youtube-color"><span>Youtube Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-discord-color"><span>Discord Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-fandom-color"><span>Fandom Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-asecure-color"><span>ASecure Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-steam-color"><span>Steam Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-spotify-color"><span>Spotify Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-twitch-color"><span>Twitch Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-qore-color"><span>Qore Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-mpisto-color"><span>Mpisto Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-splashhol-color"><span>Splashhol Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-secondary cpe-is-gamepedia-color"><span>Gamepedia Color</span></button>
+			  <button class="cpe-button is-secondary is-success-color"><span>Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-success-color">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-success-color">
+			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-facebook-color"><span>Facebook Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-googleplus-color"><span>GooglePlus Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-line-color"><span>Line Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-linkedin-color"><span>Linkedin Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-instagram-color"><span>Instagram Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-meneame-color"><span>Meneame Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-nk-color"><span>NK Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-odnoklassniki-color"><span>Odnoklassniki Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-reddit-color"><span>Reddit Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-tumblr-color"><span>Tumblr Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-twitter-color"><span>Twitter Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-vkontakte-color"><span>VKontakte Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-wykop-color"><span>Wykop Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-Weibo-color"><span>Weibo Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-youtube-color"><span>Youtube Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-discord-color"><span>Discord Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-fandom-color"><span>Fandom Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-asecure-color"><span>ASecure Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-steam-color"><span>Steam Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-spotify-color"><span>Spotify Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-twitch-color"><span>Twitch Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-qore-color"><span>Qore Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-mpisto-color"><span>Mpisto Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-splashhol-color"><span>Splashhol Color</span></button>
-			  <button style="margin:5px;" class="cpe-button cpe-is-text cpe-is-gamepedia-color"><span>Gamepedia Color</span></button>
+			  <button class="cpe-button is-text is-success-color"><span>Frameless Button</span></button>
+			  <button class="cpe-button is-text is-success-color">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Frameless Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-text is-success-color">
+			  <span>Frameless Button</span></a>
+		  </div>
+		  <h3>Message Color</h3>
+		  To Inject a button that takes advantage of Message Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-message-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-message-color"><span>Primary Button</span></button>
+			  <button class="cpe-button is-message-color">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Primary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-message-color">
+			  <span>Primary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-message-color"><span>Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-message-color">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-message-color">
+			  <span>Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-text is-message-color"><span>Frameless Button</span></button>
+			  <button class="cpe-button is-text is-message-color">
+			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
+		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
+		</svg>
+			  <span>Frameless Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-text is-message-color">
+			  <span>Frameless Button</span></a>
 		  </div>
 		<h2>Dropdowns</h2>
 		In CPE, all dropdowns are hoverable and may contain shadows (Always with Shadow on Global Navigation)
 		<h3>Regular</h3>
-		You use a div with <code>cpe-dropdown</code> any container you want, preferably <code>cpe-button</code> with a dropdown chevron but other containers should work as well. Then use <code>cpe-dropdown__content</code> class on the div inside the dropdown container. You use a ul with the class <code>cpe-list</code>, preferably with the <code>cpe-is-linked</code> as well. Then you add li and an anchor tag
+		You use a div with <code>cpe-dropdown</code> any container you want, preferably <code>cpe-button</code> with a dropdown chevron but other containers should work as well. Then use <code>cpe-dropdown__content</code> class on the div inside the dropdown container. You use a ul with the class <code>cpe-list</code>, preferably with the <code>is-linked</code> as well. Then you add li and an anchor tag
 		<div style="margin:10px 0 0;">
 			<div class="cpe-dropdown">
 				<div class="cpe-button"><span>Dropdown</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
 				<div class="cpe-dropdown__content">
-					<ul class="cpe-list cpe-is-linked">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item A</a>
 						</li>
@@ -418,14 +440,14 @@
 			</div>
 		</div>
 		<h3>No Scrolling</h3>
-			To force dropdown to appear all links at once, you may add inside the <code>cpe-dropdown__content</code> class the <code>cpe-is-not-scrollable</code> class.
+			To force dropdown to appear all links at once, you may add inside the <code>cpe-dropdown__content</code> class the <code>is-not-scrollable</code> class.
 		<div style="margin:10px 0 0;">
 			<div class="cpe-dropdown">
 				<div class="cpe-button"><span>Non-Scrolling Dropdown</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
-				<div class="cpe-dropdown__content cpe-is-not-scrollable">
-					<ul class="cpe-list cpe-is-linked">
+				<div class="cpe-dropdown__content is-not-scrollable">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item A</a>
 						</li>
@@ -465,14 +487,14 @@
 			</div>
 		</div>
 		<h3>Left and Right Aligments</h3>
-		To force dropdown to align to the left, add the <code>cpe-is-left-aligned</code> to the dropdown content class. The opposite can happen by using <code>cpe-is-right-aligned</code> class
+		To force dropdown to align to the left, add the <code>is-left-aligned</code> to the dropdown content class. The opposite can happen by using <code>is-right-aligned</code> class
 		<div style="margin:10px 0 0;">
 			<div class="cpe-dropdown">
 				<div class="cpe-button"><span>Left Aligned Dropdown</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
-				<div class="cpe-dropdown__content cpe-is-left-aligned">
-					<ul class="cpe-list cpe-is-linked">
+				<div class="cpe-dropdown__content is-left-aligned">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item A</a>
 						</li>
@@ -511,11 +533,11 @@
 				</div>
 			</div>
 			<div class="cpe-dropdown">
-				<div class="cpe-button cpe-is-alternate"><span>Right Aligned Dropdown</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
+				<div class="cpe-button is-alternate"><span>Right Aligned Dropdown</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
-				<div class="cpe-dropdown__content cpe-is-right-aligned">
-					<ul class="cpe-list cpe-is-linked">
+				<div class="cpe-dropdown__content is-right-aligned">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item A</a>
 						</li>
@@ -563,7 +585,7 @@
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
 				<div class="cpe-dropdown__content">
-					<ul class="cpe-list cpe-is-linked">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item A</a>
 						</li>
@@ -603,15 +625,15 @@
 			</div>
 		</div>
 		<h3>Shadows</h3>
-		You can place extra shadow without any border by adding either <code>cpe-has-shadow</code> or <code>cpe-has-dark-shadow</code> class to <code>cpe-dropdown</code> class
+		You can place extra shadow without any border by adding either <code>has-shadow</code> or <code>has-dark-shadow</code> class to <code>cpe-dropdown</code> class
 
 		<div style="margin:10px 0 0;">
-			<div class="cpe-dropdown cpe-has-shadow">
+			<div class="cpe-dropdown has-shadow">
 				<div class="cpe-button"><span>Dropdown with Shadow</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
 				<div class="cpe-dropdown__content">
-					<ul class="cpe-list cpe-is-linked">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item A</a>
 						</li>
@@ -649,12 +671,12 @@
 					</ul>
 				</div>
 			</div>
-			<div class="cpe-dropdown cpe-has-dark-shadow">
-				<div class="cpe-button cpe-is-alternate"><span>Dropdown with Thick Shadow</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
+			<div class="cpe-dropdown has-dark-shadow">
+				<div class="cpe-button is-alternate"><span>Dropdown with Thick Shadow</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
 				<div class="cpe-dropdown__content">
-					<ul class="cpe-list cpe-is-linked">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item A</a>
 						</li>
@@ -694,20 +716,20 @@
 			</div>
 		</div>
 		<h3>2 levels</h3>
-		Dropdowns may have 2-levels. Inside a dropdown-link, you must use the <code>cpe-dropdown-level-2</code>. And another div with the class <code>cpe-dropdown-level-2__content</code>, then following the same procedures as the level 1 version minus this one. Note that the 2nd level menu is aligned to the top of 1st level dropdown by default, but it doesn"t work for shorter list so we need to add class <code>cpe-is-sticked-to-parent</code> to elements that contains shorter level 2 menu. Note that scrolling version and thick shadows are not recommended.
+		Dropdowns may have 2-levels. Inside a dropdown-link, you must use the <code>cpe-dropdown-level-2</code>. And another div with the class <code>cpe-dropdown-level-2__content</code>, then following the same procedures as the level 1 version minus this one. Note that the 2nd level menu is aligned to the top of 1st level dropdown by default, but it doesn"t work for shorter list so we need to add class <code>is-sticked-to-parent</code> to elements that contains shorter level 2 menu. Note that scrolling version and thick shadows are not recommended.
 		<div style="margin:10px 0 0;">
 			<div class="cpe-dropdown">
 				<div class="cpe-button"><span>Advanced Dropdown</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
-				<div class="cpe-dropdown__content cpe-is-not-scrollable">
-					<ul class="cpe-list cpe-is-linked">
+				<div class="cpe-dropdown__content is-not-scrollable">
+					<ul class="cpe-list is-linked">
 						<li class="cpe-dropdown-level-2">
 							<a><span>Item A</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown-chevron">
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-menu-control-tiny"></use>
 								</svg> </a>
 							<div class="cpe-dropdown-level-2__content">
-								<ul class="cpe-list cpe-is-linked">
+								<ul class="cpe-list is-linked">
 									<li>
 										<a>Item B</a>
 									</li>
@@ -729,13 +751,13 @@
 						<li>
 							<a>Item G</a>
 						</li>
-						<li class="cpe-dropdown-level-2 cpe-is-sticked-to-parent">
+						<li class="cpe-dropdown-level-2 is-sticked-to-parent">
 							<a><span>Item H</span>
 								<svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown-chevron">
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-menu-control-tiny"></use>
 								</svg></a>
 							<div class="cpe-dropdown-level-2__content">
-								<ul class="cpe-list cpe-is-linked">
+								<ul class="cpe-list is-linked">
 									<li>
 										<a>Item I</a>
 									</li>
@@ -760,8 +782,8 @@
 				<div class="cpe-button"><span>Dropdown with Button</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
-				<div class="cpe-dropdown__content cpe-is-left-aligned">
-					<ul class="cpe-list cpe-is-linked">
+				<div class="cpe-dropdown__content is-left-aligned">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item A</a>
 						</li>
@@ -775,7 +797,7 @@
 							<a>Item D</a>
 						</li>
 						<li>
-							<a class="cpe-button cpe-is-alternate cpe-is-secondary">Item E</a>
+							<a class="cpe-button is-alternate is-secondary">Item E</a>
 						</li>
 
 					</ul>
@@ -783,11 +805,11 @@
 			</div>
 
 			<div class="cpe-dropdown">
-				<div class="cpe-button cpe-is-alternate"><span>Dropdown with Primary Button</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
+				<div class="cpe-button is-alternate"><span>Dropdown with Primary Button</span> <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg></div>
-				<div class="cpe-dropdown__content cpe-is-right-aligned">
-					<ul class="cpe-list cpe-is-linked">
+				<div class="cpe-dropdown__content is-right-aligned">
+					<ul class="cpe-list is-linked">
 						<li>
 							<a>Item F</a>
 						</li>
@@ -801,7 +823,7 @@
 							<a>Item I</a>
 						</li>
 						<li>
-							<a class="cpe-button cpe-is-alternate">Item J</a>
+							<a class="cpe-button is-alternate">Item J</a>
 						</li>
 
 					</ul>
@@ -831,53 +853,53 @@
 					</button>
 				</div>
 				<div class="cpe-button-group">
-					<button class="cpe-button cpe-is-secondary">
+					<button class="cpe-button is-secondary">
 						6
 					</button>
-					<button class="cpe-button cpe-is-secondary">
+					<button class="cpe-button is-secondary">
 						7
 					</button>
-					<button class="cpe-button cpe-is-secondary">
+					<button class="cpe-button is-secondary">
 						8
 					</button>
-					<button class="cpe-button cpe-is-secondary">
+					<button class="cpe-button is-secondary">
 						9
 					</button>
-					<button class="cpe-button cpe-is-secondary">
+					<button class="cpe-button is-secondary">
 						10
 					</button>
 				</div>
 				<div class="cpe-button-group">
-					<button class="cpe-button cpe-is-alternate">
+					<button class="cpe-button is-alternate">
 						11
 					</button>
-					<button class="cpe-button cpe-is-alternate">
+					<button class="cpe-button is-alternate">
 						12
 					</button>
-					<button class="cpe-button cpe-is-alternate">
+					<button class="cpe-button is-alternate">
 						13
 					</button>
-					<button class="cpe-button cpe-is-alternate">
+					<button class="cpe-button is-alternate">
 						14
 					</button>
-					<button class="cpe-button cpe-is-alternate">
+					<button class="cpe-button is-alternate">
 						15
 					</button>
 				</div>
 				<div class="cpe-button-group">
-					<button class="cpe-button cpe-is-secondary cpe-is-alternate">
+					<button class="cpe-button is-secondary is-alternate">
 						16
 					</button>
-					<button class="cpe-button cpe-is-secondary cpe-is-alternate">
+					<button class="cpe-button is-secondary is-alternate">
 						17
 					</button>
-					<button class="cpe-button cpe-is-secondary cpe-is-alternate">
+					<button class="cpe-button is-secondary is-alternate">
 						18
 					</button>
-					<button class="cpe-button cpe-is-secondary cpe-is-alternate">
+					<button class="cpe-button is-secondary is-alternate">
 						19
 					</button>
-					<button class="cpe-button cpe-is-secondary cpe-is-alternate">
+					<button class="cpe-button is-secondary is-alternate">
 						20
 					</button>
 				</div>
@@ -886,20 +908,20 @@
 			It is also possible to do button group with a dropdown
 			<div style="margin:10px 0 0">
 				<div class="cpe-button-group">
-				  <a class="cpe-is-squished cpe-button">				
+				  <a class="is-squished cpe-button">				
 					<svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-small">
 					  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-pencil-small"></use>
 					</svg>				
 					<span>Edit</span>
 					</a>
 				  <div class="cpe-dropdown">				
-					<div class="cpe-button cpe-is-squished cpe-dropdown__toggle">	
+					<div class="cpe-button is-squished cpe-dropdown__toggle">	
 					  <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg>
 					</div>
-					<div class="cpe-dropdown__content cpe-is-right-aligned cpe-is-not-scrollable">					
-					  <ul class="cpe-list cpe-is-linked">						
+					<div class="cpe-dropdown__content is-right-aligned is-not-scrollable">					
+					  <ul class="cpe-list is-linked">						
 						<li><a>Action</a></li>
 						<li><a>Another Action</a></li>
 					  </ul>
@@ -907,20 +929,20 @@
 				  </div>		
 				</div>
 				<div class="cpe-button-group">
-				  <a class="cpe-is-squished cpe-is-alternate cpe-button">				
+				  <a class="is-squished is-alternate cpe-button">				
 					<svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-small">
 					  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-pencil-small"></use>
 					</svg>				
 					<span>Edit</span>
 					</a>
 				  <div class="cpe-dropdown">				
-					<div class="cpe-button cpe-is-alternate cpe-is-squished cpe-dropdown__toggle">	
+					<div class="cpe-button is-alternate is-squished cpe-dropdown__toggle">	
 					  <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg>
 					</div>
-					<div class="cpe-dropdown__content cpe-is-right-aligned cpe-is-not-scrollable">					
-					  <ul class="cpe-list cpe-is-linked">						
+					<div class="cpe-dropdown__content is-right-aligned is-not-scrollable">					
+					  <ul class="cpe-list is-linked">						
 						<li><a>Action</a></li>
 						<li><a>Another Action</a></li>
 					  </ul>
@@ -928,20 +950,20 @@
 				  </div>		
 				</div>
 				<div class="cpe-button-group">
-				  <a class="cpe-is-squished cpe-is-secondary cpe-button">				
+				  <a class="is-squished is-secondary cpe-button">				
 					<svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-small">
 					  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-pencil-small"></use>
 					</svg>				
 					<span>Edit</span>
 					</a>
 				  <div class="cpe-dropdown">				
-					<div class="cpe-button cpe-is-secondary cpe-is-squished cpe-dropdown__toggle">	
+					<div class="cpe-button is-secondary is-squished cpe-dropdown__toggle">	
 					  <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg>
 					</div>
-					<div class="cpe-dropdown__content cpe-is-right-aligned cpe-is-not-scrollable">					
-					  <ul class="cpe-list cpe-is-linked">						
+					<div class="cpe-dropdown__content is-right-aligned is-not-scrollable">					
+					  <ul class="cpe-list is-linked">						
 						<li><a>Action</a></li>
 						<li><a>Another Action</a></li>
 					  </ul>
@@ -949,20 +971,20 @@
 				  </div>		
 				</div>
 				<div class="cpe-button-group">
-				  <a class="cpe-is-squished cpe-is-secondary cpe-is-alternate cpe-button">				
+				  <a class="is-squished is-secondary is-alternate cpe-button">				
 					<svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-small">
 					  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-pencil-small"></use>
 					</svg>				
 					<span>Edit</span>
 					</a>
 				  <div class="cpe-dropdown">				
-					<div class="cpe-button cpe-is-secondary cpe-is-alternate cpe-is-squished cpe-dropdown__toggle">	
+					<div class="cpe-button is-secondary is-alternate is-squished cpe-dropdown__toggle">	
 					  <svg xmlns="http://www.w3.org/2000/svg" class="cpe-icon cpe-icon-tiny cpe-dropdown__toggle-chevron">
 						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cpe-icons-dropdown-tiny"></use>
 					  </svg>
 					</div>
-					<div class="cpe-dropdown__content cpe-is-right-aligned cpe-is-not-scrollable">					
-					  <ul class="cpe-list cpe-is-linked">						
+					<div class="cpe-dropdown__content is-right-aligned is-not-scrollable">					
+					  <ul class="cpe-list is-linked">						
 						<li><a>Action</a></li>
 						<li><a>Another Action</a></li>
 					  </ul>
@@ -971,7 +993,7 @@
 				</div>
 			</div>
 			<h2>Tabs</h2>
-			Tabs can be made by using a ul element of <code>cpe-tabs</code>. Use a li with a class of <code>cpe-tabs__tab</code> which a <code>cpe-is-alternate</code> can be used as well for alternation of color. Then inside it, use an anchor or a div with the class <code>cpe-tabs__tab-label</code>
+			Tabs can be made by using a ul element of <code>cpe-tabs</code>. Use a li with a class of <code>cpe-tabs__tab</code> which a <code>is-alternate</code> can be used as well for alternation of color. Then inside it, use an anchor or a div with the class <code>cpe-tabs__tab-label</code>
 			<h3>Regular</h3>
 			Following the above procedure will produce these two tabs
 			<div style="margin:10px 0 0">
@@ -981,7 +1003,7 @@
 							<span>Simple Tab</span>
 						</div>
 					</li>
-					<li class="cpe-tabs__tab cpe-is-alternate">
+					<li class="cpe-tabs__tab is-alternate">
 						<div class="cpe-tabs__tab-label">
 							<span>Simple Tab</span>
 						</div>
@@ -997,8 +1019,8 @@
 							<div class="cpe-tabs__tab-label">
 								<span>Dropdown Tab</span>
 							</div>
-							<div class="cpe-dropdown__content cpe-is-left-aligned">
-								<ul class="cpe-list cpe-is-linked">
+							<div class="cpe-dropdown__content is-left-aligned">
+								<ul class="cpe-list is-linked">
 									<li>
 										<a>Item A</a>
 									</li>
@@ -1037,13 +1059,13 @@
 							</div>
 						</div>
 					</li>
-					<li class="cpe-tabs__tab cpe-is-alternate">
+					<li class="cpe-tabs__tab is-alternate">
 						<div class="cpe-dropdown">
 							<div class="cpe-tabs__tab-label">
 								<span>Dropdown Tab</span>
 							</div>
-							<div class="cpe-dropdown__content cpe-is-right-aligned">
-								<ul class="cpe-list cpe-is-linked">
+							<div class="cpe-dropdown__content is-right-aligned">
+								<ul class="cpe-list is-linked">
 									<li>
 										<a>Item A</a>
 									</li>
@@ -1085,15 +1107,15 @@
 				</ul>
 			</div>
 			<h3>Selected Tab</h3>
-			In order to have the tab selected, you must add <code>cpe-is-current</code> in <code>cpe-tabs__tab</code> class as seen in the example
+			In order to have the tab selected, you must add <code>is-current</code> in <code>cpe-tabs__tab</code> class as seen in the example
 			<div style="margin:10px 0 0">
 				<ul class="cpe-tabs">
-					<li class="cpe-tabs__tab cpe-is-current">
+					<li class="cpe-tabs__tab is-current">
 						<div class="cpe-tabs__tab-label">
 							<span>Current Tab</span>
 						</div>
 					</li>
-					<li class="cpe-tabs__tab cpe-is-alternate cpe-is-current">
+					<li class="cpe-tabs__tab is-alternate is-current">
 						<div class="cpe-tabs__tab-label">
 							<span>Current Tab</span>
 						</div>
@@ -1110,7 +1132,7 @@
 							<a href="https://github.com/Awikia">Linked Tab</a>
 						</div>
 					</li>
-					<li class="cpe-tabs__tab cpe-is-alternate">
+					<li class="cpe-tabs__tab is-alternate">
 						<div class="cpe-tabs__tab-label">
 							<a href="https://github.com/Awikia">Linked Tab</a>
 						</div>
@@ -1128,7 +1150,7 @@
 		</button>
 	</div>
 		<h3>Button Group</h3>
-		Use <code>cpe-floating-button-group</code> class and wrap floating buttons to make a list of floating buttons. Use <code>cpe-is-vertical</code> for column group of floating buttons
+		Use <code>cpe-floating-button-group</code> class and wrap floating buttons to make a list of floating buttons. Use <code>is-vertical</code> for column group of floating buttons
 
 				<div style="margin:10px 0 0">
 					<div class="cpe-floating-button-group">
@@ -1149,7 +1171,7 @@
 					</svg>	
 					</button>
 				</div>
-					<div class="cpe-floating-button-group cpe-is-vertical">
+					<div class="cpe-floating-button-group is-vertical">
 						<button class="cpe-floating-button">
 						<svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 					  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
