@@ -124,15 +124,15 @@ Aleo = Latin
 :root {
 font-family:Trebuchet MS;
 /* Base Foreground Colors */
---light-theme-foreground-color:#140a1f;
---dark-theme-foreground-color:#faf7fc;
---light-theme-text-background-color:#1a1a1a;
---dark-theme-text-background-color:#d4d5d5;
+--light-theme-foreground-color:#000000;
+--dark-theme-foreground-color:#ffffff;
+--light-theme-text-background-color:#3a3a3a;
+--dark-theme-text-background-color:#e6e6e6;
 /* Aliases */
 --page-border-background-color:auto;
 --page-text-background-color:auto;
 --community-background-image-opacity:100%;
---community-header-text-color:auto;
+--community-header-text-background-color:auto;
 --community-background-mode:standard;
 --community-background-alignment:var(--community-background-vertical-alignment) var(--community-background-horizontal-alignment);
 --community-background-horizontal-alignment:center;
@@ -194,56 +194,54 @@ font-family:Trebuchet MS;
 		--message-background-color-page-background-color-mix-light:color-mix(in srgb, var(--message-background-color) 20%, var(--page-background-color));
 		--message-background-color-page-background-color-mix:color-mix(in srgb, var(--message-background-color) 40%, var(--page-background-color));
 	}
-
-
 }
 
 /* Generic Colors & Color Scheme */
 :root {
 	color-scheme:light!important;
-    --alert-background-color:#bf0000!important; /* Was dd3333 */
-    --warning-background-color:#b37400!important; /* Was ffcc33 */
-    --success-background-color:#008039!important; /* Was 14866d */
-    --message-background-color:#737373!important; /* Was 575859 */
+    --alert-background-color:#b30000!important; /* Was dd3333 */
+    --warning-background-color:#996300!important; /* Was ffcc33 */
+    --success-background-color:#008040!important; /* Was 14866d */
+    --message-background-color:#666666!important; /* Was 575859 */
 }
 
 :root {
-    --alert-background-color-hover: #590000!important;
+    --alert-background-color-hover: #4D0000!important;
     --alert-foreground-color-inverted: var(--dark-theme-foreground-color)!important;
-    --alert-background-color-rgb: 191,0,0!important;
-    --warning-background-color-hover: #4D3200!important;
+    --alert-background-color-rgb: 178,0,0!important;
+    --warning-background-color-hover: #332100!important;
     --warning-foreground-color-inverted: var(--dark-theme-foreground-color)!important;
-    --warning-background-color-rgb: 179,116,0!important;
-    --success-background-color-hover: #001A0C!important;
+    --warning-background-color-rgb: 153,99,0!important;
+    --success-background-color-hover: #001A0D!important;
     --success-foreground-color-inverted: var(--dark-theme-foreground-color)!important;
-    --success-background-color-rgb: 0,128,57!important;
-    --message-background-color-hover: #404040!important;
+    --success-background-color-rgb: 0,128,64!important;
+    --message-background-color-hover: #333333!important;
     --message-foreground-color-inverted: var(--dark-theme-foreground-color)!important;
-    --message-background-color-rgb: 115,115,115!important;
+    --message-background-color-rgb: 102,102,102!important;
 }
 
 /* Use Legible Generic Colors for Dark themes */
 :root[dark-mode="true"] {
 	color-scheme:dark!important;
-    --alert-background-color:#ffbfbf!important;
-    --warning-background-color:#ffe4b3!important;
-    --success-background-color:#80ffb9!important;
-    --message-background-color:#8c8c8c!important;
+    --alert-background-color:#ff6666!important;
+    --warning-background-color:#ffce73!important;
+    --success-background-color:#80ffb8!important;
+    --message-background-color:#999999!important;
 }
 
 :root[dark-mode="true"] {
-    --alert-background-color-hover: #FFFFFF!important;
+    --alert-background-color-hover: #FFCCCC!important;
     --alert-foreground-color-inverted: var(--light-theme-foreground-color)!important;
-    --alert-background-color-rgb: 255,191,191!important;
-    --warning-background-color-hover: #FFFFFF!important;
+    --alert-background-color-rgb: 255,102,102!important;
+    --warning-background-color-hover: #fff2d9!important;
     --warning-foreground-color-inverted: var(--light-theme-foreground-color)!important;
-    --warning-background-color-rgb: 255,228,179!important;
+    --warning-background-color-rgb: 255,205,114!important;
     --success-background-color-hover: #E6FFF1!important;
     --success-foreground-color-inverted: var(--light-theme-foreground-color)!important;
-    --success-background-color-rgb: 128,255,185!important;
-    --message-background-color-hover: #BFBFBF!important;
+    --success-background-color-rgb: 127,255,184!important;
+    --message-background-color-hover: #CCCCCC!important;
     --message-foreground-color-inverted: var(--light-theme-foreground-color)!important;
-    --message-background-color-rgb: 140,140,140!important;
+    --message-background-color-rgb: 153,153,153!important;
 }
 
 /** Foreground Color Sets **/
@@ -251,6 +249,7 @@ font-family:Trebuchet MS;
 :root {
 /* Base */
 	--community-foreground-color:var(--dark-theme-foreground-color);
+	--community-header-text-foreground-color:var(--dark-theme-foreground-color);
 	--anchor-foreground-color:var(--dark-theme-foreground-color);
 	--page-border-foreground-color:var(--dark-theme-foreground-color);
 	--page-text-foreground-color:var(--dark-theme-foreground-color);
@@ -263,6 +262,7 @@ font-family:Trebuchet MS;
 	--message-foreground-color:var(--dark-theme-foreground-color);
 /* Hover */
 	--community-foreground-color-hover:var(--dark-theme-foreground-color-hover);
+	--community-header-text-foreground-color-hover:var(--dark-theme-foreground-color-hover);
 	--anchor-foreground-color-hover:var(--dark-theme-foreground-color-hover);
 	--page-border-foreground-color-hover:var(--dark-theme-foreground-color-hover);
 	--page-text-foreground-color-hover:var(--dark-theme-foreground-color-hover);
@@ -275,6 +275,7 @@ font-family:Trebuchet MS;
 	--message-foreground-color-hover:var(--dark-theme-foreground-color-hover);
 /* RGB Base */
 	--community-foreground-color-rgb:var(--dark-theme-foreground-color-rgb);
+	--community-header-text-foreground-color-rgb:var(--dark-theme-foreground-color-rgb);
 	--anchor-foreground-color-rgb:var(--dark-theme-foreground-color-rgb);
 	--page-border-foreground-color-rgb:var(--dark-theme-foreground-color-rgb);
 	--page-text-foreground-color-rgb:var(--dark-theme-foreground-color-rgb);
@@ -287,6 +288,7 @@ font-family:Trebuchet MS;
 	--message-foreground-color-rgb:var(--dark-theme-foreground-color-rgb);
 /* RGB Hover */
 	--community-foreground-color-hover-rgb:var(--dark-theme-foreground-color-hover-rgb);
+	--community-header-text-foreground-color-hover-rgb:var(--dark-theme-foreground-color-hover-rgb);
 	--anchor-foreground-color-hover-rgb:var(--dark-theme-foreground-color-hover-rgb);
 	--page-border-foreground-color-hover-rgb:var(--dark-theme-foreground-color-hover-rgb);
 	--page-text-foreground-color-hover-rgb:var(--dark-theme-foreground-color-hover-rgb);
@@ -307,6 +309,14 @@ font-family:Trebuchet MS;
 	--community-foreground-color-rgb:var(--light-theme-foreground-color-rgb);
 	--community-foreground-color-hover-rgb:var(--light-theme-foreground-color-hover-rgb);
 }
+
+:root[light-community-header-text="true"] {
+	--community-header-text-foreground-color:var(--light-theme-foreground-color);
+	--community-header-text-foreground-color-hover:var(--light-theme-foreground-color-hover);
+	--community-header-text-foreground-color-rgb:var(--light-theme-foreground-color-rgb);
+	--community-header-text-foreground-color-hover-rgb:var(--light-theme-foreground-color-hover-rgb);
+}
+
 
 :root[light-anchor="true"] {
 	--anchor-foreground-color:var(--light-theme-foreground-color);
@@ -505,8 +515,8 @@ body {
     --theme-success-label: var(--success-foreground-color);
     --theme-message-color: var(--message-background-color);
     --theme-message-label: var(--message-foreground-color);
-	--theme-community-header-color:var(--community-header-text-color);
-	--theme-community-header-color--hover:var(--community-header-text-color-hover);
+	--theme-community-header-color:var(--community-header-text-background-color);
+	--theme-community-header-color--hover:var(--community-header-text-background-color-hover);
 	--theme-background-image-opacity:var(--community-background-image-opacity);
 }
 
@@ -517,15 +527,9 @@ body {
 --community-background-color-page-background-color-mix-light:#CEC5DA;
 --community-background-color-page-background-color-mix:#AC98C1;
 --community-background-color-rgb:68,17,119;
---community-header-text-color-hover:#FFFFFF;
---community-header-text-color-rgb:242,246,250;
---community-header-text-color-hover-rgb:255,255,255;
---community-background-mode:standard;
---community-background-horizontal-alignment:center;
---community-background-vertical-alignment:center;
---community-background-size:cover;
---community-background-no-horizontal-tiling:false;
---community-background-no-vertical-tiling:false;
+--community-header-text-background-color-hover:#FFFFFF;
+--community-header-text-background-color-rgb:242,246,250;
+--community-header-text-background-color-hover-rgb:255,255,255;
 --anchor-background-color-hover:#771300;
 --anchor-background-color-page-background-color-mix-light:#EDC9C2;
 --anchor-background-color-page-background-color-mix:#E99F92;
@@ -593,9 +597,9 @@ body {
 	--scrollbar-track-color-2:var(--community-background-color-hover);
 	--scrollbar-track-text:var(--community-foreground-color);
 	/* Thumb */
-	--scrollbar-thumb-color-1:var(--accent-background-color);
-	--scrollbar-thumb-color-2:var(--accent-background-color-hover);
-	--scrollbar-thumb-text:var(--accent-foreground-color);
+	--scrollbar-thumb-color-1:var(--community-header-text-background-color);
+	--scrollbar-thumb-color-2:var(--community-header-text-background-color-hover);
+	--scrollbar-thumb-text:var(--community-header-text-foreground-color);
 	accent-color:var(--accent-background-color);
 
   margin:0 auto;

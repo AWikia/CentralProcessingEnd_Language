@@ -5,12 +5,12 @@ window.MW18ContrastNotice = false;
 window.MW18ForcedTheme = false;
 
 /* Visual Themes */
-var visualThemes = ['lite', 'basic', 'contrast', 'simple','classic']
-var visualThemeNames = ['Lite','Basic','High Contrast','Simple','Classic'];
+var visualThemes = ['lite', 'basic', 'contrast', 'simple']
+var visualThemeNames = ['Lite','Basic','High Contrast','Simple'];
 var contrastVisual = 2;
 /* Visual Colors */
-var visualColors = ['factorycolors','lunacolors','classicforced','campbellforced','forced','tangoforced','rgbcolors','retro','retro2','retro3','retro4','retro5','retro6','retro7','fandomcolors','fandomcolors2', 'fandomcolors3', 'candycrush','candycrush2','discord'];
-var visualColorNames = ['Factory', 'XP Luna', 'Windows Forced', 'Campbell Forced', 'evelution OSX Forced', 'Tango Forced','RGB Celebration','Retro','Retro II','Retro III','Retro IV','Retro V','Retro VI','Retro VII','Fandom 2021', 'Fandom 2021 II', 'Fandom 2021 III', 'Candy Crush', 'Candy Crush II', 'Discord'];
+var visualColors = ['factorycolors','lunacolors','classicforced','campbellforced','forced','forced2','tangoforced','rgbcolors','retro','retro2','retro3','retro4','retro5','retro6','retro7','fandomcolors','fandomcolors2', 'fandomcolors3', 'candycrush','candycrush2','discord','evelution'];
+var visualColorNames = ['Factory', 'XP Luna', 'Windows Forced', 'Campbell Forced', 'Evelution OS Forced', 'Evelution OS Forced II', 'Tango Forced','RGB Celebration','Retro','Retro II','Retro III','Retro IV','Retro V','Retro VI','Retro VII','Fandom 2021', 'Fandom 2021 II', 'Fandom 2021 III', 'Candy Crush', 'Candy Crush II', 'Discord','Evelution OS'];
 
 (function () {
 	// Evelution Specific
@@ -182,7 +182,7 @@ function VisualColor(style,save=true) {
 		if (save) {
 		insertKey('color-active', style );
 		}
-		ColorUpdate(true,true);
+		ColorUpdate(true);
 		ThemeColorMetaTag();
 }
 
@@ -577,10 +577,14 @@ function DownloadTheme(full=false) {
 				 '--community-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-foreground-color-rgb")  + ';\n' +
 				 '--community-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-foreground-color-hover-rgb")  + ';\n' +
 				// Community Text Color
-				 '--community-header-text-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-color")  + ';\n' +
-				 '--community-header-text-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-color-hover")  + ';\n' +
-				 '--community-header-text-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-color-rgb")  + ';\n' +
-				 '--community-header-text-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-color-hover-rgb")  + ';\n' +
+				 '--community-header-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-background-color")  + ';\n' +
+				 '--community-header-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-background-color-hover")  + ';\n' +
+				 '--community-header-text-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-foreground-color")  + ';\n' +
+				 '--community-header-text-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-foreground-color-hover")  + ';\n' +
+				 '--community-header-text-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-background-color-rgb")  + ';\n' +
+				 '--community-header-text-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-background-color-hover-rgb")  + ';\n' +
+				 '--community-header-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-foreground-color-rgb")  + ';\n' +
+				 '--community-header-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-foreground-color-hover-rgb")  + ';\n' +
 				// Community BG Settings
 				 '--community-background-mode:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-background-mode")  + ';\n' +
 				 '--community-background-horizontal-alignment:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--community-background-horizontal-alignment")  + ';\n' +
@@ -881,7 +885,15 @@ function Color2(color) {
 
 
 function isLightColor(color) {
-	return (Color(color).getLuminance() >= 0.5)
+	var c1 = (chroma.contrast('#000000',  Color(color).toString()))
+	var c2 = (chroma.contrast('#ffffff',  Color(color).toString()))
+	var contrast = (window.matchMedia('(prefers-contrast: more)').matches) ? 7 : 4.5
+	var contrast2 = (window.matchMedia('(prefers-contrast: more)').matches) ? 3 : 4.5
+	if (c1 > c2) {
+		return (c1 >= contrast )
+	} else {
+		return (c2 < contrast2 )
+	}
 }
 
 
@@ -890,7 +902,15 @@ function setLightful(color,prop="page-text") {
 }
 
 function isSuperLightColor(color) {
-	return (Color(color).getLuminance() >= 0.75)
+	var c1 = (chroma.contrast('#000000',  Color(color).toString()))
+	var c2 = (chroma.contrast('#ffffff',  Color(color).toString()))
+	var contrast = (window.matchMedia('(prefers-contrast: more)').matches) ? 18 : 16
+	var contrast2 = (window.matchMedia('(prefers-contrast: more)').matches) ? 14 : 16
+	if (c1 > c2) {
+		return (c1 >= contrast )
+	} else {
+		return (c2 < contrast2 )
+	}
 }
 
 function GetContrast(color1,color2) {
@@ -905,11 +925,13 @@ function GetContrast(color1,color2) {
 
 
 function isSuitableColor(color,color2) {
-return ((chroma.contrast(color, color2)) >= 3)
+var contrast = (window.matchMedia('(prefers-contrast: more)').matches) ? 4.5 : 3
+return ((chroma.contrast(color, color2)) >= contrast)
 }
 
 function isSuitableColor2(color,color2) {
-return ((chroma.contrast(color, color2)) >= 1.25) // For Border Color
+var contrast = (window.matchMedia('(prefers-contrast: more)').matches) ? 1.75 : 1.25
+return ((chroma.contrast(color, color2)) >= contrast) // For Border Color
 }
 
 function isSuitableColor3(color,color2) {
@@ -944,7 +966,7 @@ function SocialCompile() {
 /* End Color Parsers */
 
 /* Used to udpate all dynamical variables */
-function ColorUpdate(refresh=true,suitcheck=false) {
+function ColorUpdate(refresh=true) {
 if (refresh === true) {
 	colortheme($('html').attr("wikitheme"), false,false)
 	/** Foreground Colors **/
@@ -992,18 +1014,22 @@ if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--page-t
 if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--page-text-background-color") != 'auto') ) { // Only run this part of Liatch quirk if not in autocolorization
 	if ( (window.MW18darkmode === true) ) {
 		document.querySelector('body').style.setProperty("--page-text-background-color", ColorInvert(getComputedStyle(document.querySelector('html')).getPropertyValue("--page-text-background-color")));
-		if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-			document.querySelector('body').style.setProperty("--page-text-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"),false,false,true));
-		}
-		if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-			document.querySelector('body').style.setProperty("--page-text-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"),false,false,true));
-		}
-		if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-			document.querySelector('body').style.setProperty("--page-text-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"),false,false,true));
-		}
 	} else {
 		document.querySelector('body').style.setProperty("--page-text-background-color", 'inherit');
 	}
+		if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('body').style.setProperty("--page-text-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"),false,false,true));
+		}
+		if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('body').style.setProperty("--page-text-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"),false,false,true));
+		}
+		if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('body').style.setProperty("--page-text-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"),false,false,true));
+		}
+		if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('body').style.setProperty("--page-text-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color"),false,false,true));
+		}
+
 } else {
 	document.querySelector('body').style.setProperty("--page-text-background-color", content_text);
 }
@@ -1020,7 +1046,6 @@ if (isLightColor(content_color)) {
 	} else {
 		var dropdowncolor2 = 'inherit';
 	}
-
 } else {
 	var dropdowncolor = ColorTestTwin(content_color,"#ffffff",0.25);
 	if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--page-border-background-color") === 'auto')  ) {
@@ -1028,7 +1053,6 @@ if (isLightColor(content_color)) {
 	} else {
 		var dropdowncolor2 = 'inherit';
 	}
-
 }
 	setLightful(content_text,'page-text');
 	var content_text2 = ColorTest(content_text,false,true,true);
@@ -1039,7 +1063,6 @@ if (isLightColor(content_color)) {
 	}
 
 var dropdowncolorH = ColorTest(dropdowncolor,false,false,true);
-
 
 document.querySelector('html').style.setProperty("--page-secondary-background-color", dropdowncolor);
 document.querySelector('html').style.setProperty("--page-secondary-background-color-hover", dropdowncolorH);
@@ -1066,18 +1089,21 @@ document.querySelector('html').style.setProperty("--page-text-background-color-h
 // Liatch Quirk
 if ( (window.MW18darkmode === true) ) {
 	document.querySelector('body').style.setProperty("--accent-background-color", ColorInvert(getComputedStyle(document.querySelector('html')).getPropertyValue("--accent-background-color")));
-	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-		document.querySelector('body').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true));
-	}
-	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-		document.querySelector('body').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true));
-	}
-	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-		document.querySelector('body').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true));
-	}
 } else {
 	document.querySelector('body').style.setProperty("--accent-background-color", 'inherit');
 }
+	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('body').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true));
+	}
+	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('body').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true));
+	}
+	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('body').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true));
+	}
+	if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('body').style.setProperty("--accent-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color"),false,false,true));
+	}
 
 
 var button_color = getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color");
@@ -1138,18 +1164,21 @@ document.querySelector('html').style.setProperty("--sticky-header-background-col
 // Liatch Quirk
 if ( (window.MW18darkmode === true) ) {
 	document.querySelector('body').style.setProperty("--anchor-background-color", ColorInvert(getComputedStyle(document.querySelector('html')).getPropertyValue("--anchor-background-color")));
-	if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-		document.querySelector('body').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true));
-	}
-	if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-		document.querySelector('body').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true));
-	}
-	if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-		document.querySelector('body').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true));
-	}
 } else {
 	document.querySelector('body').style.setProperty("--anchor-background-color", 'inherit');
 }
+	if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('body').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true));
+	}
+	if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('body').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true));
+	}
+	if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('body').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true));
+	}
+	if ( !(isSuitableColor(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+		document.querySelector('body').style.setProperty("--anchor-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color"),false,false,true));
+	}
 
 var link_color = getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color");
 var linkcolor1 = ColorTest(link_color,false,false,true);
@@ -1182,16 +1211,20 @@ if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--page-b
 
 	if ( (window.MW18darkmode === true) ) {
 		document.querySelector('body').style.setProperty("--page-border-background-color", ColorInvert(getComputedStyle(document.querySelector('html')).getPropertyValue("--page-border-background-color")));
-		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-			document.querySelector('body').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"),false,false,true));
-		}
-		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-			document.querySelector('body').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"),false,false,true));
-		}
-		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
-			document.querySelector('body').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"),false,false,true));
-		}
 	}
+		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('body').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"),false,false,true));
+		}
+		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('body').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"),false,false,true));
+		}
+		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('body').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"),false,false,true));
+		}
+		if ( !(isSuitableColor2(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"), getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color"))) )  { // If still not legible
+			document.querySelector('body').style.setProperty("--page-border-background-color", ColorTest(getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color"),false,false,true));
+		}
+
 }
 
 var border_color =	getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color");
@@ -1246,10 +1279,10 @@ if (!SupportsColorMix()) {
 document.querySelector('html').style.setProperty("--community-background-color-rgb", Color2(head_color));
 
 /** Community Header text color **/
-if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--community-header-text-color") !== 'auto')  ) {
+if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--community-header-text-background-color") !== 'auto')  ) {
 	// Liatch Quirk
 	if ( (window.MW18darkmode === true) ) {
-		headertext_color = ColorInvert(getComputedStyle(document.querySelector('html')).getPropertyValue("--community-header-text-color"));
+		headertext_color = ColorInvert(getComputedStyle(document.querySelector('html')).getPropertyValue("--community-header-text-background-color"));
 	} else {
 		headertext_color = 'inherit';
 	}
@@ -1259,16 +1292,17 @@ if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--commun
 	var headertext_color = getComputedStyle(document.querySelector('html')).getPropertyValue("--community-foreground-color");
 }
 
-document.querySelector('body').style.setProperty("--community-header-text-color", headertext_color);
-var headertext_color= getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-color");
+document.querySelector('body').style.setProperty("--community-header-text-background-color", headertext_color);
+var headertext_color= getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-background-color");
 
 var headertextcolor1 = ColorTest(headertext_color,false,true,true);
+	setLightful(headertext_color,'community-header-text');
 
-document.querySelector('html').style.setProperty("--community-header-text-color-hover", headertextcolor1);
+document.querySelector('html').style.setProperty("--community-header-text-background-color-hover", headertextcolor1);
 
 // RGB
-document.querySelector('html').style.setProperty("--community-header-text-color-rgb", Color2( getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-color") ));
-document.querySelector('html').style.setProperty("--community-header-text-color-hover-rgb", Color2(headertextcolor1));
+document.querySelector('html').style.setProperty("--community-header-text-background-color-rgb", Color2( getComputedStyle(document.querySelector('body')).getPropertyValue("--community-header-text-background-color") ));
+document.querySelector('html').style.setProperty("--community-header-text-background-color-hover-rgb", Color2(headertextcolor1));
 
 
 /* This goes before compiling Generic Colors or else they will think the theme is light */
@@ -1394,90 +1428,15 @@ CursorT('auto-r');
 }
 */
 
-if (suitcheck === true) {
-	CheckColorSuitability();
 }
 
-}
-
-function CheckColorSuitability(refresh) {
-	/* Check Contrast Colors */
-	var color1a = getComputedStyle(document.querySelector('body')).getPropertyValue("--page-text-background-color");
-	var color2  = getComputedStyle(document.querySelector('body')).getPropertyValue("--page-background-color");
-	var color1b = getComputedStyle(document.querySelector('body')).getPropertyValue("--anchor-background-color");
-	var color1c = getComputedStyle(document.querySelector('body')).getPropertyValue("--page-border-background-color");
-	var color1d = getComputedStyle(document.querySelector('body')).getPropertyValue("--accent-background-color");
-		var colornames = ['Page Text', 'Anchor', 'Page Border', 'Accent']; // List of the four color values that can become unsuitable
-		var uns = false; // Becomes true if an unsuitable color found
-		var suit0 = false;
-		var suit1 = false;
-		var suit2 = false;
-		var suit3 = false;
-		/* Variables that will attain to one of the values found in the colornames variable */
-		issue0 = "";
-		issue1 = "";
-		issue2 = "";
-		issue3 = "";
-		// Content Color
-		if ( !(isSuitableColor(color1a,color2) )) {
-			var uns = true;
-			var suit0 = true;
-		}
-		// Link Color
-		if ( !(isSuitableColor(color1b, color2)) ) {
-			var uns = true;
-			var suit1 = true;
-		}
-		if ( !(isSuitableColor3(color1b, color1a)) ) {
-			var uns = true;
-			var suit1 = true;
-		}
-		// Border Color
-		if ( !(isSuitableColor2(color1c, color2)) ) {
-			var uns = true;
-			var suit2 = true;
-		}
-		// Button Color
-		if ( !(isSuitableColor2(color1d, color2)) ) {
-			var uns = true;
-			var suit3 = true;
-		}
-		var issues = [suit0, suit1, suit2, suit3]; // Individual items can become true if one usuitable color is found
-		if (uns) { // At least one color not suited found
-			amount = 0;
-			for (let i = 0; i < issues.length; i++) {
-				if (issues[i]) {
-					if (issue0 == "") {
-						issue0 = colornames[i];
-					} else if (issue1 == "") {
-						issue1 = colornames[i];
-					} else if (issue2 == "") {
-						issue2 = colornames[i];
-					} else if (issue3 == "") {
-						issue3= colornames[i];
-					}
-					amount= amount + 1;
-				}
-			}
-			if (amount == 1) {
-				result = issue0 + " Background Color. Please replace it with a compatible one.";
-			} else 	if (amount == 2) {
-				result = issue0 + " and " + issue1 + " Background Colors. Please replace them with compatible ones.";
-			} else 	if (amount == 3) {
-				result = issue0 + ", " + issue1 + " and " + issue2 + " Background Colors. Please replace them with compatible ones.";
-			} else 	if (amount == 4) {
-				result = issue0 + ", " + issue1 + ", " + issue2 + " and " + issue3 + " Background Colors. Please replace them with compatible ones.";
-			}
-			AddFloatingBanner("This theme currently uses incompatible " + result ,'warning','unsuitablethemebanner'); // Message to be put (Warning Banner)
-		}
-}
 
 
 function CheckAdapt() {
-		if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--community-header-text-color") === 'auto')  ) {
-				$("body").attr('community-header-text-color-auto', 'true');
+		if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--community-header-text-background-color") === 'auto')  ) {
+				$("body").attr('community-header-text-background-color-auto', 'true');
 		} else {
-				$("body").attr('community-header-text-color-auto', 'false');
+				$("body").attr('community-header-text-background-color-auto', 'false');
 		}
 		if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--page-border-background-color") === 'auto')  ) {
 				$("body").attr('page-border-background-color-auto', 'true');
@@ -1533,7 +1492,7 @@ function CheckBG() {
 function HCa() {
     var x = document.querySelector('html');
 		$('html').attr('theme','A');
-		ColorUpdate(true,true);
+		ColorUpdate(true);
 		CheckDeprecation();
 		insertKey('theme-selected', 'A' );
 		$(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-themes li").removeClass('selected');
@@ -1543,7 +1502,7 @@ function HCa() {
 function HCb() {
     var x = document.querySelector('html');
 		$('html').attr('theme','B');
-		ColorUpdate(true,true);
+		ColorUpdate(true);
 		CheckDeprecation();
 		insertKey('theme-selected', 'B' );
 		$(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-themes li").removeClass('selected');
@@ -1553,7 +1512,7 @@ function HCb() {
 function HCc() {
     var x = document.querySelector('html');
 		$('html').attr('theme','C');
-		ColorUpdate(true,true);
+		ColorUpdate(true);
 		CheckDeprecation();
 		insertKey('theme-selected', 'C' );
 		$(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-themes li").removeClass('selected');
@@ -1563,7 +1522,7 @@ function HCc() {
 function HCd() {
     var x = document.querySelector('html');
 		$('html').attr('theme','D');
-		ColorUpdate(true,true);
+		ColorUpdate(true);
 		CheckDeprecation();
 		insertKey('theme-selected', 'D' );
 		$(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-themes li").removeClass('selected');
