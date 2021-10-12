@@ -218,31 +218,24 @@ html {
 	color-scheme:dark!important;
 }
 
+	body {
+		--alert-background-color:#990000;
+		--warning-background-color:#996400;
+		--success-background-color:#00994d;
+		--message-background-color:#4d4d4d;
+	}
+
 
 /* Light */
 	body {
-		--alert-background-color:rgb(var(--alert-background-color-rgb));
-		--warning-background-color:rgb(var(--warning-background-color-rgb));
-		--success-background-color:rgb(var(--success-background-color-rgb));
-		--message-background-color:rgb(var(--message-background-color-rgb));
-/*
-		--alert-background-color:color-contrast(var(--page-background-color) vs #ff1919, #ff3333, #ff4d4d, #ff6666, #ff8080, #ff9999, #ffb3b3, #ffcccc, #ffe6e6, #e60000, #cc0000, #b30000, #990000, #800000, #660000, #4d0000, #330000, #1a0000 to 3)!important;
-		--warning-background-color:color-contrast(var(--page-background-color) vs #ffaf19, #ffb833, #ffc14d, #ffc966, #ffc966, #ffdb99, #ffe4b3, #ffedcc, #fff6e6, #e69500, #cc8500, #b37400, #996300, #805300, #664200, #4d3200, #332100, #1a1100 to 3)!important;
-		--success-background-color:color-contrast(var(--page-background-color) vs #19ff8c, #33ff99, #4dffa6, #66ffb3, #80ffbf, #99ffcc, #b3ffd9, #ccffe6, #e6fff2, #00e673, #00cc66, #00b359, #00994d, #008040, #006633, #004d26, #00331a, #001a0d to 3)!important;
-		--message-background-color:color-contrast(var(--page-background-color) vs #8c8c8c, #999999, #a5a5a5, #b2b2b2, #bfbfbf, #cccccc, #d8d8d8, #e5e5e5, #f2f2f2, #727272, #666666, #595959, #4c4c4c, #404040, #333333, #262626, #191919, #0c0c0c to 3)!important;
-*/
+		--alert-background-color:rgb(var(--alert-background-color-rgb))!important;
+		--warning-background-color:rgb(var(--warning-background-color-rgb))!important;
+		--success-background-color:rgb(var(--success-background-color-rgb))!important;
+		--message-background-color:rgb(var(--message-background-color-rgb))!important;
 	}
 
 
 /* Dark */
-	html[dark-mode="true"] body {
-/*
-		--alert-background-color:color-contrast(var(--page-background-color) vs #e60000, #cc0000, #b30000, #990000, #800000, #660000, #4d0000, #330000, #1a0000, #ff1919, #ff3333, #ff4d4d, #ff6666, #ff8080, #ff9999, #ffb3b3, #ffcccc, #ffe6e6 to 3)!important;
-		--warning-background-color:color-contrast(var(--page-background-color) vs #e69500, #cc8500, #b37400, #996300, #805300, #664200, #4d3200, #332100, #1a1100, #ffaf19, #ffb833, #ffc14d, #ffc966, #ffd280, #ffdb99, #ffe4b3, #ffedcc, #fff6e6 to 3)!important;
-		--success-background-color:color-contrast(var(--page-background-color) vs #00e673, #00cc66, #00b359, #00994d, #008040, #006633, #004d26, #00331a, #001a0d, #19ff8c, #33ff99, #4dffa6, #66ffb3, #80ffbf, #99ffcc, #b3ffd9, #ccffe6, #e6fff2 to 3)!important;
-		--message-background-color:color-contrast(var(--page-background-color) vs #727272, #666666, #595959, #4c4c4c, #404040, #333333, #262626, #191919, #0c0c0c, #8c8c8c, #999999, #a5a5a5, #b2b2b2, #bfbfbf, #cccccc, #d8d8d8, #e5e5e5, #f2f2f2 to 3)!important;
-*/
-	}
 /* Generic Alert Color RGB Locks */
 	body[alert-color="230 0 0"] { /* e60000 */
 		--alert-background-color-rgb:230, 0, 0!important;
