@@ -600,15 +600,6 @@ if (isLightColor(page)) { // ( chroma(page).get('hsl.l') < 0.5)
 		progressh = 220
 		messageh = -1
 		
-		if (mediawiki) {
-			{{#has-servelution-no-dgeneric}}
-				if (isLightColor(page)) { // ( chroma(page).get('hsl.l') < 0.5)
-					return [chroma('hsl('+ alerth + ', 100%, 35%)'),chroma('hsl('+ pauseh + ', 100%, 35%)'),chroma('hsl('+ warningh + ', 100%, 35%)'),chroma('hsl('+ successh + ', 100%, 35%)'),chroma('hsl('+ progressh + ', 100%, 35%)'),chroma('hsl('+ alerth + ', 0%, 35%)')]
-				} else {
-					return [chroma('hsl('+ alerth + ', 100%, 70%)'),chroma('hsl('+ pauseh + ', 100%, 70%)'),chroma('hsl('+ warningh + ', 100%, 70%)'),chroma('hsl('+ successh + ', 100%, 70%)'),chroma('hsl('+ progressh + ', 100%, 70%)'),chroma('hsl('+ alerth + ', 0%, 70%)')]
-				}
-			{{/has-servelution-no-dgeneric}}
-		}
 
 		
 		contrastA = window.MW18highContrast*ContrastRatio()*1
@@ -875,21 +866,11 @@ function SetAccent(tick='false',save='true') {
 		if (save) {
 			insertKey('accent-active', tick );
 		}
-		if (mediawiki) { // When Running non-ivilution (Evelution, Tunic)
-			{{^has-servelution-no-accent}}
-				if (tick === 'true') {
-					document.querySelector('html').classList.add('has-accents');
-				} else {
-					document.querySelector('html').classList.remove('has-accents');
-				}
-			{{/has-servelution-no-accent}}
-		} else {
 			if (tick === 'true') {
 				document.querySelector('html').classList.add('has-accents');
 			} else {
 				document.querySelector('html').classList.remove('has-accents');
 			}
-		}
 }
 
 
