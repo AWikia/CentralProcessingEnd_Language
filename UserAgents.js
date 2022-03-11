@@ -285,7 +285,7 @@ function RemoveBanner() {
 			if (!(document.querySelectorAll("#floatingbanner .cpe-banner-notification").length)) {
 				document.querySelector('#floatingbanner').remove();
 			}
-			document.querySelector('.top-gap').focus();
+			document.querySelector('.focus-overlay').focus();
 		}),405);
 	
 
