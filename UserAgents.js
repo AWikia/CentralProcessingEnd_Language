@@ -159,7 +159,7 @@ function DropDownUpdate() {
 
 function UpdateSelectValue() { // Handles Blurring
 		setTimeout(
-		(function() { document.querySelector(' .cpe-dropdown.cpe-select:focus-within').blur() } )
+		(function() { document.querySelector(' .cpe-dropdown.cpe-select:focus-within').blur(); 	document.querySelector('.focus-overlay').focus(); } )
 	,0)
 }
 
@@ -167,7 +167,12 @@ function UpdateSelectValue() { // Handles Blurring
 function UpdateRange() {
 	var ranges = document.querySelectorAll('input[type="range"]');
 	ranges.forEach(function(x) {
-		x.style.setProperty("--range-percent",  (((x.value) * 100) / x.getAttribute('max')) + '%' );
+		x.style.setProperty("--range-percent",  (( ((x.value) - x.getAttribute('min') ) * 100) / (x.getAttribute('max') - x.getAttribute('min')) ) + '%'  );
+	});
+
+	var progresses = document.querySelectorAll('progress');
+	progresses.forEach(function(x) {
+		x.style.setProperty("--range-percent",  (( ((x.getAttribute('value')) - 0 ) * 100) / (x.getAttribute('max') - 0) ) + '%'  );
 	});
 
 }
@@ -188,12 +193,6 @@ function UpdateRangeInputs() {
 	if (getKey('content-full') === '-1') {
 		insertKey('content-full', 'false' );
 	}
-	if (getKey('toolbar-full') === '-1') {
-		insertKey('toolbar-full', 'true' );
-	}
-	if (getKey('nav-full') === '-1') {
-		insertKey('nav-full', 'true' );
-	}
 	if (getKey('right-rail-full') === '-1') {
 		insertKey('right-rail-full', 'true' );
 	}
@@ -201,8 +200,6 @@ function UpdateRangeInputs() {
 		insertKey('left-rail-full', 'true' );
 	}
 	var content_full = getKey('content-full')
-	var toolbar_full = getKey('toolbar-full');
-	var nav_full = getKey('nav-full');
 	var right_rail_full = getKey('right-rail-full');
 	var left_rail_full = getKey('left-rail-full');
     getParams().forEach(function (param) {
@@ -211,38 +208,47 @@ function UpdateRangeInputs() {
 
         switch (key) {
             case 'fullwidth':
-				content_full = (value === 'true');
+				content_full = value;
 				console.info('Article width settings overriden')
                 break;
-            case 'hidetoolbar':
-				toolbar_full = (value === 'false');
-				console.info('Toolbar visibility settings overriden')
-                break;
-            case 'hidenavbar':
-				nav_full = (value === 'false');
-				console.info('Sticky navigation visibility settings overriden')
-                break;
             case 'hiderail':
-				right_rail_full = (value === 'false');
-				left_rail_full = (value === 'false');
+				if (value === 'true') {
+					right_rail_full = 'false';
+					left_rail_full = 'false';
+				} else {
+					right_rail_full = 'true';
+					left_rail_full = 'true';
+				}
 				console.info('Pane visibility settings overriden')
                 break;
             case 'hiderightrail':
-				right_rail_full = (value === 'false');
+				if (value === 'true') {
+					right_rail_full = 'false';
+				} else {
+					right_rail_full = 'true';
+				}
 				console.info('Right pane visibility settings overriden')
                 break;
             case 'hideleftrail':
-				left_rail_full = (value === 'false');
+				if (value === 'true') {
+					left_rail_full = 'false';
+				} else {
+					left_rail_full = 'true';
+				}
 				console.info('Left pane visibility settings overriden')
                 break;
 
         }
     });
-	document.querySelector(' container ').setAttribute('wide', content_full );
-	document.querySelector(' container ').setAttribute('toolbar', toolbar_full );
-	document.querySelector(' container ').setAttribute('nav', nav_full );
-	document.querySelector(' container ').setAttribute('right-rail', right_rail_full );
-	document.querySelector(' container ').setAttribute('left-rail', left_rail_full );
+    if (content_full === 'true') {
+		document.querySelector(' body ').classList.add('is-wide');
+	}
+    if (right_rail_full === 'true') {
+		document.querySelector(' body ').classList.add('has-right-rail');
+	}
+    if (left_rail_full === 'true') {
+		document.querySelector(' body ').classList.add('has-left-rail');
+	}
 	UpdateRangeInputs();
 	DropDownUpdate();
 })();
@@ -279,19 +285,23 @@ function RemoveBanner() {
 			if (!(document.querySelectorAll("#floatingbanner .cpe-banner-notification").length)) {
 				document.querySelector('#floatingbanner').remove();
 			}
-			document.querySelector('body').focus();
+			document.querySelector('.top-gap').focus();
 		}),405);
 	
 
 }
 
 function AddFloatingBanner(content='Sample Content',kind='message',extraclass='') {
-	if (kind === 'warning') {
-		var icon = 'report_problem'
-	} else if (kind === 'alert') {
+	if (kind === 'alert') {
 		var icon = 'report'
+	} else if (kind === 'pause') {
+		var icon = 'pause'
+	} else if (kind === 'warning') {
+		var icon = 'report_problem'
 	} else if (kind === 'success') {
 		var icon = 'done'
+	} else if (kind === 'progress') {
+		var icon = 'pending'
 	} else {
 		var icon = 'info'
 	}
@@ -303,7 +313,7 @@ function AddFloatingBanner(content='Sample Content',kind='message',extraclass=''
 	}
 
 	document.querySelector(".top-gap #floatingbanner").insertAdjacentHTML('beforeend', 
-			'<div class=" cpe-banner-notification cpe-' + kind + '" id="' + extraclass  + '">' +
+			'<div class=" cpe-banner-notification is-' + kind + '" id="' + extraclass  + '">' +
 			  '<div class="cpe-banner-notification__icon">' +
 				'<span class="cpe-icon cpe-icon-small material-icons">' +
 					icon + 

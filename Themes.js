@@ -2,8 +2,14 @@
 window.MW18spdarkmode = 0; // 0 = No special behavior | 1 = Inverted Colors Dark | 2 = Grayscale | 3 = Yellow Tint | 4 = Blue Tint | 5 = Inverted Colors Light | 6 = Temperature | 7 = Inverted Temperature
 window.MW18wikitheme = 'auto';
 window.MW18contrastmode = 'auto';
+window.MW18ActiveTheme = 'A';
+window.MW18ActiveThemeMode = 'none';
+window.MW18ActiveColors = 'standard';
+window.MW18ActiveStyle = '-';
+window.MW18AutoAccent = '0';
 /* Some Theming Colors */
 window.MW18PageColor = GetCanvasShort();
+window.MW18PageColorFG = '#000000';
 window.MW18BgColor = GetDesktop();
 /* Contrast Values */
 window.MW18lowContrast = 1.25;
@@ -16,16 +22,8 @@ window.MW18highContrast = 3.00;
 **
 */
 
-var visualStyles = [
-					['formal', 'Formal', 'opacity'],
-					['lite', 'Lite', 'square'],
-					['basic', 'Basic', 'inbox'],
-					['contrast', 'High Contrast', 'contrast'],
-					['simple', 'Simple', 'extension'],
-					['classic', 'Classic', 'smart_toy'],
-					['classiccontrast', 'Classic High Contrast', 'filter_b_and_w']
-				    ];
-var contrastVisual = 'contrast';
+var visualStyles = [];
+var contrastVisual = 'standard';
 
 /*
 **
@@ -34,16 +32,11 @@ var contrastVisual = 'contrast';
 **
 */
 
-var visualColors = [
-					['factorycolors', 'Factory', 'android'],
-					['forced', 'Forced', 'contrast'],
-					['techno', 'Techno', 'explore'],
-					['retro', 'Retro', 'smart_toy'],
-					['retro2', 'Retro II', 'smart_toy'],
-					['neon', 'Neon', 'lightbulb'],
-					['evelution', 'Evelution OS', 'computer']
-				    ];
+var visualColors = [];
+var visualColorNames = ['standard', 'nocolormanagement'];
 
+// MediaWiki
+	var mediawiki = document.querySelector("html:not(.ivilution-loaded) body.mediawiki");
 
 (function () {
 	// Evelution Specific
@@ -163,7 +156,7 @@ var visualColors = [
 	document.querySelector("head").insertAdjacentHTML('afterbegin','<style class="theming"></style>');
 	document.querySelector('body').setAttribute('tabindex',-1);; // Add the CPE button class
 	document.querySelector('body').focus();
-	ToggleTheme(theme_selected,false);
+	ToggleTheme(theme_selected,false,false);
 	colortheme(color_mode,false,false);
 	contrastmode(contrast_mode,false,false);
 	SetAccent(accent_active,false);
@@ -214,13 +207,20 @@ function SupportsColorContrast() {
 }
 
 function ForcedColors() {
-	return ( ( window.matchMedia('(forced-colors: active)').matches ) || (document.querySelector("container.no-color-management") ) )
+	return ( ( window.matchMedia('(forced-colors: active)').matches ) || (document.querySelector("container.no-color-management") ) ||  (window.MW18ActiveColors === 'nocolormanagement') )
 }
-
 
 /* Visual Styles */
 function VisualStyle(style,save=true) {
-	document.querySelector('html').setAttribute("visualtheme", style);
+	vstyle = style;
+    var x = document.querySelector('html');
+		var oldstyle = window.MW18ActiveStyle;
+		window.MW18ActiveStyle = vstyle;
+		if (oldstyle === '-') {
+			document.querySelector('html').classList.add("visualstyle-" +  window.MW18ActiveStyle);
+		} else if (oldstyle != window.MW18ActiveStyle ) {
+			document.querySelector('html').classList.replace("visualstyle-" +  oldstyle,"visualstyle-" +  window.MW18ActiveStyle);
+		}
 	var x = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-visual-styles li.selected")
 	if (x) {
 		x.classList.remove("selected");
@@ -234,8 +234,15 @@ function VisualStyle(style,save=true) {
 	}
 }
 
-function VisualColor(style,save=true) {
-	document.querySelector('html').setAttribute("visualcolors", style);
+function VisualColor(style,save=true,repaint=true) {
+    var x = document.querySelector('html');
+		if (!(visualColorNames.includes(style))) {
+			console.log("CPE Language allows you to set the color scheme slot only to \"standard\", \"nocolormanagement\" and to any defined color scheme. \"standard\" is used as a fallback")
+			var style='standard';
+			var save = true;
+		}
+	window.MW18ActiveColors = style;
+
 	var x = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-visual-colors li.selected, .skin-tunic #visual-colors .mw-portlet-body ul li.selected");
 	if (x) {
 		x.classList.remove("selected");
@@ -247,7 +254,9 @@ function VisualColor(style,save=true) {
 		if (save) {
 		insertKey('visual-color', style );
 		}
-		ColorUpdate(true);
+		if (repaint) {
+			ColorUpdate(true);
+		}
 }
 
 
@@ -268,11 +277,23 @@ function VisualStyleCompile() {
 	}
 /* Visual Colors */
 	if (! (document.querySelector("container.no-color-management") ) ) {
+		var length = visualColorNames.length
 		for (let i = 0; i < visualColors.length; i++) {
+			visualColorNames[i+length] =  visualColors[i][0];
 			str = 	'<li data-visual-color="' + visualColors[i][0] + '" title="' + visualColors[i][1] + '">' +
 						'<a onclick="VisualColor(' + "'" + visualColors[i][0]  + "'" + ')">' +
 							'<span class="cpe-icon material-icons">' + visualColors[i][2] + '</span>' +
 						'</a>' +
+						'<div style="position:absolute; z-index:-1; pointer-events:none;">' +
+							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-A"></div>' +
+							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-B"></div>' +
+							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-C"></div>' +
+							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-D"></div>' +
+							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-E"></div>' +
+							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-F"></div>' +
+							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-G"></div>' +
+							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-H"></div>' +
+						'</div>' +
 					'</li>'
 			var x = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-visual-colors");
 			if (x) {
@@ -284,6 +305,16 @@ function VisualStyleCompile() {
 							'<a onclick="VisualColor(' + "'" + visualColors[i][0]  + "'" + ')">' +
 								'<span>' + visualColors[i][1] + '</span>' +
 							'</a>' +
+							'<div style="position:absolute; z-index:-1; pointer-events:none; opacity:0;">' +
+								'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-A"></div>' +
+								'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-B"></div>' +
+								'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-C"></div>' +
+								'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-D"></div>' +
+								'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-E"></div>' +
+								'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-F"></div>' +
+								'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-G"></div>' +
+								'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' theme-H"></div>' +
+							'</div>' +
 						'</li>'
 					x.insertAdjacentHTML('beforeend',str);
 				}
@@ -298,20 +329,71 @@ function VisualStyleCompile() {
 /* Getting non-generic color values */
 function GetDesktop() {
 	if (ForcedColors()) {
-		return getComputedStyle(document.querySelector('.fc-buttonface')).getPropertyValue("color");
+		if ((navigator.userAgent.match("Chrome/"))  && ( window.matchMedia('(forced-colors: active)').matches ) ) {
+			return getComputedStyle(document.querySelector('.fc-canvas')).getPropertyValue("color");
+		} else {
+			return getComputedStyle(document.querySelector('.fc-background')).getPropertyValue("color");
+		}
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-color").trim();
 	}
+}
+
+function GetDesktopImage(trimmed=false) {
+	var img = getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-image");
+	if (img === 'none') {
+		return '';
+	} else if (trimmed) {
+		return img.replace('url(', '').replace(')', '').split('\\').join('');
+	} else {
+		return 'url(' + img.replace('url(', '').replace(')', '').split('\\').join('') + ')';
+	}
+}
+
+/*
+GetAutoColorDesktop()
+var s = window.MW18AutoAccent;
+s
+*/
+function GetAutoColorDesktop() {
+const myImg = new Image();
+myImg.crossOrigin = "Anonymous";
+myImg.onload =  () => {
+ const x = document.createElement('canvas');
+    x.width=myImg.width
+    x.height=myImg.height
+  const context = x.getContext('2d');
+  context.drawImage(myImg, 0, 0);
+  const {
+    data
+  } = context.getImageData((Math.round(myImg.width /2) - 1), (Math.round(myImg.height /2) - 1), 1, 1);
+  if (myImg.src === '""') {
+	window.MW18AutoAccent = '';
+  } else {
+	window.MW18AutoAccent = chroma('rgb(' + data[0] + ',' + data[1] + ',' + data[2] + ')').hex();
+	
+  }
+}
+
+var img = GetDesktopImage(true);
+
+if (img == '""') {
+	window.MW18AutoAccent = '';
+} else {
+	myImg.src = img;
+}
 }
 
 function GetDesktopText() {
 	if (ForcedColors()) {
-		return getComputedStyle(document.querySelector('.fc-buttontext')).getPropertyValue("color");
-	} else if (getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-text-background-color") === 'auto') {
+//		return getComputedStyle(document.querySelector('.fc-buttontext')).getPropertyValue("color");
 		var color = window.MW18BgColor;
-		return GetTextVariable(color);
+		return GetForegroundVariables(color)[4];
+	} else if (getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-text-background-color") === 'auto') {
+		var color = window.MW18BgColor;
+		return GetForegroundVariables(color)[4];
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-text-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-text-background-color").trim();
 	}
 }
 
@@ -320,7 +402,7 @@ function GetCanvasShort() { // Like GetCanvas() without forced colors mode you g
 	if (ForcedColors()) {
 		return getComputedStyle(document.querySelector('.fc-canvas')).getPropertyValue("color");
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--canvas-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-background-color").trim();
 	}
 }
 
@@ -333,11 +415,24 @@ function GetCanvas() {
 	}
 }
 
+function GetCanvas2() { // Like GetCanvas() without forced colors mode you get the unaltered page background mode (Used for checking dark mode)
+	if (ForcedColors()) {
+		if 	(CSS.supports("color","-moz-dialog")) {
+			return getComputedStyle(document.querySelector('.fc-mozbuttonface')).getPropertyValue("color");
+		} else {
+			return getComputedStyle(document.querySelector('.fc-buttonface')).getPropertyValue("color");
+		}
+	} else {
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-secondary-background-color").trim();
+	}
+}
+
+
 function GetHyperlink() {
 	if (ForcedColors()) {
 		return getComputedStyle(document.querySelector('.fc-linktext')).getPropertyValue("color");
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--hyperlink-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--hyperlink-background-color").trim();
 	}
 }
 
@@ -345,8 +440,10 @@ function GetHyperlink() {
 function GetInactiveText() {
 	if (ForcedColors()) {
 		return getComputedStyle(document.querySelector('.fc-graytext')).getPropertyValue("color");
+	} else if (getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--inactive-text-background-color") === 'auto') {
+		return ColorTestTwin(window.MW18PageColor,window.MW18PageColorFG,window.MW18FinalContrast*2);
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--inactive-text-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--inactive-text-background-color").trim();
 	}
 }
 
@@ -354,11 +451,26 @@ function GetInactiveText() {
 function GetCanvasText() {
 	if (ForcedColors()) {
 		return getComputedStyle(document.querySelector('.fc-canvastext')).getPropertyValue("color");
-	} else if (getComputedStyle(document.querySelector('html')).getPropertyValue("--canvas-text-background-color") === 'auto') {
+	} else if (getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-text-background-color") === 'auto') {
 		var color = window.MW18PageColor;
-		return GetTextVariable(color);
+		return GetForegroundVariables(color)[4];
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--canvas-text-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-text-background-color").trim();
+	}
+}
+
+
+function GetCanvasText2() {
+	if (ForcedColors()) {
+		if 	(CSS.supports("color","-moz-dialogtext")) {
+			return getComputedStyle(document.querySelector('.fc-mozbuttontext')).getPropertyValue("color");
+		} else {
+			return getComputedStyle(document.querySelector('.fc-buttontext')).getPropertyValue("color");
+		}
+	} else if (getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-text-secondary-background-color") === 'auto') {
+		return GetCanvasText();
+	} else {
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-text-secondary-background-color").trim();
 	}
 }
 
@@ -366,30 +478,38 @@ function GetCanvasText() {
 function GetHighlight() {
 	if (ForcedColors()) {
 		return getComputedStyle(document.querySelector('.fc-highlight')).getPropertyValue("color");
+	} else if (getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--highlight-background-color") === 'auto') {
+		return GetHyperlink();
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--highlight-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--highlight-background-color").trim();
 	}
 }
 
 function GetActiveTitle() {
 	if (ForcedColors()) {
-		return getComputedStyle(document.querySelector('.fc-highlight')).getPropertyValue("color");
-	} else if (getComputedStyle(document.querySelector('html')).getPropertyValue("--active-title-background-color") === 'auto') {
-		var color = getComputedStyle(document.querySelector('html')).getPropertyValue("--highlight-background-color").trim();
-		return color
+		if ((navigator.userAgent.match("Chrome/"))  && ( window.matchMedia('(forced-colors: active)').matches ) ) {
+			return getComputedStyle(document.querySelector('.fc-linktext')).getPropertyValue("color");
+		} else {
+			return getComputedStyle(document.querySelector('.fc-activecaption')).getPropertyValue("color");
+		}
+	} else if (getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--active-title-background-color") === 'auto') {
+		return GetHyperlink();
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--active-title-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--active-title-background-color").trim();
 	}
 }
 
 function GetInactiveTitle() {
 	if (ForcedColors()) {
-		return getComputedStyle(document.querySelector('.fc-graytext')).getPropertyValue("color");
-	} else if (getComputedStyle(document.querySelector('html')).getPropertyValue("--inactive-title-background-color") === 'auto') {
-		var color = getComputedStyle(document.querySelector('html')).getPropertyValue("--canvas-background-color").trim();
-		return color
+		if ((navigator.userAgent.match("Chrome/"))  && ( window.matchMedia('(forced-colors: active)').matches ) ) {
+			return getComputedStyle(document.querySelector('.fc-graytext')).getPropertyValue("color");
+		} else {
+			return getComputedStyle(document.querySelector('.fc-inactivecaption')).getPropertyValue("color");
+		}
+	} else if (getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--inactive-title-background-color") === 'auto') {
+		return GetInactiveText();
 	} else {
-		return getComputedStyle(document.querySelector('html')).getPropertyValue("--inactive-title-background-color").trim();
+		return getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--inactive-title-background-color").trim();
 	}
 }
 
@@ -398,17 +518,24 @@ function GetAlert() {
 		return BestAlertColor()[0];
 }
 
-
-function GetWarning() {
+function GetPause() {
 		return BestAlertColor()[1];
 }
 
-function GetSuccess() {
+function GetWarning() {
 		return BestAlertColor()[2];
 }
 
-function GetMessage() {
+function GetSuccess() {
 		return BestAlertColor()[3];
+}
+
+function GetProgress() {
+		return BestAlertColor()[4];
+}
+
+function GetMessage() {
+		return BestAlertColor()[5];
 }
 
 function ContrastRatio() {
@@ -456,7 +583,7 @@ function ContrastRatio2() {
 }
 
 function BestAlertColor() {
-var page = GetCanvas()
+var page = window.MW18PageColor;
 var invpage = page;
 
 
@@ -466,105 +593,105 @@ if (isLightColor(page)) { // ( chroma(page).get('hsl.l') < 0.5)
 	var colors = ['4%', '6%', '8%', '10%', '12%', '14%', '16%', '18%', '20%', '22%', '24%', '26%', '28%', '30%', '32%', '34%', '36%', '38%', '40%', '42%', '44%', '46%', '54%', '56%', '58%', '60%', '62%', '64%', '66%', '68%', '70%', '72%', '74%', '76%', '78%', '80%', '82%', '84%', '86%', '88%', '90%', '92%', '94%', '96%']
 }
 
-		alerth = 352 // 360
-		warningh = 29 // 38
-		successh = 140 // 150
-		messageh = -1 // -1
+		alerth = 0
+		pauseh = 20
+		warningh = 45
+		successh = 167
+		progressh = 220
+		messageh = -1
 		
-		contrastA = window.MW18highContrast*ContrastRatio()
-		contrastW = window.MW18highContrast*ContrastRatio()*0.85
-		contrastS = window.MW18highContrast*ContrastRatio()*0.75
-		contrastM = window.MW18highContrast*ContrastRatio()*0.7
+		if (mediawiki) {
+			{{#has-servelution-no-dgeneric}}
+				if (isLightColor(page)) { // ( chroma(page).get('hsl.l') < 0.5)
+					return [chroma('hsl('+ alerth + ', 100%, 35%)'),chroma('hsl('+ pauseh + ', 100%, 35%)'),chroma('hsl('+ warningh + ', 100%, 35%)'),chroma('hsl('+ successh + ', 100%, 35%)'),chroma('hsl('+ progressh + ', 100%, 35%)'),chroma('hsl('+ alerth + ', 0%, 35%)')]
+				} else {
+					return [chroma('hsl('+ alerth + ', 100%, 70%)'),chroma('hsl('+ pauseh + ', 100%, 70%)'),chroma('hsl('+ warningh + ', 100%, 70%)'),chroma('hsl('+ successh + ', 100%, 70%)'),chroma('hsl('+ progressh + ', 100%, 70%)'),chroma('hsl('+ alerth + ', 0%, 70%)')]
+				}
+			{{/has-servelution-no-dgeneric}}
+		}
+
+		
+		contrastA = window.MW18highContrast*ContrastRatio()*1
+		contrastP = window.MW18highContrast*ContrastRatio()*1
+		contrastW = window.MW18highContrast*ContrastRatio()*1
+		contrastS = window.MW18highContrast*ContrastRatio()*1
+		contrastP = window.MW18highContrast*ContrastRatio()*1
+		contrastM = window.MW18highContrast*ContrastRatio()*1
 
 	for (let i = 0; i < colors.length; i++) {
 		var color = chroma('hsl(0,100%,' + colors[i] + ')').hex(); // Base Color
 		var alert = chroma(ColorTestTwin(color, invpage, 0,alerth)).set('hsl.s',1); // Alert
 		var alertsat = chroma(alert).get('hsl.s'); // Saturation of Alert Color
 		var alertlight =  chroma(alert).get('hsl.l') // Lightness of Alert Color
+		var pause = chroma(alert).set('hsl.h',pauseh).set('hsl.s',alertsat).set('hsl.l', alertlight);  // Pause
 		var warn = chroma(alert).set('hsl.h',warningh).set('hsl.s',alertsat).set('hsl.l', alertlight);  // Warning
 		var done = chroma(alert).set('hsl.h',successh).set('hsl.s',alertsat).set('hsl.l', alertlight); // Success
+		var progress = chroma(alert).set('hsl.h',progressh).set('hsl.s',alertsat).set('hsl.l', alertlight); // Progress
 		var info = chroma(ColorTestTwin(color, invpage, 0,messageh)).set('hsl.l', alertlight); // Message
-		if ( ((chroma.contrast(page, alert)) >= contrastA) && ((chroma.contrast(page, warn)) >= contrastW) && ((chroma.contrast(page, done)) >= contrastS) && ((chroma.contrast(page, info)) >= contrastM) ) {
-			return [alert, warn, done, info];
+		if ( ((chroma.contrast(page, alert)) >= contrastA) && ((chroma.contrast(page, pause)) >= contrastP) && ((chroma.contrast(page, warn)) >= contrastW) && ((chroma.contrast(page, done)) >= contrastS) && ((chroma.contrast(page, progress)) >= contrastP) && ((chroma.contrast(page, info)) >= contrastM) ) {
+			return [alert, pause, warn, done, progress, info];
 		}
 	}
 
-	/* If no color can be found legible, fallback to specific color */	
-		var color = chroma('hsl(0,100%,' + colors[43] + ')' ).hex();
-		var alert = chroma(ColorTestTwin(color, invpage, 0,alerth)).set('hsl.s',1); // Alert
-		var alertsat = chroma(alert).get('hsl.s'); // Saturation of Alert Color
-		var alertlight =  chroma(alert).get('hsl.l') // Lightness of Alert Color
-		var warn = chroma(alert).set('hsl.h',warningh).set('hsl.s',alertsat).set('hsl.l', alertlight);  // Warning
-		var done = chroma(alert).set('hsl.h',successh).set('hsl.s',alertsat).set('hsl.l', alertlight); // Success
-		var info = chroma(ColorTestTwin(color, invpage, 0,messageh)).set('hsl.l', alertlight); // Message
-		return [alert, warn, done, info];
+	/* If no color can be found legible, fallback to pre-Nickel behavior */	
+				if (isLightColor(page)) { // ( chroma(page).get('hsl.l') < 0.5)
+					return [chroma('hsl('+ alerth + ', 100%, 4%)'),chroma('hsl('+ pauseh + ', 100%, 4%)'),chroma('hsl('+ warningh + ', 100%, 4%)'),chroma('hsl('+ successh + ', 100%, 4%)'),chroma('hsl('+ progressh + ', 100%, 4%)'),chroma('hsl('+ alerth + ', 0%, 4%)')]
+				} else {
+					return [chroma('hsl('+ alerth + ', 100%, 96%)'),chroma('hsl('+ pauseh + ', 100%, 96%)'),chroma('hsl('+ warningh + ', 100%, 96%)'),chroma('hsl('+ successh + ', 100%, 96%)'),chroma('hsl('+ progressh + ', 100%, 96%)'),chroma('hsl('+ alerth + ', 0%, 96%)')]
+				}
 
  
 }
 
 /* Get Foreground Variables */
 
-function GetForegroundVariable(color,hover=false) {
-	if (hover) {
-		if (isLightColor(color)) {
-			return 'var(--light-theme-foreground-color-hover)'
-		} else {
-			return 'var(--dark-theme-foreground-color-hover)'
-		}
+function GetForegroundVariables(color,func="nil",funcB="nil") {
+	if (func == 'nil') {
+		var func1 = isLightColor(color);
 	} else {
-		if (isLightColor(color)) {
-			return 'var(--light-theme-foreground-color)'
-		} else {
-			return 'var(--dark-theme-foreground-color)'
-		}
+		func1 = func; // Custom Function For Light or Dark case
 	}
-}
-
-
-function GetForegroundVariable2(color,hover=false) {
-	if (hover) {
-		if (isLightColor(color)) {
-			return 'var(--light-theme-foreground-color-hover-rgb)'
-		} else {
-			return 'var(--dark-theme-foreground-color-hover-rgb)'
-		}
+	if (funcB == 'nil') {
+		var func2 = isLightColor2(color);
 	} else {
-		if (isLightColor(color)) {
-			return 'var(--light-theme-foreground-color-rgb)'
-		} else {
-			return 'var(--dark-theme-foreground-color-rgb)'
-		}
+		func2 = funcB; // Custom Function For Light or Dark case
 	}
-}
-
-function GetTextVariable(color) {
-	if (isLightColor2(color)) {
-		return getComputedStyle(document.querySelector('body')).getPropertyValue("--light-theme-text-background-color");
+	if (func2) {
+		var fc1 =  getComputedStyle(document.querySelector('body')).getPropertyValue("--light-theme-text-background-color");
+		var fc2 =  getComputedStyle(document.querySelector('body')).getPropertyValue("--light-theme-text-background-color-rgb");
 	} else {
-		return getComputedStyle(document.querySelector('body')).getPropertyValue("--dark-theme-text-background-color");
+		var fc1 =  getComputedStyle(document.querySelector('body')).getPropertyValue("--dark-theme-text-background-color");
+		var fc2 =  getComputedStyle(document.querySelector('body')).getPropertyValue("--dark-theme-text-background-color-rgb");
 	}
-}
-
-function GetTextVariable2(color) {
-	if (isLightColor2(color)) {
-		return Color2(getComputedStyle(document.querySelector('body')).getPropertyValue("--light-theme-text-background-color"));
+	if (func1) {
+		return ['var(--light-theme-foreground-color)', 'var(--light-theme-foreground-color-hover)', 'var(--light-theme-foreground-color-rgb)', 'var(--light-theme-foreground-color-hover-rgb)', fc1, fc2]
 	} else {
-		return Color2(getComputedStyle(document.querySelector('body')).getPropertyValue("--dark-theme-text-background-color"));
+		return ['var(--dark-theme-foreground-color)', 'var(--dark-theme-foreground-color-hover)', 'var(--dark-theme-foreground-color-rgb)', 'var(--dark-theme-foreground-color-hover-rgb)', fc1, fc2]
 	}
 }
 
 
 /* Get Gradient Variables */
-function GetGradientVariable(color,name="page") {
-	if (isLightColor(color)) {
+function GetGradientVariable(color,name="canvas", func="nil") {
+	if (func == 'nil') {
+		var func1 = isLightColor(color);
+	} else {
+		func1 = func; // Custom Function For Light or Dark case
+	}
+	if (func1) {
 		return ['var(--' + name + '-background-color)', 'var(--' + name + '-background-color-hover)']
 	} else {
 		return ['var(--' + name + '-background-color-hover)', 'var(--' + name + '-background-color)']
 	}
 }
 
-function GetGradientVariable2(color,name="page") {
-	if (isDarkColor(color)) {
+function GetGradientVariable2(color,name="canvas", func="nil") {
+	if (func == 'nil') {
+		var func1 = isLightColor(color);
+	} else {
+		func1 = func; // Custom Function For Light or Dark case
+	}
+	if (!(func1)) {
 		return ['var(--' + name + '-background-color)', 'var(--' + name + '-background-color-hover)']
 	} else {
 		return ['var(--' + name + '-background-color-hover)', 'var(--' + name + '-background-color)']
@@ -748,15 +875,29 @@ function SetAccent(tick='false',save='true') {
 		if (save) {
 			insertKey('accent-active', tick );
 		}
-		document.querySelector('html').setAttribute('accented', tick);
+		if (mediawiki) { // When Running non-ivilution (Evelution, Tunic)
+			{{^has-servelution-no-accent}}
+				if (tick === 'true') {
+					document.querySelector('html').classList.add('has-accents');
+				} else {
+					document.querySelector('html').classList.remove('has-accents');
+				}
+			{{/has-servelution-no-accent}}
+		} else {
+			if (tick === 'true') {
+				document.querySelector('html').classList.add('has-accents');
+			} else {
+				document.querySelector('html').classList.remove('has-accents');
+			}
+		}
 }
 
 
 function ToggleAccent() {
-	if (document.querySelector('html').getAttribute('accented') === 'false') {
-		SetAccent( 'true' )
+	if (document.querySelector('html.has-accents')) {
+		SetAccent( 'false' )
 	} else {
-		SetAccent ( 'false')
+		SetAccent ( 'true' )
 	}
 }
 
@@ -765,15 +906,15 @@ function ToggleAccent() {
 
 /* Downloads all modificative values of the current selected theme to a file */
 function DownloadTheme(full=false) {
-	wordfilter2 = getComputedStyle(document.querySelector('body')).getPropertyValue("--icon-filter-hover")
+	wordfilter2 = getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--icon-filter-hover")
 	if ( wordfilter2 == "" ) {
 		wordfilter2 == 'initial'
 	}
 	if (full) { // For use without Theme Management
-		result = '[theme="A"][visualcolors="standard"] {\n' + // Beginning
+		result = '.visualcolors-standard.theme-A {\n' + // Beginning
 				// Body BG
 				 '--desktop-background-image:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-image")  + ';\n' +
-				 '--desktop-background-image-opacity:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-image-opacity")  + ';\n' +
+				 '--desktop-background-image-filter:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-image-filter")  + ';\n' +
 				// Body Color
 				 '--desktop-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-color")  + ';\n' +
 				 '--desktop-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-color-hover")  + ';\n' +
@@ -812,25 +953,33 @@ function DownloadTheme(full=false) {
 				 '--desktop-background-no-vertical-tiling:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-no-vertical-tiling")  + ';\n' +
 				 // Page Color
 				 '--canvas-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-background-color")  + ';\n' +
-				 '--canvas-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-3d-background-color-hover")  + ';\n' +
-				 '--canvas-3d-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-3d-background-color-dark")  + ';\n' +
-				 '--canvas-3d-background-color-dark:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-background-color")  + ';\n' +
+				 '--canvas-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-background-color-hover")  + ';\n' +
 				 '--canvas-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-fadeout-color")  + ';\n' +
 				 '--canvas-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-gradient-color")  + ';\n' +
 				 '--canvas-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-gradient-color-hover")  + ';\n' +
 				 '--canvas-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color")  + ';\n' +
 				 '--canvas-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color-hover")  + ';\n' +
 				 '--canvas-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-alternative-foreground-color")  + ';\n' +
-				 '--canvas-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color")  + ';\n' +
-				 '--canvas-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color-hover")  + ';\n' +
-				 '--canvas-secondary-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-fadeout-color")  + ';\n' +
-				 '--canvas-secondary-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-gradient-color")  + ';\n' +
-				 '--canvas-secondary-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-gradient-color-hover")  + ';\n' +
 				 '--canvas-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-background-color-rgb")  + ';\n' +
 				 '--canvas-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color-rgb")  + ';\n' +
 				 '--canvas-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color-hover-rgb")  + ';\n' +
 				 '--canvas-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-alternative-foreground-color-rgb")  + ';\n' +
+				 // 2nd Page Color
+				 '--canvas-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color")  + ';\n' +
+				 '--canvas-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color-hover")  + ';\n' +
+				 '--canvas-3d-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-3d-background-color")  + ';\n' +
+				 '--canvas-3d-background-color-dark:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-3d-background-color-dark")  + ';\n' +
+				 '--canvas-secondary-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-fadeout-color")  + ';\n' +
+				 '--canvas-secondary-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-gradient-color")  + ';\n' +
+				 '--canvas-secondary-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-gradient-color-hover")  + ';\n' +
+				 '--canvas-secondary-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color")  + ';\n' +
+				 '--canvas-secondary-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color-hover")  + ';\n' +
+				 '--canvas-secondary-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-alternative-foreground-color")  + ';\n' +
 				 '--canvas-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color-rgb")  + ';\n' +
+				 '--canvas-secondary-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color-rgb")  + ';\n' +
+				 '--canvas-secondary-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color-hover-rgb")  + ';\n' +
+				 '--canvas-secondary-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-alternative-foreground-color-rgb")  + ';\n' +
+
 				 // Page Border Color
 				 '--inactive-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-background-color")  + ';\n' +
 				 '--inactive-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-background-color-hover")  + ';\n' +
@@ -860,6 +1009,22 @@ function DownloadTheme(full=false) {
 				 '--canvas-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-foreground-color-rgb")  + ';\n' +
 				 '--canvas-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-foreground-color-hover-rgb")  + ';\n' +
 				 '--canvas-text-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-alternative-foreground-color-rgb")  + ';\n' +
+				 // 2nd Page Text Color
+				 '--canvas-text-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-background-color")  + ';\n' +
+				 '--canvas-text-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-background-color-hover")  + ';\n' +
+				 '--canvas-text-secondary-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-fadeout-color")  + ';\n' +
+				 '--canvas-text-secondary-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-gradient-color")  + ';\n' +
+				 '--canvas-text-secondary-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-gradient-color-hover")  + ';\n' +
+				 '--canvas-text-secondary-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color")  + ';\n' +
+				 '--canvas-text-secondary-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-hover")  + ';\n' +
+				 '--canvas-text-secondary-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-inverted")  + ';\n' +
+				 '--canvas-text-secondary-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-alternative-foreground-color")  + ';\n' +
+				 '--canvas-text-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-background-color-rgb")  + ';\n' +
+				 '--canvas-text-secondary-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-background-color-hover-rgb")  + ';\n' +
+				 '--canvas-text-secondary-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-rgb")  + ';\n' +
+				 '--canvas-text-secondary-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-hover-rgb")  + ';\n' +
+				 '--canvas-text-secondary-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-alternative-foreground-color-rgb")  + ';\n' +
+
 				 // Accent Color
 				 '--highlight-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-background-color")  + ';\n' +
 				 '--highlight-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-background-color-hover")  + ';\n' +
@@ -889,6 +1054,11 @@ function DownloadTheme(full=false) {
 				 '--hyperlink-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-foreground-color-rgb")  + ';\n' +
 				 '--hyperlink-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-foreground-color-hover-rgb")  + ';\n' +
 				 '--hyperlink-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-alternative-foreground-color-rgb")  + ';\n' +
+				 // 2nd Secondary Accent Color
+				 '--hyperlink-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-secondary-background-color")  + ';\n' +
+				 '--hyperlink-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-secondary-background-color-hover")  + ';\n' +
+				 '--hyperlink-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-secondary-background-color-rgb")  + ';\n' +
+
 				 // Tertiary Accent Color
 				 '--active-title-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-background-color")  + ';\n' +
 				 '--active-title-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-background-color-hover")  + ';\n' +
@@ -920,6 +1090,7 @@ function DownloadTheme(full=false) {
 				 // Alert
 				 '--alert-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-background-color")  + ';\n' +
 				 '--alert-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-background-color-hover")  + ';\n' +
+				 '--alert-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-background-color-hover-2")  + ';\n' +
 				 '--alert-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-fadeout-color")  + ';\n' +
 				 '--alert-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-gradient-color")  + ';\n' +
 				 '--alert-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-gradient-color-hover")  + ';\n' +
@@ -931,9 +1102,25 @@ function DownloadTheme(full=false) {
 				 '--alert-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-foreground-color-rgb")  + ';\n' +
 				 '--alert-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-foreground-color-hover-rgb")  + ';\n' +
 				 '--alert-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-alternative-foreground-color-rgb")  + ';\n' +
+				 // Pause
+				 '--pause-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-background-color")  + ';\n' +
+				 '--pause-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-background-color-hover")  + ';\n' +
+				 '--pause-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-background-color-hover-2")  + ';\n' +
+				 '--pause-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-fadeout-color")  + ';\n' +
+				 '--pause-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-gradient-color")  + ';\n' +
+				 '--pause-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-gradient-color-hover")  + ';\n' +
+				 '--pause-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color")  + ';\n' +
+				 '--pause-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-hover")  + ';\n' +
+				 '--pause-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-inverted")  + ';\n' +
+				 '--pause-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-alternative-foreground-color")  + ';\n' +
+				 '--pause-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-background-color-rgb")  + ';\n' +
+				 '--pause-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-rgb")  + ';\n' +
+				 '--pause-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-hover-rgb")  + ';\n' +
+				 '--pause-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-alternative-foreground-color-rgb")  + ';\n' +
 				 // Warning
 				 '--warning-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-background-color")  + ';\n' +
 				 '--warning-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-background-color-hover")  + ';\n' +
+				 '--warning-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-background-color-hover-2")  + ';\n' +
 				 '--warning-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-fadeout-color")  + ';\n' +
 				 '--warning-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-gradient-color")  + ';\n' +
 				 '--warning-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-gradient-color-hover")  + ';\n' +
@@ -948,6 +1135,7 @@ function DownloadTheme(full=false) {
 				 // Success
 				 '--success-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-background-color")  + ';\n' +
 				 '--success-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-background-color-hover")  + ';\n' +
+				 '--success-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-background-color-hover-2")  + ';\n' +
 				 '--success-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-fadeout-color")  + ';\n' +
 				 '--success-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-gradient-color")  + ';\n' +
 				 '--success-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-gradient-color-hover")  + ';\n' +
@@ -959,9 +1147,25 @@ function DownloadTheme(full=false) {
 				 '--success-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-foreground-color-rgb")  + ';\n' +
 				 '--success-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-foreground-color-hover-rgb")  + ';\n' +
 				 '--success-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-alternative-foreground-color-rgb")  + ';\n' +
+				 // Progress
+				 '--progress-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-background-color")  + ';\n' +
+				 '--progress-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-background-color-hover")  + ';\n' +
+				 '--progress-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-background-color-hover-2")  + ';\n' +
+				 '--progress-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-fadeout-color")  + ';\n' +
+				 '--progress-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-gradient-color")  + ';\n' +
+				 '--progress-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-gradient-color-hover")  + ';\n' +
+				 '--progress-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color")  + ';\n' +
+				 '--progress-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-hover")  + ';\n' +
+				 '--progress-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-inverted")  + ';\n' +
+				 '--progress-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-alternative-foreground-color")  + ';\n' +
+				 '--progress-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-background-color-rgb")  + ';\n' +
+				 '--progress-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-rgb")  + ';\n' +
+				 '--progress-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-hover-rgb")  + ';\n' +
+				 '--progress-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-alternative-foreground-color-rgb")  + ';\n' +
 				 // Message
 				 '--message-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-background-color")  + ';\n' +
 				 '--message-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-background-color-hover")  + ';\n' +
+				 '--message-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-background-color-hover-2")  + ';\n' +
 				 '--message-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-fadeout-color")  + ';\n' +
 				 '--message-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-gradient-color")  + ';\n' +
 				 '--message-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-gradient-color-hover")  + ';\n' +
@@ -974,38 +1178,44 @@ function DownloadTheme(full=false) {
 				 '--message-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-foreground-color-hover-rgb")  + ';\n' +
 				 '--message-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-alternative-foreground-color-rgb")  + ';\n' +
 				 // Miscs
+				 '--custom-font:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--custom-font")  + ';\n' +
 				 '--custom-secondary-font:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--custom-secondary-font")  + ';\n' +
 				 '--border-radius:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--border-radius")  + ';\n' +
 				 '--icon-filter:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--icon-filter")  + ';\n' +
 				 '--icon-filter-hover:' + wordfilter2  + ';\n' +
 				 '--icon-filter-duration:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--icon-filter-duration")  + ';\n' +
 				 '--icon-filter-delay:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--icon-filter-delay")  + ';\n' +
+				 '--system-acryllic-opacity:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--system-acryllic-opacity")  + ';\n' +
 				 '}' // Ending
 	} else { // For use with Theme Management
-		result = '[theme="A"][visualcolors="standard"] {\n' + // Beginning
-				 '--desktop-background-image:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-image")  + ';\n' +
-				 '--desktop-background-image-opacity:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-image-opacity")  + ';\n' +
-				 '--desktop-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-color")  + ';\n' +
-				 '--desktop-text-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-text-background-color")  + ';\n' +
-				 '--desktop-background-mode:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-mode")  + ';\n' +
-				 '--desktop-background-size:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-size")  + ';\n' +
-				 '--desktop-background-horizontal-alignment:' + getComputedStyle(document.querySelector('container')).getPropertyValue("--desktop-background-horizontal-alignment")  + ';\n' +
-				 '--desktop-background-vertical-alignment:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-vertical-alignment")  + ';\n' +
-				 '--desktop-background-no-horizontal-tiling:' + getComputedStyle(document.querySelector('container')).getPropertyValue("--desktop-background-no-horizontal-tiling")  + ';\n' +
-				 '--desktop-background-no-vertical-tiling:' + getComputedStyle(document.querySelector('container')).getPropertyValue("--desktop-background-no-vertical-tiling")  + ';\n' +
-				 '--canvas-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--canvas-background-color")  + ';\n' +
-				 '--inactive-text-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--inactive-text-background-color")  + ';\n' +
-				 '--canvas-text-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--canvas-text-background-color")  + ';\n' +
-				 '--highlight-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--highlight-background-color")  + ';\n' +
-				 '--hyperlink-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--hyperlink-background-color")  + ';\n' +
-				 '--active-title-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--active-title-background-color")  + ';\n' +
-				 '--inactive-title-background-color:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--active-title-background-color")  + ';\n' +
-				 '--custom-secondary-font:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--custom-secondary-font")  + ';\n' +
-				 '--border-radius:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--border-radius")  + ';\n' +
-				 '--icon-filter:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--icon-filter")  + ';\n' +
+		result = '.visualcolors-standard.theme-A {\n' + // Beginning
+				 '--desktop-background-image:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-image")  + ';\n' +
+				 '--desktop-background-image-filter:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-image-filter")  + ';\n' +
+				 '--desktop-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-color")  + ';\n' +
+				 '--desktop-text-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-text-background-color")  + ';\n' +
+				 '--desktop-background-mode:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-mode")  + ';\n' +
+				 '--desktop-background-size:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-size")  + ';\n' +
+				 '--desktop-background-horizontal-alignment:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-horizontal-alignment")  + ';\n' +
+				 '--desktop-background-vertical-alignment:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-vertical-alignment")  + ';\n' +
+				 '--desktop-background-no-horizontal-tiling:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-no-horizontal-tiling")  + ';\n' +
+				 '--desktop-background-no-vertical-tiling:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-no-vertical-tiling")  + ';\n' +
+				 '--canvas-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-background-color")  + ';\n' +
+				 '--canvas-secondary-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-secondary-background-color")  + ';\n' +
+				 '--inactive-text-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--inactive-text-background-color")  + ';\n' +
+				 '--canvas-text-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-text-background-color")  + ';\n' +
+				 '--canvas-text-secondary-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-text-secondary-background-color")  + ';\n' +
+				 '--highlight-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--highlight-background-color")  + ';\n' +
+				 '--hyperlink-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--hyperlink-background-color")  + ';\n' +
+				 '--active-title-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--active-title-background-color")  + ';\n' +
+				 '--inactive-title-background-color:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--active-title-background-color")  + ';\n' +
+				 '--custom-font:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--custom-font")  + ';\n' +
+				 '--custom-secondary-font:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--custom-secondary-font")  + ';\n' +
+				 '--border-radius:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--border-radius")  + ';\n' +
+				 '--icon-filter:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--icon-filter")  + ';\n' +
 				 '--icon-filter-hover:' + wordfilter2  + ';\n' +
-				 '--icon-filter-duration:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--icon-filter-duration")  + ';\n' +
-				 '--icon-filter-delay:' + getComputedStyle(document.querySelector('html')).getPropertyValue("--icon-filter-delay")  + ';\n' +
+				 '--icon-filter-duration:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--icon-filter-duration")  + ';\n' +
+				 '--icon-filter-delay:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--icon-filter-delay")  + ';\n' +
+				 '--system-acryllic-opacity:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--system-acryllic-opacity")  + ';\n' +
 				 '}' // Ending
 	}
 	alert('Once you save the file, put the stylesheet contents to MediaWiki:Common.css for use in the wiki or upload it to any website.');
@@ -1091,6 +1301,17 @@ function MiniColorTest2(color) { // Regular Colors
 	}
 }
 
+function MiniColorTest3(color,color2) { // Regular Colors
+	var func = (isLightColor(color2));
+	var light = chroma(color).get('hsl.l');
+	if (func) {
+		return chroma(color).set('hsl.l', light-0.02).hex();
+	} else {
+		return chroma(color).set('hsl.l', light+0.02).hex();
+	}
+}
+
+
 function ColorInvert(color) {
 	if (window.MW18spdarkmode === 6) { // Special Case
 		var color2 = color;
@@ -1141,11 +1362,7 @@ function ColorTest2(color,text=false) {
 
 // Conversion for R,G,B syntax
 function Color2(color) {
-	return Math.round(chroma(color).get('rgb.r') ) + ',' + Math.round(chroma(color).get('rgb.g') ) + ',' + Math.round(chroma(color).get('rgb.b') );
-}
-
-function Color4(color) {
-	return Math.round(chroma(color).get('rgb.r') ) + ' ' + Math.round(chroma(color).get('rgb.g') ) + ' ' + Math.round(chroma(color).get('rgb.b') );
+	return chroma(color).get('rgb.r') + ',' + chroma(color).get('rgb.g') + ',' + chroma(color).get('rgb.b');
 }
 
 function isLightColor(color) {
@@ -1165,19 +1382,6 @@ function isDarkColor(color) {
 	return !isLightColor(color)
 }
 
-function isSuperLightColor(color) {
-	var c1 = (chroma.contrast('#000000',  chroma(color)))
-	var contrast = (window.matchMedia('(prefers-contrast: more)').matches) ? 13 : 10
-	return (c1 >= contrast )
-}
-
-function isSuperDarkColor(color) {
-	var c1 = (chroma.contrast('#ffffff',  chroma(color)))
-	var contrast = (window.matchMedia('(prefers-contrast: more)').matches) ? 13 : 10
-	return (c1 >= contrast )
-}
-
-
 function isSuitableColor(color,color2) {
 var contrast = window.MW18highContrast*ContrastRatio()
 return ((chroma.contrast(color, color2)) >= contrast)
@@ -1187,12 +1391,6 @@ function isSuitableColor2(color,color2) {
 var contrast = window.MW18lowContrast*ContrastRatio()
 return ((chroma.contrast(color, color2)) >= contrast) // For Border Color
 }
-
-function isSuitableColor3(color,color2) {
-var contrast = 1.5
-return ((chroma.contrast(color, color2)) >= contrast)
-}
-
 
 
 
@@ -1217,9 +1415,23 @@ if (refresh === true) {
 	**/
 }
 
+//	ToggleTheme(window.MW18ActiveTheme,false,false);
+//	VisualColor(window.MW18ActiveColors,false,false);
+	if (window.MW18ActiveColors === 'nocolormanagement') {
+		var colorstyle =".color-management-on { display:none!important;}\n"
+	} else {
+		var colorstyle= "\n"
+	}
+
+if (refresh) {
+//	GetAutoColorDesktop();
+//alert(window.MW18AutoAccent);
+}
+
 /** Page BG **/
 /* Set Vars */
 // content_text is Content Color
+// content2_text is Dropdown Color
 // content_text4 is Text color of Content Color
 // content_text5 is Dark text color of Content Color
 // content_color is Content Bg
@@ -1230,48 +1442,66 @@ var content_color =  GetCanvasShort();
 
 /* This goes before compiling Generic Colors or else they will think the theme is light */
 
-	document.querySelector('html').classList.remove("theme-fandomdesktop-light");
-	document.querySelector('html').classList.remove("theme-fandomdesktop-dark");
-
 // Liatch Quirk
 	var content_color = ColorInvert(content_color)
 
-	window.MW18PageColor = content_color
+	window.MW18PageColor = content_color;
 	var darkpage = isLightColor(content_color);
-	if (!(darkpage)) {
-		document.querySelector('html').classList.add("theme-fandomdesktop-dark")
-	} else {
-		document.querySelector('html').classList.add("theme-fandomdesktop-light")
+	if (refresh === true) {
+		var oldtheme = window.MW18ActiveThemeMode;
+		if (!(darkpage)) {
+			 window.MW18ActiveThemeMode = 'dark';
+		} else {
+			 window.MW18ActiveThemeMode = 'light';
+		}
+		if (oldtheme === 'none') {
+			document.querySelector('html').classList.add("theme-fandomdesktop-" +  window.MW18ActiveThemeMode);
+		} else if (oldtheme != window.MW18ActiveThemeMode ) {
+			document.querySelector('html').classList.replace("theme-fandomdesktop-" +  oldtheme,"theme-fandomdesktop-" +  window.MW18ActiveThemeMode);
+		}
 	}
 
 
 var content_color2 = ColorTest(content_color);
 
 var adjustment = ContrastRatio2();
+window.MW18FinalContrast = adjustment;
 
 	if (darkpage) {
 		var lightness = '#000000';
-		var dropdowncolor = ColorTestTwin(content_color,"#000000",adjustment);
-		if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--inactive-text-background-color") === 'auto')  ) {
-			var dropdowncolor2 = ColorTestTwin(content_color,"#000000",adjustment*2);
-		} else {
-			var dropdowncolor2 = GetInactiveText();
-		}
 	} else {
 		var lightness = '#ffffff';
-		var dropdowncolor = ColorTestTwin(content_color,"#ffffff",adjustment);
-		if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--inactive-text-background-color") === 'auto')  ) {
-			var dropdowncolor2 = ColorTestTwin(content_color,"#ffffff",adjustment*2);
-		} else {
-			var dropdowncolor2 = GetInactiveText();
-		}
 	}
+		window.MW18PageColorFG = lightness
+
+if ((getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-secondary-background-color") == 'auto') ) {
+	if (darkpage) {
+		var dropdowncolor = ColorTestTwin(content_color,"#000000",adjustment);
+	} else {
+		var dropdowncolor = ColorTestTwin(content_color,"#ffffff",adjustment);
+	}
+} else {
+	var dropdowncolor = GetCanvas2();
+	var dropdowncolor = ColorInvert(dropdowncolor);
+}
+	var darkpage2 = isLightColor(dropdowncolor);
+	if (darkpage2) {
+		var lightness3 = '#000000';
+		var c3dlight = 0.75;
+		var c3ddark = 0.5;
+	} else {
+		var lightness3 = '#ffffff';
+		var c3dlight = 0.5;
+		var c3ddark = 0.75;
+	}
+
+var dropdowncolor2 = GetInactiveText();
 var dropdowncolorH = ColorTest(dropdowncolor,false,false,true);
 
 /** Page text color **/
 var content_text= GetCanvasText();
 
-if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--canvas-text-background-color") !== 'auto')  ) {
+if ((getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--canvas-text-background-color") !== 'auto')  ) {
 	// Liatch Quirk
 		var content_text = ColorInvert(content_text);
 	
@@ -1283,6 +1513,19 @@ if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--canvas
 
 
 var content_text1 = ColorTest(content_text,false,true,true);
+
+/** 2nd Page text color **/
+var content2_text= GetCanvasText2();
+
+	// Liatch Quirk
+		var content2_text = ColorInvert(content2_text);
+	
+		while ( ( !(isSuitableColor(content2_text, dropdowncolor)) ) && (content2_text !== lightness3) ) {
+			var content2_text= MiniColorTest3(content2_text,dropdowncolor);
+		}
+
+
+var content2_text1 = ColorTest(content2_text,false,true,true);
 
 
 
@@ -1309,12 +1552,18 @@ var link_color = GetHyperlink();
 
 // Liatch Quirk
 	var link_color = ColorInvert(link_color);
-
+	var link2_color = link_color;
+	
 		while ( ( !(isSuitableColor(link_color, content_color)) ) && (link_color !== lightness) ) {
 			var link_color= MiniColorTest(link_color,false,false,true);
 		}
+		while ( ( !(isSuitableColor(link2_color, dropdowncolor)) ) && (link2_color !== lightness3) ) {
+			var link2_color= MiniColorTest3(link2_color,dropdowncolor);
+		}
+
 
 var linkcolor1 = ColorTest(link_color,false,false,true);
+var link2color1 = ColorTest(link2_color,false,false,true);
 
 
 
@@ -1323,7 +1572,7 @@ var linkcolor1 = ColorTest(link_color,false,false,true);
 
 var border_color =	dropdowncolor2;
 
-if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--inactive-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
+if ((getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--inactive-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
 	// Liatch Quirk
 
 		var border_color = ColorInvert(border_color);
@@ -1348,8 +1597,8 @@ var head_color =	GetDesktop();
 
 // Liatch Quirk
 		var head_color = ColorInvert(head_color);
-
-	if (isLightColor(head_color)) {
+	var lighthead = isLightColor(head_color);
+	if (lighthead) {
 		var lightness2 = '#000000';
 	} else {
 		var lightness2 = '#ffffff';
@@ -1364,7 +1613,7 @@ var headcolor1 = ColorTest(head_color,false,false,true);
 
 var headertext_color= GetDesktopText();
 
-if ((getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-text-background-color") !== 'auto')  ) {
+if ((getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-text-background-color") !== 'auto')  ) {
 	// Liatch Quirk
 		var headertext_color = ColorInvert(headertext_color);
 
@@ -1398,7 +1647,7 @@ var caret2_color = GetInactiveTitle();
 // Liatch Quirk
 		var caret2_color = ColorInvert(caret2_color);
 
-var caret2color1 = ColorTest(caret2_color);
+var caret2color1 = ColorTest(caret2_color,false,true);
 
 /* Generic Colors */
 var generic = BestAlertColor();
@@ -1407,208 +1656,339 @@ var generic = BestAlertColor();
 /* Set Vars */
 var alert_color = generic[0];
 var alertcolor1 = ColorTest(alert_color,false,false,true);
+var alertcolor2 = ColorTest(alert_color,false,false,false);
 
-
-
+/** Pause Color **/
+/* Set Vars */
+var pause_color = generic[1];
+var pausecolor1 = ColorTest(pause_color,false,false,true);
+var pausecolor2 = ColorTest(pause_color,false,false,false);
 
 /** Warning Color **/
 /* Set Vars */
-var warning_color = generic[1];
+var warning_color = generic[2];
 var warningcolor1 = ColorTest(warning_color,false,false,true);
-
-
+var warningcolor2 = ColorTest(warning_color,false,false,false);
 
 /** Success Color **/
 /* Set Vars */
-var success_color = generic[2];
+var success_color = generic[3];
 var successcolor1 = ColorTest(success_color,false,false,true);
+var successcolor2 = ColorTest(success_color,false,false,false);
 
+/** Progress Color **/
+/* Set Vars */
+var progress_color = generic[4];
+var progresscolor1 = ColorTest(progress_color,false,false,true);
+var progresscolor2 = ColorTest(progress_color,false,false,false);
 
 /** Message Color **/
 /* Set Vars */
-var message_color = generic[3];
+var message_color = generic[5];
 var messagecolor1 = ColorTest(message_color,false,false,true);
+var messagecolor2 = ColorTest(message_color,false,false,false);
 
+var img = GetDesktopImage();
 
-if (['full','legacy'].includes(getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-mode"))) {
-	var overlay = ['none', '100%'];
+if (['full','legacy','100%','four-quarters'].includes(getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-mode"))) {
+	var overlay = ['none', '100%','four-quarters'];
+} else if (['three-quarters','75%'].includes(getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-mode"))) {
+	var overlay = ['block', '75%','three-quarters'];
+} else if (['half','50%','two-quarters'].includes(getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-mode"))) {
+	var overlay = ['block', '50%','two-quarters'];
+} else if (['one-quarter','25%'].includes(getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-mode"))) {
+	var overlay = ['block', '25%','one-quarter'];
 } else {
-	var overlay = ['block', 'var(--header-size)'];
+	var overlay = ['block', 'var(--header-size)','header'];
 }
 
+if (img === 'url("")') {
+	overlay[0] = 'none';
+	overlay[1] = '100%';
+}
+
+// Gradient Sets
+var alert_gradient= GetGradientVariable(content_color,'alert');
+var pause_gradient= GetGradientVariable(content_color,'pause');
+var warning_gradient = GetGradientVariable(content_color,'warning');
+var success_gradient = GetGradientVariable(content_color,'success');
+var progress_gradient = GetGradientVariable(content_color,'progress');
+var message_gradient = GetGradientVariable(content_color,'message');
+var content_color_gradient = GetGradientVariable(content_color,'canvas');
+var dropdowncolor_gradient = GetGradientVariable(content_color,'canvas-secondary');
+var content_text_gradient = GetGradientVariable2(content_color,'canvas-text');
+var content2_text_gradient = GetGradientVariable2(content_color,'canvas-text-secondary');
+var button_gradient = GetGradientVariable(button_color,'highlight');
+var link_gradient = GetGradientVariable(content_color,'hyperlink');
+var border_gradient = GetGradientVariable(border_color,'inactive-text');
+var head_gradient = GetGradientVariable(content_color,'desktop');
+var caret_gradient = GetGradientVariable(caret_color,'active-title');
+var caret2_gradient = GetGradientVariable2(caret2_color,'inactive-title');
+
+// Foreground texts
+var alert_fg = GetForegroundVariables(alert_color);
+var pause_fg = GetForegroundVariables(pause_color);
+var warning_fg = GetForegroundVariables(warning_color);
+var success_fg = GetForegroundVariables(success_color);
+var progress_fg = GetForegroundVariables(progress_color);
+var message_fg = GetForegroundVariables(message_color);
+var content_color_fg = GetForegroundVariables(content_color);
+var dropdowncolor_fg = GetForegroundVariables(dropdowncolor);
+var content_text_fg = GetForegroundVariables(content_text);
+var content2_text_fg = GetForegroundVariables(content2_text);
+var button_fg = GetForegroundVariables(button_color);
+var link_fg = GetForegroundVariables(link_color);
+var border_fg = GetForegroundVariables(border_color);
+var head_fg = GetForegroundVariables(head_color);
+var headertext_fg = GetForegroundVariables(headertext_color);
+var caret_fg = GetForegroundVariables(caret_color);
+var caret2_fg = GetForegroundVariables(caret2_color);
+
+	wordfilter2 = getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--icon-filter-hover")
+	if ( wordfilter2 == "" ) {
+		wordfilter2 == 'initial'
+	}
+
 /* Set Values for dynamical variables */
-	var result = 		  ":root {" +
-						  "--desktop-alternative-foreground-color:" + GetTextVariable(head_color) + ";\n" + 
-						  "--desktop-alternative-foreground-color-rgb:" + GetTextVariable2(head_color) + ";\n" +
-						  "--desktop-text-alternative-foreground-color:" + GetTextVariable(headertext_color) + ";\n" + 
-						  "--desktop-text-alternative-foreground-color-rgb:" + GetTextVariable2(headertext_color) + ";\n" +
-						  "--hyperlink-alternative-foreground-color:" + GetTextVariable(link_color) + ";\n" + 
-						  "--hyperlink-alternative-foreground-color-rgb:" + GetTextVariable2(link_color) + ";\n" +
-						  "--canvas-alternative-foreground-color:" + GetTextVariable(content_color) + ";\n" + 
-						  "--canvas-alternative-foreground-color-rgb:" + GetTextVariable2(content_color) + ";\n" +
-						  "--inactive-text-alternative-foreground-color:" + GetTextVariable(border_color) + ";\n" + 
-						  "--inactive-text-alternative-foreground-color-rgb:" + GetTextVariable2(border_color) + ";\n" +
-						  "--canvas-text-alternative-foreground-color:" + GetTextVariable(content_text) + ";\n" + 
-						  "--canvas-text-alternative-foreground-color-rgb:" + GetTextVariable2(content_text) + ";\n" +
-						  "--highlight-alternative-foreground-color:" + GetTextVariable(button_color) + ";\n" + 
-						  "--highlight-alternative-foreground-color-rgb:" + GetTextVariable2(button_color) + ";\n" +
-						  "--active-title-alternative-foreground-color:" + GetTextVariable(caret_color) + ";\n" + 
-						  "--active-title-alternative-foreground-color-rgb:" + GetTextVariable2(caret_color) + ";\n" +
-						  "--inactive-title-alternative-foreground-color:" + GetTextVariable(caret2_color) + ";\n" + 
-						  "--inactive-title-alternative-foreground-color-rgb:" + GetTextVariable2(caret2_color) + ";\n" +
-						  "--alert-alternative-foreground-color:" + GetTextVariable(alert_color) + "!important;\n" + 
-						  "--alert-alternative-foreground-color-rgb:" + GetTextVariable2(alert_color) + "!important;\n" +
-						  "--warning-alternative-foreground-color:" + GetTextVariable(warning_color) + "!important;\n" + 
-						  "--warning-alternative-foreground-color-rgb:" + GetTextVariable2(warning_color) + "!important;\n" +
-						  "--success-alternative-foreground-color:" + GetTextVariable(success_color) + "!important;\n" + 
-						  "--success-alternative-foreground-color-rgb:" + GetTextVariable2(success_color) + "!important;\n" +
-						  "--message-alternative-foreground-color:" + GetTextVariable(message_color) + "!important;\n" + 
-						  "--message-alternative-foreground-color-rgb:" + GetTextVariable2(message_color) + "!important;\n" +
-						  "--canvas-secondary-background-color:" + dropdowncolor + ";\n" + 
+	var result = 		  colorstyle +
+						  ":root {" +
+						  "--desktop-alternative-foreground-color:" + head_fg[4] + ";\n" + 
+						  "--desktop-alternative-foreground-color-rgb:" + head_fg[5] + ";\n" +
+						  "--desktop-text-alternative-foreground-color:" + headertext_fg[4] + ";\n" + 
+						  "--desktop-text-alternative-foreground-color-rgb:" + headertext_fg[5] + ";\n" +
+						  "--hyperlink-alternative-foreground-color:" + link_fg[4] + ";\n" + 
+						  "--hyperlink-alternative-foreground-color-rgb:" + link_fg[5] + ";\n" +
+						  "--canvas-alternative-foreground-color:" + content_color_fg[4] + ";\n" + 
+						  "--canvas-alternative-foreground-color-rgb:" + content_color_fg[5] + ";\n" +
+						  "--canvas-secondary-alternative-foreground-color:" + dropdowncolor_fg[4] + ";\n" + 
+						  "--canvas-secondary-alternative-foreground-color-rgb:" + dropdowncolor_fg[5] + ";\n" +
+						  "--inactive-text-alternative-foreground-color:" + border_fg[4] + ";\n" + 
+						  "--inactive-text-alternative-foreground-color-rgb:" + border_fg[5] + ";\n" +
+						  "--canvas-text-alternative-foreground-color:" + content_text_fg[4] + ";\n" + 
+						  "--canvas-text-alternative-foreground-color-rgb:" + content_text_fg[5] + ";\n" +
+						  "--highlight-alternative-foreground-color:" + button_fg[4] + ";\n" + 
+						  "--highlight-alternative-foreground-color-rgb:" + button_fg[5] + ";\n" +
+						  "--active-title-alternative-foreground-color:" + caret_fg[4] + ";\n" + 
+						  "--active-title-alternative-foreground-color-rgb:" + caret_fg[5] + ";\n" +
+						  "--inactive-title-alternative-foreground-color:" + caret2_fg[4] + ";\n" + 
+						  "--inactive-title-alternative-foreground-color-rgb:" + caret2_fg[5] + ";\n" +
+						  "--alert-alternative-foreground-color:" + alert_fg[4] + "!important;\n" + 
+						  "--alert-alternative-foreground-color-rgb:" + alert_fg[5] + "!important;\n" +
+						  "--pause-alternative-foreground-color:" + pause_fg[4] + "!important;\n" + 
+						  "--pause-alternative-foreground-color-rgb:" + pause_fg[5] + "!important;\n" +
+						  "--warning-alternative-foreground-color:" + warning_fg[4] + "!important;\n" + 
+						  "--warning-alternative-foreground-color-rgb:" + warning_fg[5] + "!important;\n" +
+						  "--success-alternative-foreground-color:" + success_fg[4] + "!important;\n" + 
+						  "--success-alternative-foreground-color-rgb:" + success_fg[5] + "!important;\n" +
+						  "--progress-alternative-foreground-color:" + progress_fg[4] + "!important;\n" + 
+						  "--progress-alternative-foreground-color-rgb:" + progress_fg[5] + "!important;\n" +
+						  "--message-alternative-foreground-color:" + message_fg[4] + "!important;\n" + 
+						  "--message-alternative-foreground-color-rgb:" + message_fg[5] + "!important;\n" +
 						  "--canvas-secondary-background-color-hover:" + dropdowncolorH + ";\n" + 
-						  "--canvas-3d-background-color:" + ColorTestTwin(dropdowncolor,"#ffffff",0.75) + ";\n" +
-						  "--canvas-3d-background-color-dark:" + ColorTestTwin(dropdowncolor,"#000000",0.5) + ";\n" +
+						  "--canvas-secondary-foreground-color:" + dropdowncolor_fg[0] + ";\n" +
+						  "--canvas-secondary-foreground-color-hover:" +  dropdowncolor_fg[1] + ";\n" + 
+						  "--canvas-3d-background-color:" + ColorTestTwin(dropdowncolor,"#ffffff",c3dlight) + ";\n" +
+						  "--canvas-3d-background-color-dark:" + ColorTestTwin(dropdowncolor,"#000000",c3ddark) + ";\n" +
 						  "--canvas-background-color-hover:" + content_color2 + ";\n" +
-						  "--canvas-foreground-color:" + GetForegroundVariable(content_color) + ";\n" +
-						  "--canvas-foreground-color-hover:" + GetForegroundVariable(content_color,true) + ";\n" + 
+						  "--canvas-foreground-color:" + content_color_fg[0] + ";\n" +
+						  "--canvas-foreground-color-hover:" +  content_color_fg[1] + ";\n" + 
 						  "--canvas-secondary-background-color-rgb:" + Color2(dropdowncolor) + ";\n" + 
+						  "--canvas-secondary-foreground-color-rgb:" + dropdowncolor_fg[2] + ";\n" +
+						  "--canvas-secondary-foreground-color-hover-rgb:" +  dropdowncolor_fg[3] + ";\n" + 
 						  "--canvas-background-color-rgb:" + Color2( content_color ) + ";\n" +
-						  "--canvas-foreground-color-rgb:" + GetForegroundVariable2(content_color) + ";\n" +
-						  "--canvas-foreground-color-hover-rgb:" + GetForegroundVariable2(content_color,true) + ";\n" + 
+						  "--canvas-foreground-color-rgb:" +  content_color_fg[2] + ";\n" +
+						  "--canvas-foreground-color-hover-rgb:" +  content_color_fg[3] + ";\n" + 
 						  "--canvas-text-background-color-hover:" + content_text1 + ";\n" +
-						  "--canvas-text-foreground-color:" + GetForegroundVariable(content_text) + ";\n" +
-						  "--canvas-text-foreground-color-hover:" + GetForegroundVariable(content_text,true) + ";\n" +
-						  "--canvas-text-foreground-color-inverted:" + GetForegroundVariable(content_text1) + ";\n" +
+						  "--canvas-text-foreground-color:" + content_text_fg[0] + ";\n" +
+						  "--canvas-text-foreground-color-hover:" + content_text_fg[1] + ";\n" +
+						  "--canvas-text-foreground-color-inverted:" + GetForegroundVariables(content_text1)[0] + ";\n" +
 						  "--canvas-text-background-color-rgb:" + Color2( content_text ) + ";\n" +
 						  "--canvas-text-background-color-hover-rgb:" + Color2(content_text1) + ";\n" +
-						  "--canvas-text-foreground-color-rgb:" + GetForegroundVariable2(content_text) + ";\n" +
-						  "--canvas-text-foreground-color-hover-rgb:" + GetForegroundVariable2(content_text,true) + ";\n" +
+						  "--canvas-text-foreground-color-rgb:" + content_text_fg[2] + ";\n" +
+						  "--canvas-text-foreground-color-hover-rgb:" + content_text_fg[3] + ";\n" +
+						  "--canvas-text-secondary-background-color-hover:" + content2_text1 + ";\n" +
+						  "--canvas-text-secondary-foreground-color:" + content2_text_fg[0] + ";\n" +
+						  "--canvas-text-secondary-foreground-color-hover:" + content2_text_fg[1] + ";\n" +
+						  "--canvas-text-secondary-foreground-color-inverted:" + GetForegroundVariables(content2_text1)[0] + ";\n" +
+						  "--canvas-text-secondary-background-color-rgb:" + Color2( content2_text ) + ";\n" +
+						  "--canvas-text-secondary-background-color-hover-rgb:" + Color2(content2_text1) + ";\n" +
+						  "--canvas-text-secondary-foreground-color-rgb:" + content2_text_fg[2] + ";\n" +
+						  "--canvas-text-secondary-foreground-color-hover-rgb:" + content2_text_fg[3] + ";\n" +
 						  "--highlight-background-color-hover:" + buttoncolor1 + ";\n" +
-						  "--highlight-foreground-color:" + GetForegroundVariable(button_color) + ";\n" +
-						  "--highlight-foreground-color-hover:" + GetForegroundVariable(button_color,true) + ";\n" +
-						  "--highlight-foreground-color-inverted:" + GetForegroundVariable(buttoncolor1) + ";\n" +
+						  "--highlight-foreground-color:" + button_fg[0] + ";\n" +
+						  "--highlight-foreground-color-hover:" + button_fg[1] + ";\n" +
+						  "--highlight-foreground-color-inverted:" + GetForegroundVariables(buttoncolor1)[0] + ";\n" +
 						  "--highlight-background-color-rgb:" + Color2(button_color) + ";\n" +
-						  "--highlight-foreground-color-rgb:" + GetForegroundVariable2(button_color) + ";\n" +
-						  "--highlight-foreground-color-hover-rgb:" + GetForegroundVariable2(button_color,true) + ";\n" +
+						  "--highlight-foreground-color-rgb:" + button_fg[2] + ";\n" +
+						  "--highlight-foreground-color-hover-rgb:" + button_fg[3] + ";\n" +
 						  "--hyperlink-background-color-hover:" + linkcolor1 + ";\n" +
-						  "--hyperlink-foreground-color:" + GetForegroundVariable(link_color) + ";\n" +
-						  "--hyperlink-foreground-color-hover:" + GetForegroundVariable(link_color,true) + ";\n" +
-						  "--hyperlink-foreground-color-inverted:" + GetForegroundVariable(linkcolor1) + ";\n" +
+						  "--hyperlink-foreground-color:" + link_fg[0] + ";\n" +
+						  "--hyperlink-foreground-color-hover:" + link_fg[1] + ";\n" +
+						  "--hyperlink-foreground-color-inverted:" + GetForegroundVariables(linkcolor1)[0] + ";\n" +
 						  "--hyperlink-background-color-rgb:" + Color2(link_color) + ";\n" +
 						  "--hyperlink-background-color-hover-rgb:" + Color2(linkcolor1) + ";\n" +
-						  "--hyperlink-foreground-color-rgb:" + GetForegroundVariable2(link_color) + ";\n" +
-						  "--hyperlink-foreground-color-hover-rgb:" + GetForegroundVariable2(link_color,true) + ";\n" +
+						  "--hyperlink-foreground-color-rgb:" + link_fg[2] + ";\n" +
+						  "--hyperlink-foreground-color-hover-rgb:" + link_fg[3] + ";\n" +
+						  "--hyperlink-secondary-background-color:" + link2_color + ";\n" +
+						  "--hyperlink-secondary-background-color-hover:" + link2color1 + ";\n" +
+						  "--hyperlink-secondary-background-color-rgb:" + Color2(link2_color) + ";\n" +
 						  "--inactive-text-background-color-hover:" + bordercolor1 + ";\n" +
-						  "--inactive-text-foreground-color:" + GetForegroundVariable(border_color) + ";\n" +
-						  "--inactive-text-foreground-color-hover:" + GetForegroundVariable(border_color,true) + ";\n" +
-						  "--inactive-text-foreground-color-inverted:" + GetForegroundVariable(bordercolor1) + ";\n" +
+						  "--inactive-text-foreground-color:" + border_fg[0] + ";\n" +
+						  "--inactive-text-foreground-color-hover:" + border_fg[1] + ";\n" +
+						  "--inactive-text-foreground-color-inverted:" + GetForegroundVariables(bordercolor1)[0] + ";\n" +
 						  "--inactive-text-background-color-rgb:" + Color2(border_color) + ";\n" +
-						  "--inactive-text-foreground-color-rgb:" + GetForegroundVariable2(border_color) + ";\n" +
-						  "--inactive-text-foreground-color-hover-rgb:" + GetForegroundVariable2(border_color,true) + ";\n" +
+						  "--inactive-text-foreground-color-rgb:" + border_fg[2] + ";\n" +
+						  "--inactive-text-foreground-color-hover-rgb:" + border_fg[3] + ";\n" +
 						  "--desktop-background-color-hover:" + headcolor1 + ";\n" +
-						  "--desktop-foreground-color:" + GetForegroundVariable(head_color) + ";\n" +
-						  "--desktop-foreground-color-hover:" + GetForegroundVariable(head_color,true) + ";\n" +
-						  "--desktop-foreground-color-inverted:" + GetForegroundVariable(headcolor1) + ";\n" +
+						  "--desktop-foreground-color:" + head_fg[0] + ";\n" +
+						  "--desktop-foreground-color-hover:" + head_fg[1] + ";\n" +
+						  "--desktop-foreground-color-inverted:" + GetForegroundVariables(headcolor1)[0] + ";\n" +
 						  "--desktop-background-color-rgb:" + Color2(head_color) + ";\n" +
-						  "--desktop-foreground-color-rgb:" + GetForegroundVariable2(head_color) + ";\n" +
-						  "--desktop-foreground-color-hover-rgb:" + GetForegroundVariable2(head_color,true) + ";\n" +
+						  "--desktop-foreground-color-rgb:" + head_fg[2] + ";\n" +
+						  "--desktop-foreground-color-hover-rgb:" + head_fg[3] + ";\n" +
 						  "--desktop-text-background-color-hover:" + headertextcolor1 + ";\n" +
-						  "--desktop-text-foreground-color:" + GetForegroundVariable(headertext_color) + ";\n" +
-						  "--desktop-text-foreground-color-hover:" + GetForegroundVariable(headertext_color,true) + ";\n" +
-						  "--desktop-text-foreground-color-inverted:" + GetForegroundVariable(headertextcolor1) + ";\n" +
+						  "--desktop-text-foreground-color:" + headertext_fg[0] + ";\n" +
+						  "--desktop-text-foreground-color-hover:" + headertext_fg[1] + ";\n" +
+						  "--desktop-text-foreground-color-inverted:" + GetForegroundVariables(headertextcolor1)[0] + ";\n" +
 						  "--desktop-text-background-color-rgb:" + Color2( headertext_color ) + ";\n" +
 						  "--desktop-text-background-color-hover-rgb:" + Color2(headertextcolor1) + ";\n" +
-						  "--desktop-text-foreground-color-rgb:" + GetForegroundVariable2(headertext_color) + ";\n" +
-						  "--desktop-text-foreground-color-hover-rgb:" + GetForegroundVariable2(headertext_color,true) + ";\n" +
+						  "--desktop-text-foreground-color-rgb:" + headertext_fg[2] + ";\n" +
+						  "--desktop-text-foreground-color-hover-rgb:" + headertext_fg[2] + ";\n" +
 						  "--active-title-background-color-hover:" + caretcolor1 + ";\n" +
-						  "--active-title-foreground-color:" + GetForegroundVariable(caret_color) + ";\n" +
-						  "--active-title-foreground-color-hover:" + GetForegroundVariable(caret_color,true) + ";\n" +
-						  "--active-title-foreground-color-inverted:" + GetForegroundVariable(caretcolor1) + ";\n" +
+						  "--active-title-foreground-color:" + caret_fg[0] + ";\n" +
+						  "--active-title-foreground-color-hover:" + caret_fg[1] + ";\n" +
+						  "--active-title-foreground-color-inverted:" + GetForegroundVariables(caretcolor1)[0] + ";\n" +
 						  "--active-title-background-color-rgb:" + Color2( caret_color ) + ";\n" +
-						  "--active-title-foreground-color-rgb:" + GetForegroundVariable2(caret_color) + ";\n" +
-						  "--active-title-foreground-color-hover-rgb:" + GetForegroundVariable2(caret_color,true) + ";\n" +
+						  "--active-title-foreground-color-rgb:" + caret_fg[2] + ";\n" +
+						  "--active-title-foreground-color-hover-rgb:" + caret_fg[3] + ";\n" +
 						  "--inactive-title-background-color-hover:" + caret2color1 + ";\n" +
-						  "--inactive-title-foreground-color:" + GetForegroundVariable(caret2_color) + ";\n" +
-						  "--inactive-title-foreground-color-hover:" + GetForegroundVariable(caret2_color,true) + ";\n" +
-						  "--inactive-title-foreground-color-inverted:" + GetForegroundVariable(caret2color1) + ";\n" +
+						  "--inactive-title-foreground-color:" + caret2_fg[0] + ";\n" +
+						  "--inactive-title-foreground-color-hover:" + caret2_fg[1] + ";\n" +
+						  "--inactive-title-foreground-color-inverted:" + GetForegroundVariables(caret2color1)[0] + ";\n" +
 						  "--inactive-title-background-color-rgb:" + Color2( caret2_color ) + ";\n" +
-						  "--inactive-title-foreground-color-rgb:" + GetForegroundVariable2(caret2_color) + ";\n" +
-						  "--inactive-title-foreground-color-hover-rgb:" + GetForegroundVariable2(caret2_color,true) + ";\n" +
+						  "--inactive-title-foreground-color-rgb:" + caret2_fg[2] + ";\n" +
+						  "--inactive-title-foreground-color-hover-rgb:" + caret2_fg[3] + ";\n" +
 						  "--alert-background-color:" + alert_color + "!important;\n" +
 						  "--alert-background-color-hover:" + alertcolor1 + "!important;\n" +
-						  "--alert-gradient-color:" + GetGradientVariable(content_color,'alert')[0] + "!important;\n" +
-						  "--alert-gradient-color-hover:" + GetGradientVariable(content_color,'alert')[1] + "!important;\n" +
-						  "--alert-foreground-color:" + GetForegroundVariable(alert_color) + "!important;\n" +
-						  "--alert-foreground-color-hover:" + GetForegroundVariable(alert_color,true) + "!important;\n" +
-						  "--alert-foreground-color-inverted:" + GetForegroundVariable(alertcolor1) + "!important;\n" +
+						  "--alert-background-color-hover-2:" + alertcolor2 + "!important;\n" +
+						  "--alert-gradient-color:" + alert_gradient[0] + "!important;\n" +
+						  "--alert-gradient-color-hover:" + alert_gradient[1] + "!important;\n" +
+						  "--alert-foreground-color:" + alert_fg[0] + "!important;\n" +
+						  "--alert-foreground-color-hover:" + alert_fg[1] + "!important;\n" +
+						  "--alert-foreground-color-inverted:" + GetForegroundVariables(alertcolor1)[0] + "!important;\n" +
 						  "--alert-background-color-rgb:" + Color2(alert_color) + "!important;\n" +
-						  "--alert-foreground-color-rgb:" + GetForegroundVariable2(alert_color) + "!important;\n" +
-						  "--alert-foreground-color-hover-rgb:" + GetForegroundVariable2(alert_color,true) + "!important;\n" +
+						  "--alert-foreground-color-rgb:" + alert_fg[2] + "!important;\n" +
+						  "--alert-foreground-color-hover-rgb:" + alert_fg[3] + "!important;\n" +
+						  "--pause-background-color:" + pause_color + "!important;\n" +
+						  "--pause-background-color-hover:" + pausecolor1 + "!important;\n" +
+						  "--pause-background-color-hover-2:" + pausecolor2 + "!important;\n" +
+						  "--pause-gradient-color:" + pause_gradient[0] + "!important;\n" +
+						  "--pause-gradient-color-hover:" + pause_gradient[1] + "!important;\n" +
+						  "--pause-foreground-color:" + pause_fg[0] + "!important;\n" +
+						  "--pause-foreground-color-hover:" + pause_fg[1] + "!important;\n" +
+						  "--pause-foreground-color-inverted:" + GetForegroundVariables(pausecolor1)[0] + "!important;\n" +
+						  "--pause-background-color-rgb:" + Color2(pause_color) + "!important;\n" +
+						  "--pause-foreground-color-rgb:" + pause_fg[2] + "!important;\n" +
+						  "--pause-foreground-color-hover-rgb:" + pause_fg[3] + "!important;\n" +
 						  "--warning-background-color:" + warning_color + "!important;\n" +
 						  "--warning-background-color-hover:" + warningcolor1 + "!important;\n" +
-						  "--warning-gradient-color:" + GetGradientVariable(content_color,'warning')[0] + "!important;\n" +
-						  "--warning-gradient-color-hover:" + GetGradientVariable(content_color,'warning')[1] + "!important;\n" +
-						  "--warning-foreground-color:" + GetForegroundVariable(warning_color) + "!important;\n" +
-						  "--warning-foreground-color-hover:" + GetForegroundVariable(warning_color,true) + "!important;\n" +
-						  "--warning-foreground-color-inverted:" + GetForegroundVariable(warningcolor1) + "!important;\n" +
+						  "--warning-background-color-hover-2:" + warningcolor2 + "!important;\n" +
+						  "--warning-gradient-color:" + warning_gradient[0] + "!important;\n" +
+						  "--warning-gradient-color-hover:" + warning_gradient[1] + "!important;\n" +
+						  "--warning-foreground-color:" + warning_fg[0] + "!important;\n" +
+						  "--warning-foreground-color-hover:" + warning_fg[1] + "!important;\n" +
+						  "--warning-foreground-color-inverted:" + GetForegroundVariables(warningcolor1)[0] + "!important;\n" +
 						  "--warning-background-color-rgb:" + Color2(warning_color) + "!important;\n" +
-						  "--warning-foreground-color-rgb:" + GetForegroundVariable2(warning_color) + "!important;\n" +
-						  "--warning-foreground-color-hover-rgb:" + GetForegroundVariable2(warning_color,true) + "!important;\n" +
+						  "--warning-foreground-color-rgb:" + warning_fg[2] + "!important;\n" +
+						  "--warning-foreground-color-hover-rgb:" + warning_fg[3] + "!important;\n" +
 						  "--success-background-color:" + success_color + "!important;\n" +
 						  "--success-background-color-hover:" + successcolor1 + "!important;\n" +
-						  "--success-gradient-color:" + GetGradientVariable(content_color,'success')[0] + "!important;\n" +
-						  "--success-gradient-color-hover:" + GetGradientVariable(content_color,'success')[1] + "!important;\n" +
-						  "--success-foreground-color:" + GetForegroundVariable(success_color) + "!important;\n" +
-						  "--success-foreground-color-hover:" + GetForegroundVariable(success_color,true) + "!important;\n" +
-						  "--success-foreground-color-inverted:" + GetForegroundVariable(successcolor1) + "!important;\n" +
+						  "--success-background-color-hover-2:" + successcolor2 + "!important;\n" +
+						  "--success-gradient-color:" + success_gradient[0] + "!important;\n" +
+						  "--success-gradient-color-hover:" + success_gradient[1] + "!important;\n" +
+						  "--success-foreground-color:" + success_fg[0] + "!important;\n" +
+						  "--success-foreground-color-hover:" + success_fg[1] + "!important;\n" +
+						  "--success-foreground-color-inverted:" + GetForegroundVariables(successcolor1)[0] + "!important;\n" +
 						  "--success-background-color-rgb:" + Color2(success_color) + "!important;\n" +
-						  "--success-foreground-color-rgb:" + GetForegroundVariable2(success_color) + "!important;\n" +
-						  "--success-foreground-color-hover-rgb:" + GetForegroundVariable2(success_color,true) + "!important;\n" +
+						  "--success-foreground-color-rgb:" + success_fg[2] + "!important;\n" +
+						  "--success-foreground-color-hover-rgb:" + success_fg[3] + "!important;\n" +
+						  "--progress-background-color:" + progress_color + "!important;\n" +
+						  "--progress-background-color-hover:" + progresscolor1 + "!important;\n" +
+						  "--progress-background-color-hover-2:" + progresscolor2 + "!important;\n" +
+						  "--progress-gradient-color:" + progress_gradient[0] + "!important;\n" +
+						  "--progress-gradient-color-hover:" + progress_gradient[1] + "!important;\n" +
+						  "--progress-foreground-color:" + progress_fg[0] + "!important;\n" +
+						  "--progress-foreground-color-hover:" + progress_fg[1] + "!important;\n" +
+						  "--progress-foreground-color-inverted:" + GetForegroundVariables(progresscolor1)[0] + "!important;\n" +
+						  "--progress-background-color-rgb:" + Color2(progress_color) + "!important;\n" +
+						  "--progress-foreground-color-rgb:" + progress_fg[2] + "!important;\n" +
+						  "--progress-foreground-color-hover-rgb:" + progress_fg[3] + "!important;\n" +
 						  "--message-background-color:" + message_color + "!important;\n" +
 						  "--message-background-color-hover:" + messagecolor1 + "!important;\n" +
-						  "--message-gradient-color:" + GetGradientVariable(content_color,'message')[0] + "!important;\n" +
-						  "--message-gradient-color-hover:" + GetGradientVariable(content_color,'message')[1] + "!important;\n" +
-						  "--message-foreground-color:" + GetForegroundVariable(message_color) + "!important;\n" +
-						  "--message-foreground-color-hover:" + GetForegroundVariable(message_color,true) + "!important;\n" +
-						  "--message-foreground-color-inverted:" + GetForegroundVariable(messagecolor1) + "!important;\n" +
+						  "--message-background-color-hover-2:" + messagecolor2 + "!important;\n" +
+						  "--message-gradient-color:" + message_gradient[0] + "!important;\n" +
+						  "--message-gradient-color-hover:" + message_gradient[1] + "!important;\n" +
+						  "--message-foreground-color:" + message_fg[0] + "!important;\n" +
+						  "--message-foreground-color-hover:" + message_fg[1] + "!important;\n" +
+						  "--message-foreground-color-inverted:" + GetForegroundVariables(messagecolor1)[0] + "!important;\n" +
 						  "--message-background-color-rgb:" + Color2(message_color) + "!important;\n" +
-						  "--message-foreground-color-rgb:" + GetForegroundVariable2(message_color) + "!important;\n" +
-						  "--message-foreground-color-hover-rgb:" + GetForegroundVariable2(message_color,true) + "!important;\n" +
+						  "--message-foreground-color-rgb:" + message_fg[2] + "!important;\n" +
+						  "--message-foreground-color-hover-rgb:" + message_fg[3] + "!important;\n" +
 						  "}" +
 						  //
-						  "body {" +
+						  ":root {" +
 						  "--canvas-background-color:" + content_color + ";\n" +
-						  "--canvas-gradient-color:" + GetGradientVariable(content_color,'canvas')[0] + ";\n" +
-						  "--canvas-gradient-color-hover:" + GetGradientVariable(content_color,'canvas')[1] + ";\n" +
-						  "--canvas-secondary-gradient-color:" + GetGradientVariable(content_color,'canvas-secondary')[0] + ";\n" +
-						  "--canvas-secondary-gradient-color-hover:" + GetGradientVariable(content_color,'canvas-secondary')[1] + ";\n" +
+						  "--canvas-secondary-background-color:" + dropdowncolor + ";\n" + 
+						  "--canvas-gradient-color:" + content_color_gradient[0] + ";\n" +
+						  "--canvas-gradient-color-hover:" + content_color_gradient[1] + ";\n" +
+						  "--canvas-secondary-gradient-color:" + dropdowncolor_gradient[0] + ";\n" +
+						  "--canvas-secondary-gradient-color-hover:" + dropdowncolor_gradient[1] + ";\n" +
 						  "--canvas-text-background-color:" + content_text + ";\n" +
-						  "--canvas-text-gradient-color:" + GetGradientVariable2(content_color,'canvas-text')[0] + ";\n" +
-						  "--canvas-text-gradient-color-hover:" + GetGradientVariable2(content_color,'canvas-text')[1] + ";\n" +
+						  "--canvas-text-gradient-color:" + content_text_gradient[0] + ";\n" +
+						  "--canvas-text-gradient-color-hover:" + content_text_gradient[1] + ";\n" +
+						  "--canvas-text-secondary-background-color:" + content2_text + ";\n" +
+						  "--canvas-text-secondary-gradient-color:" + content2_text_gradient[0] + ";\n" +
+						  "--canvas-text-secondary-gradient-color-hover:" + content2_text_gradient[1] + ";\n" +
 						  "--highlight-background-color:" + button_color + ";\n" +
-						  "--highlight-gradient-color:" + GetGradientVariable(button_color,'highlight')[0] + ";\n" +
-						  "--highlight-gradient-color-hover:" + GetGradientVariable(button_color,'highlight')[1] + ";\n" +
+						  "--highlight-gradient-color:" + button_gradient[0] + ";\n" +
+						  "--highlight-gradient-color-hover:" + button_gradient[1] + ";\n" +
 						  "--hyperlink-background-color:" + link_color + ";\n" +
-						  "--hyperlink-gradient-color:" + GetGradientVariable(content_color,'hyperlink')[0] + ";\n" +
-						  "--hyperlink-gradient-color-hover:" + GetGradientVariable(content_color,'hyperlink')[1] + ";\n" +
+						  "--hyperlink-gradient-color:" + link_gradient[0] + ";\n" +
+						  "--hyperlink-gradient-color-hover:" + link_gradient[1] + ";\n" +
 						  "--inactive-text-background-color:" + border_color + ";\n" +
-						  "--inactive-text-gradient-color:" + GetGradientVariable(border_color,'inactive-text')[0] + ";\n" +
-						  "--inactive-text-gradient-color-hover:" + GetGradientVariable(border_color,'inactive-text')[1] + ";\n" +
+						  "--inactive-text-gradient-color:" + border_gradient[0] + ";\n" +
+						  "--inactive-text-gradient-color-hover:" + border_gradient[1] + ";\n" +
 						  "--desktop-background-color:" + head_color + ";\n" +
-						  "--desktop-gradient-color:" + GetGradientVariable(content_color,'desktop')[0] + ";\n" +
+						  "--desktop-gradient-color:" + head_gradient[0] + ";\n" +
 						  "--desktop-gradient-color-hover:" + GetGradientVariable(content_color,'desktop')[1] + ";\n" +
 						  "--desktop-text-background-color:" + headertext_color + ";\n" +
 						  "--desktop-text-gradient-color:" + GetGradientVariable2(content_color,'desktop-text')[0] + ";\n" +
 						  "--desktop-text-gradient-color-hover:" + GetGradientVariable2(content_color,'desktop-text')[1] + ";\n" +
 						  "--active-title-background-color:" + caret_color + ";\n" +
-						  "--active-title-gradient-color:" + GetGradientVariable(caret_color,'active-title')[0] + ";\n" +
-						  "--active-title-gradient-color-hover:" + GetGradientVariable(caret_color,'active-title')[1] + ";\n" +
+						  "--active-title-gradient-color:" + caret_gradient[0] + ";\n" +
+						  "--active-title-gradient-color-hover:" + caret_gradient[1] + ";\n" +
 						  "--inactive-title-background-color:" + caret2_color + ";\n" +
-						  "--inactive-title-gradient-color:" + GetGradientVariable(caret2_color,'inactive-title')[0] + ";\n" +
-						  "--inactive-title-gradient-color-hover:" + GetGradientVariable(caret2_color,'inactive-title')[1] + ";\n" +
-						  "--bg-size:" + ['cover','contain','100% 100%','auto'][["cover", "contain", "stretched", "full"].indexOf( getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-size") ) ] + ";\n" +
-						  "--bg-tile-x:" + ['repeat','no-repeat'][["false", "true"].indexOf( getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-no-horizontal-tiling") ) ] + ";\n" +
-						  "--bg-tile-y:" + ['repeat','no-repeat'][["false", "true"].indexOf( getComputedStyle(document.querySelector('html')).getPropertyValue("--desktop-background-no-vertical-tiling") ) ] + ";\n" +
+						  "--inactive-title-gradient-color:" + caret2_gradient[0] + ";\n" +
+						  "--inactive-title-gradient-color-hover:" + caret2_gradient[1] + ";\n" +
+// Misc Variables
+						'--desktop-background-image:' + img  + ';\n' +
+						'--desktop-background-image-filter:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-image-filter")  + ';\n' +
+						  "--desktop-background-mode:" + overlay[2] + ";\n" +
+					 '--desktop-background-horizontal-alignment:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-horizontal-alignment")  + ';\n' +
+					 '--desktop-background-vertical-alignment:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-vertical-alignment")  + ';\n' +
+						 '--custom-font:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--custom-font")  + ';\n' +
+						 '--custom-secondary-font:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--custom-secondary-font")  + ';\n' +
+						 '--border-radius:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--border-radius")  + ';\n' +
+						 '--icon-filter:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--icon-filter")  + ';\n' +
+						 '--icon-filter-hover:' + wordfilter2  + ';\n' +
+						 '--icon-filter-duration:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--icon-filter-duration")  + ';\n' +
+						 '--icon-filter-delay:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--icon-filter-delay")  + ';\n' +
+						 '--system-acryllic-opacity:' + getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--system-acryllic-opacity")  + ';\n' +
+
+// Misc Background Settings
+						  "--bg-size:" + ['cover','contain','100% 100%','auto'][["cover", "contain", "stretched", "full"].indexOf( getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-size") ) ] + ";\n" +
+						  "--bg-tile-x:" + ['repeat','no-repeat'][["false", "true"].indexOf( getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-no-horizontal-tiling") ) ] + ";\n" +
+						  "--bg-tile-y:" + ['repeat','no-repeat'][["false", "true"].indexOf( getComputedStyle(document.querySelector('.cpe-theming.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme)).getPropertyValue("--desktop-background-no-vertical-tiling") ) ] + ";\n" +
 						  "--bg-overlay-display:" + overlay[0] + ";\n" +
 						  "--bg-overlay-size:" + overlay[1] + ";\n" +
 						  "--invertion-filter:" + [['none','none','grayscale(100%)','sepia(1) hue-rotate(20deg)','sepia(1) hue-rotate(200deg)','hue-rotate(180deg)','opacity(0.5) sepia(1)', 'opacity(0.5) sepia(1) hue-rotate(180deg)'][window.MW18spdarkmode],['invert(1) hue-rotate(180deg)','invert(1)','invert(1) grayscale(100%)','invert(1) sepia(1) hue-rotate(20deg)','invert(1) sepia(1) hue-rotate(200deg)','invert(1) hue-rotate(180deg)','invert(1) opacity(0.5) sepia(1)', 'invert(1) opacity(0.5) sepia(1) hue-rotate(180deg)'][window.MW18spdarkmode]][[false, true].indexOf(window.MW18darkmode) ] + ";\n" +
@@ -1621,14 +2001,21 @@ document.querySelector("head .theming").innerHTML = result;
 }
 
 /* Toggles Theme */
-function ToggleTheme(theme="A",repaint=true) {
+function ToggleTheme(theme="A",repaint=true,save=true) {
     var x = document.querySelector('html');
-		document.querySelector('html').setAttribute('theme', theme);
+		if (!(['A','B','C','D','E','F','G','H'].includes(theme))) {
+			console.log("CPE Language allows you to set the theme slot only from A to H. Slot A is used as a fallback")
+			var theme='A';
+			var save = true;
+		}
+		window.MW18ActiveTheme = theme;
 		if (repaint) {
 			ColorUpdate(true);
 		}
-		insertKey('theme-selected', theme );
-		var theme_selected = getKey('theme-selected');
+		if (save) {
+			insertKey('theme-selected', window.MW18ActiveTheme );
+		}
+		var theme_selected = theme;
 		var x = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-themes li.selected, .skin-tunic #wiki-themes .mw-portlet-body ul li.selected");
 			if (x) {
 				x.classList.remove("selected");
