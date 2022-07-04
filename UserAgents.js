@@ -91,13 +91,13 @@ function RemoveBannerBrowser1() {
 
 /* Mobile Only CSS */
 if (navigator.userAgent.match("Mobile")) {
-document.querySelector("body").className += " phone"
+document.querySelector("html").className += " phone"
 }
 
 /* Local Storage */
 function getKey(key) {
 var str = window.localStorage,
-    result = str.getItem('-evelution-pref-'+key);
+    result = str.getItem('-evelution-preference-'+key);
 if (!result) {
    return '-1';
 }
@@ -105,7 +105,7 @@ return result;
 }
 
 function insertKey(key,value) {
-	window.localStorage.setItem('-evelution-pref-' + key, '' + value);
+	window.localStorage.setItem('-evelution-preference-' + key, '' + value);
 }
 
 function getParams() {
@@ -123,7 +123,7 @@ function getParams() {
 function DropDownUpdate() {
 	var dropdowns = document.querySelectorAll(".cpe-dropdown");
 	dropdowns.forEach(function(x) {
-		x.setAttribute('tabindex',-1);; // Add the CPE button class
+		x.setAttribute('tabindex',-1); // Add the CPE button class
 	});
 
 
@@ -146,10 +146,13 @@ function DropDownUpdate() {
 						var value = selected.getAttribute("value");
 						document.querySelector(' .cpe-dropdown.cpe-select:focus-within')
 						.addEventListener('click',(function() {
-									var content = selected.innerText;
-									document.querySelector('.cpe-select:focus-within .cpe-select__value').setAttribute("value", value);
-									document.querySelector('.cpe-select:focus-within .cpe-select__value').innerHTML= content;
-//									TestDynamicTheme(); // Change
+									if (selected != undefined) {
+										var content = selected.innerText;
+										document.querySelector('.cpe-select:focus-within .cpe-select__value').setAttribute("value", value);
+										document.querySelector('.cpe-select:focus-within .cpe-select__value').innerHTML= content;
+										selected = undefined;
+//										TestDynamicTheme(); // Change
+									}
 								}));
         }) );
 	});
@@ -196,12 +199,8 @@ function UpdateRangeInputs() {
 	if (getKey('right-rail-full') === '-1') {
 		insertKey('right-rail-full', 'true' );
 	}
-	if (getKey('left-rail-full') === '-1') {
-		insertKey('left-rail-full', 'true' );
-	}
 	var content_full = getKey('content-full')
 	var right_rail_full = getKey('right-rail-full');
-	var left_rail_full = getKey('left-rail-full');
     getParams().forEach(function (param) {
         var key = param.split("=")[0];
         var value = param.split("=")[1];
@@ -214,10 +213,8 @@ function UpdateRangeInputs() {
             case 'hiderail':
 				if (value === 'true') {
 					right_rail_full = 'false';
-					left_rail_full = 'false';
 				} else {
 					right_rail_full = 'true';
-					left_rail_full = 'true';
 				}
 				console.info('Pane visibility settings overriden')
                 break;
@@ -229,14 +226,6 @@ function UpdateRangeInputs() {
 				}
 				console.info('Right pane visibility settings overriden')
                 break;
-            case 'hideleftrail':
-				if (value === 'true') {
-					left_rail_full = 'false';
-				} else {
-					left_rail_full = 'true';
-				}
-				console.info('Left pane visibility settings overriden')
-                break;
 
         }
     });
@@ -246,13 +235,11 @@ function UpdateRangeInputs() {
     if (right_rail_full === 'true') {
 		document.querySelector(' body ').classList.add('has-right-rail');
 	}
-    if (left_rail_full === 'true') {
-		document.querySelector(' body ').classList.add('has-left-rail');
-	}
 	UpdateRangeInputs();
 	DropDownUpdate();
+	document.querySelector("body").addEventListener("mouseenter", ( function(e) { CheckTheme(); } ) );
+	document.querySelector("body").addEventListener("mouseleave", ( function(e) { DropDownUpdate(); CheckTheme(); } ) );
 })();
-
 
 /* Aliases all components with the .wds prefix to the ones from .cpe ones */
 function AliasFandomComponents() {
@@ -291,6 +278,23 @@ function RemoveBanner() {
 
 }
 
+function RemoveBanners() {
+	var banners = document.querySelectorAll('#floatingbanner .cpe-banner-notification');
+	banners.forEach(function(banner) {
+		banner.classList.add("is-transparent")
+		setTimeout(
+		(function () {
+			banner.remove();			
+			if (!(document.querySelectorAll("#floatingbanner .cpe-banner-notification").length)) {
+				document.querySelector('#floatingbanner').remove();
+			}
+			document.querySelector('.focus-overlay').focus();
+		}),405);
+
+	});
+
+}
+
 function AddFloatingBanner(content='Sample Content',kind='message',extraclass='') {
 	if (kind === 'alert') {
 		var icon = 'report'
@@ -305,14 +309,17 @@ function AddFloatingBanner(content='Sample Content',kind='message',extraclass=''
 	} else {
 		var icon = 'info'
 	}
+	var nogap = false;
 	if (!(document.querySelector(".top-gap #floatingbanner"))) {
+		var nogap = true;
 		document.querySelector(".top-gap").insertAdjacentHTML('afterbegin', 
-			  '<div class="cpe-banner-notification__container" id="floatingbanner">' +
-			  '\n</div>'
+			  '<div class="cpe-banner-notification__container" id="floatingbanner" style="pointer-events:none;">' +
+			  '<div style="display:flex; flex-flow:column;"><button style="pointer-events:auto; align-self:flex-end; margin-right:8.5px;" class="cpe-button" onclick="RemoveBanners()">Clear all</button></div>' +
+			  '\n<div class="banners" style="pointer-events:auto;"></div></div>'
 		);
 	}
 
-	document.querySelector(".top-gap #floatingbanner").insertAdjacentHTML('beforeend', 
+	document.querySelector(".top-gap #floatingbanner .banners").insertAdjacentHTML('beforeend', 
 			'<div class=" cpe-banner-notification is-' + kind + '" id="' + extraclass  + '">' +
 			  '<div class="cpe-banner-notification__icon">' +
 				'<span class="cpe-icon cpe-icon-small material-icons">' +
@@ -325,6 +332,7 @@ function AddFloatingBanner(content='Sample Content',kind='message',extraclass=''
 			  '</span>' +
 			'</div>' 
 	);
+	
 
 
 }

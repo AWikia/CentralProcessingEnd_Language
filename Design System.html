@@ -1,18 +1,48 @@
 <html class="main">
 	<body onfocus="CheckTheme()" onblur="CheckTheme()" class="mpisto-2018" id="Handler" onclick="">
 	<div style="position:absolute; z-index:-1;">
-		<span class="fc-mozbuttonface" style="color:-moz-dialog"></span>
-		<span class="fc-mozbuttontext" style="color:-moz-dialogtext"></span>
-		<span class="fc-buttonface" style="color:buttonface"></span>
-		<span class="fc-buttontext" style="color:buttontext"></span>
-		<span class="fc-canvas" style="color:canvas;"></span>
-		<span class="fc-linktext" style="color:linktext;"></span>
-		<span class="fc-graytext" style="color:graytext;"></span>
-		<span class="fc-canvastext" style="color:canvastext;"></span>
-		<span class="fc-highlight" style="color:highlight;"></span>
-		<span class="fc-background" style="color:background;"></span>
-		<span class="fc-activecaption" style="color:activecaption;"></span>
-		<span class="fc-inactivecaption" style="color:inactivecaption;"></span>
+		<div class="cpe-system-colors dcm-standard">
+			<span class="fc-canvas" style="color:window; color:canvas;"></span>
+			<span class="fc-canvastext" style="color:windowtext; color:canvastext;"></span>
+			<span class="fc-linktext" style="color:linktext;"></span>
+			<span class="fc-visitedtext" style="color:visitedtext;"></span>
+			<span class="fc-activetext" style="color:activetext;"></span>
+			<span class="fc-buttonface" style="color:buttonface;"></span>
+			<span class="fc-buttontext" style="color:buttontext;"></span>
+			<span class="fc-buttonborder" style="color:buttontext; color:buttonborder;"></span>
+			<span class="fc-field" style="color:window; color:canvas; color:field;"></span>
+			<span class="fc-fieldtext" style="color:windowtext; color:canvastext; color:fieldtext;"></span>
+			<span class="fc-highlight" style="color:highlight;"></span>
+			<span class="fc-highlighttext" style="color:highlighttext;"></span>
+			<span class="fc-selecteditem" style="color:highlight; color:selecteditem;"></span>
+			<span class="fc-selecteditemtext" style="color:highlighttext; color:selecteditemtext;"></span>
+			<span class="fc-mark" style="color:yellow; color:mark;"></span>
+			<span class="fc-marktext" style="color:yellow; color:marktext;"></span>
+			<span class="fc-graytext" style="color:graytext;"></span>
+			<span class="fc-accentcolor" style="color:highlight;color:accentcolor;"></span>
+			<span class="fc-accentcolortext" style="color:highlighttext; color:accentcolortext;"></span>
+		</div>
+		<div class="cpe-system-colors dcm-reversi">
+			<span class="fc-canvas" style="color:canvastext;"></span>
+			<span class="fc-canvastext" style="color:canvas;"></span>
+			<span class="fc-linktext" style="color:highlight;"></span>
+			<span class="fc-visitedtext" style="color:highlight;"></span>
+			<span class="fc-activetext" style="color:highlight;"></span>
+			<span class="fc-buttonface" style="color:buttontext;"></span>
+			<span class="fc-buttontext" style="color:buttonface;"></span>
+			<span class="fc-buttonborder" style="color:buttonface"></span>
+			<span class="fc-field" style="color:windowtext; color:canvastext; color:fieldtext;"></span>
+			<span class="fc-fieldtext" style="color:window; color:canvas; color:field;"></span>
+			<span class="fc-highlight" style="color:linktext;"></span>
+			<span class="fc-highlighttext" style="color:canvastext;"></span>
+			<span class="fc-selecteditem" style="color:highlight; color:selecteditem;"></span>
+			<span class="fc-selecteditemtext" style="color:highlighttext; color:selecteditemtext;"></span>
+			<span class="fc-mark" style="color:yellow; color:mark;"></span>
+			<span class="fc-marktext" style="color:yellow; color:marktext;"></span>
+			<span class="fc-graytext" style="color:graytext;"></span>
+			<span class="fc-accentcolor" style="color:highlight;color:accentcolor;"></span>
+			<span class="fc-accentcolortext" style="color:highlighttext; color:accentcolortext;"></span>
+		</div>
 		<!-- Theming -->
 		<div class="cpe-theming visualcolors-standard theme-A"></div>
 		<div class="cpe-theming visualcolors-standard theme-B"></div>
@@ -50,7 +80,7 @@
 		  <h2>Buttons</h2>
 		  In CPE, all buttons are made out of round corners and should not contain any gradient at all. We use 3 types. Primary, Secondary and Text
 		  <h3>Primary Buttons</h3>
-		  To Inject a primary button, use an element and put the <code>cpe-button</code> class in it. Primary buttons take advantage of Accent Background Color:
+		  To Inject a primary button, use an element and put the <code>cpe-button</code> class in it. Primary buttons take advantage of Highlight Background Color:
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button"><span>Primary Button</span></button>
 			  <button class="cpe-button">
@@ -63,7 +93,7 @@
 			  <span>Primary Button</span></a>
 		  </div>
 		  <h3>Secondary Buttons</h3>
-		  To Inject a secondary button, use an element and put the <code>cpe-button</code> and <code>is-secondary</code> class in it. Secondary buttons take advantage of Anchor Background Color:
+		  To Inject a secondary button, use an element and put the <code>cpe-button</code> and <code>is-secondary</code> class in it. Secondary buttons take advantage of Hyperlink Background Color:
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary">
@@ -89,7 +119,7 @@
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Unaccented Color</h3>
-		  To Inject a button that takes advantage of Page Border and Page Text Background Colors instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-unaccented</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Inactive Text and Canvas Text Background Colors instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-unaccented</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-unaccented"><span>Primary Button</span></button>
 			  <button class="cpe-button is-unaccented">
@@ -124,7 +154,7 @@
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Alternate Color</h3>
-		  To Inject a button that takes advantage of Sticky Header and Community Background Colors instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-alternate</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Active Title and Active Text Background Colors instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-alternate</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-alternate"><span>Primary Button</span></button>
 			  <button class="cpe-button is-alternate">
@@ -159,7 +189,7 @@
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Alert Color</h3>
-		  To Inject a button that takes advantage of Alert Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-alert-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Alert Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-alert-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-alert-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-alert-color">
@@ -194,7 +224,7 @@
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Pause Color</h3>
-		  To Inject a button that takes advantage of Pause Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-pause-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Pause Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-pause-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-pause-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-pause-color">
@@ -229,7 +259,7 @@
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Warning Color</h3>
-		  To Inject a button that takes advantage of Warning Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-warning-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Warning Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-warning-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-warning-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-warning-color">
@@ -264,7 +294,7 @@
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Success Color</h3>
-		  To Inject a button that takes advantage of Success Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-success-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Success Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-success-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-success-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-success-color">
@@ -299,7 +329,7 @@
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Progress Color</h3>
-		  To Inject a button that takes advantage of Progress Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-progress-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Progress Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-progress-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-progress-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-progress-color">
@@ -334,7 +364,7 @@
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Message Color</h3>
-		  To Inject a button that takes advantage of Message Background Color instead of Accent and Anchor, use an element and put the <code>cpe-button</code> and <code>is-message-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Message Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-message-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-message-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-message-color">
@@ -517,7 +547,7 @@
 				</div>
 			</div>
 			<div class="cpe-dropdown">
-				<div class="cpe-button is-alternate"><span>Right Aligned Dropdown</span>
+				<div class="cpe-button is-unaccented"><span>Right Aligned Dropdown</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
 				</span>
@@ -662,7 +692,7 @@
 				</div>
 			</div>
 			<div class="cpe-dropdown has-dark-shadow">
-				<div class="cpe-button is-alternate"><span>Dropdown with Thick Shadow</span>
+				<div class="cpe-button is-unaccented"><span>Dropdown with Thick Shadow</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
 				</span>
@@ -796,7 +826,7 @@
 							<a>Item D</a>
 						</li>
 						<li>
-							<a class="cpe-button is-alternate is-secondary">Item E</a>
+							<a class="cpe-button is-unaccented is-secondary">Item E</a>
 						</li>
 
 					</ul>
@@ -804,7 +834,7 @@
 			</div>
 
 			<div class="cpe-dropdown">
-				<div class="cpe-button is-alternate"><span>Dropdown with Primary Button</span>
+				<div class="cpe-button is-unaccented"><span>Dropdown with Primary Button</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
 				</span>
@@ -824,7 +854,7 @@
 							<a>Item I</a>
 						</li>
 						<li>
-							<a class="cpe-button is-alternate">Item J</a>
+							<a class="cpe-button is-unaccented">Item J</a>
 						</li>
 
 					</ul>
@@ -871,37 +901,71 @@
 					</button>
 				</div>
 				<div class="cpe-button-group">
-					<button class="cpe-button is-alternate">
+					<button class="cpe-button is-unaccented">
 						11
 					</button>
-					<button class="cpe-button is-alternate">
+					<button class="cpe-button is-unaccented">
 						12
 					</button>
-					<button class="cpe-button is-alternate">
+					<button class="cpe-button is-unaccented">
 						13
 					</button>
-					<button class="cpe-button is-alternate">
+					<button class="cpe-button is-unaccented">
 						14
 					</button>
-					<button class="cpe-button is-alternate">
+					<button class="cpe-button is-unaccented">
 						15
 					</button>
 				</div>
 				<div class="cpe-button-group">
-					<button class="cpe-button is-secondary is-alternate">
+					<button class="cpe-button is-secondary is-unaccented">
 						16
 					</button>
-					<button class="cpe-button is-secondary is-alternate">
+					<button class="cpe-button is-secondary is-unaccented">
 						17
 					</button>
-					<button class="cpe-button is-secondary is-alternate">
+					<button class="cpe-button is-secondary is-unaccented">
 						18
 					</button>
-					<button class="cpe-button is-secondary is-alternate">
+					<button class="cpe-button is-secondary is-unaccented">
 						19
 					</button>
-					<button class="cpe-button is-secondary is-alternate">
+					<button class="cpe-button is-secondary is-unaccented">
 						20
+					</button>
+				</div>
+				<div class="cpe-button-group">
+					<button class="cpe-button is-alternate">
+						21
+					</button>
+					<button class="cpe-button is-alternate">
+						22
+					</button>
+					<button class="cpe-button is-alternate">
+						23
+					</button>
+					<button class="cpe-button is-alternate">
+						24
+					</button>
+					<button class="cpe-button is-alternate">
+						25
+					</button>
+				</div>
+				<div class="cpe-button-group">
+					<button class="cpe-button is-secondary is-alternate">
+						26
+					</button>
+					<button class="cpe-button is-secondary is-alternate">
+						27
+					</button>
+					<button class="cpe-button is-secondary is-alternate">
+						28
+					</button>
+					<button class="cpe-button is-secondary is-alternate">
+						29
+					</button>
+					<button class="cpe-button is-secondary is-alternate">
+						30
 					</button>
 				</div>
 			</div>
@@ -917,6 +981,27 @@
 					</a>
 				  <div class="cpe-dropdown">				
 					<div class="cpe-button is-squished cpe-dropdown__toggle">	
+				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
+					arrow_drop_down
+				</span>
+					</div>
+					<div class="cpe-dropdown__content is-right-aligned is-not-scrollable">					
+					  <ul class="cpe-list is-linked">						
+						<li><a>Action</a></li>
+						<li><a>Another Action</a></li>
+					  </ul>
+					</div>
+				  </div>		
+				</div>
+				<div class="cpe-button-group">
+				  <a class="is-squished is-unaccented cpe-button">				
+				<span class="cpe-icon cpe-icon-small material-icons">
+					edit
+				</span>			
+					<span>Edit</span>
+					</a>
+				  <div class="cpe-dropdown">				
+					<div class="cpe-button is-unaccented is-squished cpe-dropdown__toggle">	
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
 				</span>
@@ -959,6 +1044,27 @@
 					</a>
 				  <div class="cpe-dropdown">				
 					<div class="cpe-button is-secondary is-squished cpe-dropdown__toggle">	
+				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
+					arrow_drop_down
+				</span>
+					</div>
+					<div class="cpe-dropdown__content is-right-aligned is-not-scrollable">					
+					  <ul class="cpe-list is-linked">						
+						<li><a>Action</a></li>
+						<li><a>Another Action</a></li>
+					  </ul>
+					</div>
+				  </div>		
+				</div>			
+				<div class="cpe-button-group">
+				  <a class="is-squished is-secondary is-unaccented cpe-button">				
+				<span class="cpe-icon cpe-icon-small material-icons">
+					edit
+				</span>				
+					<span>Edit</span>
+					</a>
+				  <div class="cpe-dropdown">				
+					<div class="cpe-button is-secondary is-unaccented is-squished cpe-dropdown__toggle">	
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
 				</span>
@@ -1268,9 +1374,9 @@
 			  </span>
 		</div>
 	</div>
-	<h2>cpe Toggles (For Compatibility)</h2>
+	<h2>Toggle Inputs</h2>
 	Toggle is a control that is used to quickly switch between two possible states. All toggles require a label due to fact that styling inputs is tricky cross browser. All toggle inputs should have a unique id for label to work correctly. See <a href="https://fandomdesignsystem.com/components/toggles">Fandom Design System page</a> for more examples
-			<div class="component-demo__rendered">    
+			<div style="margin:10px 0 0;">    
 				<input class="cpe-toggle__input" id="toggleB" type="checkbox">
 				<label class="cpe-toggle__label" for="toggleB">      Slide me if you wish    </label>  
 			</div>
