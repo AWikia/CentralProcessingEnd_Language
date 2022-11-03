@@ -29,64 +29,47 @@ if (navigator.userAgent.match("MW18")) {
 document.getElementById("Handler").className += " mpisto-servers"
 }
 
-// Some old Fox Versions
-window.disco=false
-window.oldSafari=false
-window.disco=false
+	// Some old Fox Versions
+	var ua_agent = navigator.userAgent
 
-if ( (navigator.userAgent.match("Safari/")) && !( (navigator.userAgent.match("Chrome/")) || (navigator.userAgent.match("YNGT")) ) ) {
-// window.disco= (window.disco || (navigator.userAgent.match("Version/1\\.")) || (navigator.userAgent.match("Version/2\\.")) || (navigator.userAgent.match("Version/3\\.")) || (navigator.userAgent.match("Version/4\\.")) || (navigator.userAgent.match("Version/5\\.")) || (navigator.userAgent.match("Version/6\\.")) || (navigator.userAgent.match("Version/7\\.")) || (navigator.userAgent.match("Version/8\\.")) || (navigator.userAgent.match("Version/9\\.")) || (navigator.userAgent.match("Version/10\\.")) )
-window.oldSafari=( (navigator.userAgent.match("Version/1\\.")) || (navigator.userAgent.match("Version/2\\.")) || (navigator.userAgent.match("Version/3\\.")) || (navigator.userAgent.match("Version/4\\.")) || (navigator.userAgent.match("Version/5\\.")) || (navigator.userAgent.match("Version/6\\.")) || (navigator.userAgent.match("Version/7\\.")) || (navigator.userAgent.match("Version/8\\.")) || (navigator.userAgent.match("Version/9\\.")) || (navigator.userAgent.match("Version/10\\.")) )
-}
+	if ( (ua_agent.match("Safari/")) && !( (ua_agent.match("Chrome/")) || (ua_agent.match("YNGT")) ) ) { // Safari
+		window.oldBrowser = ua_agent.match(/Version\/(\d+)/)[1] < 14
+	}
 
-window.oldfox = ( (navigator.userAgent.match("Firefox/21\\.")) || (navigator.userAgent.match("Firefox/20\\.")) || (navigator.userAgent.match("Firefox/19\\.")) || (navigator.userAgent.match("Firefox/18\\.")) || (navigator.userAgent.match("Firefox/17\\.")) || (navigator.userAgent.match("Firefox/16\\.")) || (navigator.userAgent.match("Firefox/15\\.")) || (navigator.userAgent.match("Firefox/14\\.")) || (navigator.userAgent.match("Firefox/13\\.")) || (navigator.userAgent.match("Firefox/12\\.")) || (navigator.userAgent.match("Firefox/11\\.")) || (navigator.userAgent.match("Firefox/10\\.")) || (navigator.userAgent.match("Firefox/9\\.")) || (navigator.userAgent.match("Firefox/8\\.")) || (navigator.userAgent.match("Firefox/7\\.")) || (navigator.userAgent.match("Firefox/6\\.")) || (navigator.userAgent.match("Firefox/5\\.")) || (navigator.userAgent.match("Firefox/4\\.")) || (navigator.userAgent.match("Firefox/3\\.")) || (navigator.userAgent.match("Firefox/2\\.")) || (navigator.userAgent.match("Firefox/1\\.")) || (navigator.userAgent.match("Firefox/31\\.")) || (navigator.userAgent.match("Firefox/32\\.")) || (navigator.userAgent.match("Firefox/33\\.")) || (navigator.userAgent.match("Firefox/34\\.")) || (navigator.userAgent.match("Firefox/35\\.")) || (navigator.userAgent.match("Firefox/36\\.")) || (navigator.userAgent.match("Firefox/37\\.")) || (navigator.userAgent.match("Firefox/38\\.")) || (navigator.userAgent.match("Firefox/39\\.")) || (navigator.userAgent.match("Firefox/40\\.")) || (navigator.userAgent.match("Firefox/41\\.")) || (navigator.userAgent.match("Firefox/42\\.")) || (navigator.userAgent.match("Firefox/43\\.")) || (navigator.userAgent.match("Firefox/44\\.")) || (navigator.userAgent.match("Firefox/45\\.")) || (navigator.userAgent.match("Firefox/46\\.")) || (navigator.userAgent.match("Firefox/47\\.")) || (navigator.userAgent.match("Firefox/48\\.")) || (navigator.userAgent.match("Firefox/49\\.")) || (navigator.userAgent.match("Firefox/50\\.")) || (navigator.userAgent.match("Firefox/51\\.")) || (navigator.userAgent.match("Firefox/52\\.")) || (navigator.userAgent.match("Firefox/53\\.")) || (navigator.userAgent.match("Firefox/54\\.")) || (navigator.userAgent.match("Firefox/55\\.")) || (navigator.userAgent.match("Firefox/56\\.")) || (navigator.userAgent.match("Firefox/57\\.")) || (navigator.userAgent.match("Firefox/58\\.")) || (navigator.userAgent.match("Firefox/59\\."))  )
+	if ( (ua_agent.match("Firefox/")) && !( (ua_agent.match("PaleMoon/")) ) ) { // Mozilla Firefox
+		window.oldBrowser = ua_agent.match(/Firefox\/(\d+)/)[1] < 84
+	}
 
-// Some old Google Versions
-window.oldchrome =  ( (navigator.userAgent.match("Chrome/27\\.")) || (navigator.userAgent.match("Chrome/26\\.")) || (navigator.userAgent.match("Chrome/25\\.")) || (navigator.userAgent.match("Chrome/24\\.")) || (navigator.userAgent.match("Chrome/23\\.")) || (navigator.userAgent.match("Chrome/22\\.")) || (navigator.userAgent.match("Chrome/21\\.")) || (navigator.userAgent.match("Chrome/20\\.")) || (navigator.userAgent.match("Chrome/19\\.")) || (navigator.userAgent.match("Chrome/18\\.")) || (navigator.userAgent.match("Chrome/17\\.")) || (navigator.userAgent.match("Chrome/16\\.")) || (navigator.userAgent.match("Chrome/15\\.")) || (navigator.userAgent.match("Chrome/14\\.")) || (navigator.userAgent.match("Chrome/13\\.")) || (navigator.userAgent.match("Chrome/12\\.")) || (navigator.userAgent.match("Chrome/11\\.")) || (navigator.userAgent.match("Chrome/10\\.")) || (navigator.userAgent.match("Chrome/9\\.")) || (navigator.userAgent.match("Chrome/8\\.")) || (navigator.userAgent.match("Chrome/7\\.")) || (navigator.userAgent.match("Chrome/6\\.")) || (navigator.userAgent.match("Chrome/5\\.")) || (navigator.userAgent.match("Chrome/4\\.")) || (navigator.userAgent.match("Chrome/3\\.")) || (navigator.userAgent.match("Chrome/2\\.")) || (navigator.userAgent.match("Chrome/1\\.")) || (navigator.userAgent.match("Chrome/48\\.")) || (navigator.userAgent.match("Chrome/49\\.")) || (navigator.userAgent.match("Chrome/50\\.")) || (navigator.userAgent.match("Chrome/51\\.")) || (navigator.userAgent.match("Chrome/52\\.")) || (navigator.userAgent.match("Chrome/53\\.")) || (navigator.userAgent.match("Chrome/54\\.")) || (navigator.userAgent.match("Chrome/55\\.")) || (navigator.userAgent.match("Chrome/56\\.")) || (navigator.userAgent.match("Chrome/57\\.")) || (navigator.userAgent.match("Chrome/58\\.")) || (navigator.userAgent.match("Chrome/59\\.")) || (navigator.userAgent.match("Chrome/60\\.")) || (navigator.userAgent.match("Chrome/61\\.")) || (navigator.userAgent.match("Chrome/62\\.")) || (navigator.userAgent.match("Chrome/63\\.")) || (navigator.userAgent.match("Chrome/64\\.")) )
+	if ( (ua_agent.match("PaleMoon/")) ) { // Pale Moon
+		window.oldBrowser = ua_agent.match(/PaleMoon\/(\d+)/)[1] < 29
+	document.querySelector('html').classList.add('pale-moon')
+	}
 
-window.oldBrowser =( (navigator.userAgent.match("Trident")) || (navigator.userAgent.match("Presto")) || (navigator.userAgent.match("Tessera")) || (navigator.userAgent.match("MINERVOULA")) || (navigator.userAgent.match("Silk")) || (navigator.userAgent.match("PLAYSTATION 3")) || (navigator.userAgent.match("Nintendo DSi")) || (navigator.userAgent.match("Nintendo 3DS")) || (navigator.userAgent.match("PLAYSTATION PORTABLE")) || (navigator.userAgent.match("Edge")) || (navigator.userAgent.match("BlackBerry")) || (navigator.userAgent.match("IEMobile")) )
 
-/* Hack */
-if (window.oldBrowser || window.oldchrome || window.oldfox || window.oldSafari) {
+	if ( (ua_agent.match("Chrome/")) && !( (ua_agent.match("Edge/")) ) ) { // Google Chrome
+		window.oldBrowser = ua_agent.match(/Chrome\/(\d+)/)[1] < 84
+	}
+	
+
+	window.oldBrowser =( 
+						(window.oldBrowser) ||						    // Old Chrome, Firefox, Safari and Pale Moon
+						(ua_agent.match("Trident")) ||					// Internet Explorer 				
+						(ua_agent.match("Presto")) || 					// Classic Opera
+						(ua_agent.match("Tessera")) || 					// 4x4 Browser
+						(ua_agent.match("MINERVOULA")) || 				// Older mInerva
+						(ua_agent.match("Silk")) || 					// Amazon Silk
+						(ua_agent.match("PLAYSTATION 3")) || 			// PS3 Browser
+						(ua_agent.match("Nintendo DSi")) || 			// Nintendo DSi Browser
+						(ua_agent.match("Nintendo 3DS")) || 			// Nintendo 3DS Browser
+						(ua_agent.match("PLAYSTATION PORTABLE")) || 	// PSP Browser
+						(ua_agent.match("Edge")) || 					// Classic Microsoft Edge
+						(ua_agent.match("BlackBerry")) || 				// Blackberry Browser
+						(ua_agent.match("IEMobile")) 					// Phone Internet Explorer
+						)
+	
+	if (window.oldBrowser) {
 	window.location.replace("https://hm100.github.io/UnsupportedBanners/Mpisto.html");window.location.href = "https://hm100.github.io/UnsupportedBanners/Mpisto.html";
 }
-
-
-window.newbrowser = (CSS.supports("color","var(--color)") || CSS.supports("color:var(--color)") ) 
-
-if (!window.newbrowser ) {
-	window.location.replace("https://hm100.github.io/UnsupportedBanners/Mpisto.html");window.location.href = "https://hm100.github.io/UnsupportedBanners/Mpisto.html";
-}
-
-
-if (navigator.userAgent.match("BrowserWarn")) {
-	window.disco = false
-}
-
-if ( (navigator.userAgent.match("BrowserWarn")) || window.disco ) {
-AddFloatingBanner('We\'re dropping support on your browser soon. Please make sure that you must update your browser before its too late!<br>If your device doesn\'t allow you to upgrade your browser or can\'t afford a cutting-edge browser, this means we\'re also dropping support on your device.<br>You can download <a href="https://www.google.com/chrome/">Google Chrome</a>, <a href="https://www.mozilla.org/firefox/">Mozilla Firefox</a> or the <a href="https://support.microsoft.com/help/4501095/download-the-new-microsoft-edge-based-on-chromium">Chromium Edge</a> if you want to still use Qora Qore.','warning','BrowserBanner')
-
-
-}
-
-// Not in use
-function RemoveBannerBrowser() {
-    var x = document.getElementById("BannerBrowser");
-        x.className += " cpe-is-transparent";
-	    setTimeout(RemoveBannerBrowser1, 405) 
-}
-
-function RemoveBannerBrowser1() {
-    var x = document.getElementById("BannerBrowser");
-	document.getElementById("floatingbanner2").removeChild(x);
-	if ($(".mpisto-content").length) {
-		document.querySelector(".mpisto-content .mpisto-wrapper").removeChild(document.getElementById("floatingbanner2"));
-	}
-	if ($(".mpisto-options-content").length) {
-		document.querySelector(".mpisto-options-content").removeChild(document.getElementById("floatingbanner2"));
-	}
-}
-
 
 
 /* Mobile Only CSS */
@@ -160,6 +143,8 @@ function DropDownUpdate() {
 					
 }
 
+
+/* Range Inputs and Selects */
 function UpdateSelectValue() { // Handles Blurring
 		setTimeout(
 		(function() { document.querySelector(' .cpe-dropdown.cpe-select:focus-within').blur(); 	document.querySelector('.focus-overlay').focus(); } )
@@ -199,8 +184,12 @@ function UpdateRangeInputs() {
 	if (getKey('right-rail-full') === '-1') {
 		insertKey('right-rail-full', 'true' );
 	}
+	if (getKey('left-nav-full') === '-1') {
+		insertKey('left-nav-full', 'true' );
+	}
 	var content_full = getKey('content-full')
 	var right_rail_full = getKey('right-rail-full');
+	var left_nav_full = getKey('left-nav-full');
     getParams().forEach(function (param) {
         var key = param.split("=")[0];
         var value = param.split("=")[1];
@@ -226,6 +215,14 @@ function UpdateRangeInputs() {
 				}
 				console.info('Right pane visibility settings overriden')
                 break;
+            case 'hideleftnav':
+				if (value === 'true') {
+					left_nav_full = 'false';
+				} else {
+					left_nav_full = 'true';
+				}
+				console.info('Left navigation for large screens visibility settings overriden')
+                break;
 
         }
     });
@@ -235,10 +232,23 @@ function UpdateRangeInputs() {
     if (right_rail_full === 'true') {
 		document.querySelector(' body ').classList.add('has-right-rail');
 	}
+    if (left_nav_full === 'true') {
+		document.querySelector(' body ').classList.add('has-left-nav');
+	}
+
 	UpdateRangeInputs();
 	DropDownUpdate();
 	document.querySelector("body").addEventListener("mouseenter", ( function(e) { CheckTheme(); } ) );
 	document.querySelector("body").addEventListener("mouseleave", ( function(e) { DropDownUpdate(); CheckTheme(); } ) );
+	var y = document.querySelector('.evelution-taskbar .cpe-dropdown.search:not(:focus) .link');
+	if (y) {
+		y.addEventListener('click', (function(e) {
+						e.preventDefault();
+						var y2 = document.querySelector('.evelution-taskbar .cpe-dropdown.search input.taskbar-search');
+						y2.focus();
+        }) );
+	}
+
 })();
 
 /* Aliases all components with the .wds prefix to the ones from .cpe ones */

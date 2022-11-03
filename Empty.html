@@ -4,9 +4,9 @@
 		<div class="cpe-system-colors dcm-standard">
 			<span class="fc-canvas" style="color:window; color:canvas;"></span>
 			<span class="fc-canvastext" style="color:windowtext; color:canvastext;"></span>
-			<span class="fc-linktext" style="color:linktext;"></span>
-			<span class="fc-visitedtext" style="color:visitedtext;"></span>
-			<span class="fc-activetext" style="color:activetext;"></span>
+			<span class="fc-linktext" style="color:highlight; color:linktext;"></span>
+			<span class="fc-visitedtext" style="color:highlight; color:visitedtext;"></span>
+			<span class="fc-activetext" style="color:highlight; color:activetext;"></span>
 			<span class="fc-buttonface" style="color:buttonface;"></span>
 			<span class="fc-buttontext" style="color:buttontext;"></span>
 			<span class="fc-buttonborder" style="color:buttontext; color:buttonborder;"></span>
@@ -17,14 +17,14 @@
 			<span class="fc-selecteditem" style="color:highlight; color:selecteditem;"></span>
 			<span class="fc-selecteditemtext" style="color:highlighttext; color:selecteditemtext;"></span>
 			<span class="fc-mark" style="color:yellow; color:mark;"></span>
-			<span class="fc-marktext" style="color:yellow; color:marktext;"></span>
+			<span class="fc-marktext" style="color:black; color:marktext;"></span>
 			<span class="fc-graytext" style="color:graytext;"></span>
 			<span class="fc-accentcolor" style="color:highlight;color:accentcolor;"></span>
 			<span class="fc-accentcolortext" style="color:highlighttext; color:accentcolortext;"></span>
 		</div>
 		<div class="cpe-system-colors dcm-reversi">
-			<span class="fc-canvas" style="color:canvastext;"></span>
-			<span class="fc-canvastext" style="color:canvas;"></span>
+			<span class="fc-canvas" style="color:windowtext; color:canvastext;"></span>
+			<span class="fc-canvastext" style="color:window; color:canvas;"></span>
 			<span class="fc-linktext" style="color:highlight;"></span>
 			<span class="fc-visitedtext" style="color:highlight;"></span>
 			<span class="fc-activetext" style="color:highlight;"></span>
@@ -33,38 +33,67 @@
 			<span class="fc-buttonborder" style="color:buttonface"></span>
 			<span class="fc-field" style="color:windowtext; color:canvastext; color:fieldtext;"></span>
 			<span class="fc-fieldtext" style="color:window; color:canvas; color:field;"></span>
-			<span class="fc-highlight" style="color:linktext;"></span>
+			<span class="fc-highlight" style="color:highlight; color:linktext;"></span>
 			<span class="fc-highlighttext" style="color:canvastext;"></span>
 			<span class="fc-selecteditem" style="color:highlight; color:selecteditem;"></span>
 			<span class="fc-selecteditemtext" style="color:highlighttext; color:selecteditemtext;"></span>
 			<span class="fc-mark" style="color:yellow; color:mark;"></span>
-			<span class="fc-marktext" style="color:yellow; color:marktext;"></span>
+			<span class="fc-marktext" style="color:black; color:marktext;"></span>
 			<span class="fc-graytext" style="color:graytext;"></span>
 			<span class="fc-accentcolor" style="color:highlight;color:accentcolor;"></span>
 			<span class="fc-accentcolortext" style="color:highlighttext; color:accentcolortext;"></span>
 		</div>
-		<!-- Theming -->
-		<div class="cpe-theming visualcolors-standard theme-A"></div>
-		<div class="cpe-theming visualcolors-standard theme-B"></div>
-		<div class="cpe-theming visualcolors-standard theme-C"></div>
-		<div class="cpe-theming visualcolors-standard theme-D"></div>
-		<div class="cpe-theming visualcolors-standard theme-E"></div>
-		<div class="cpe-theming visualcolors-standard theme-F"></div>
-		<div class="cpe-theming visualcolors-standard theme-G"></div>
-		<div class="cpe-theming visualcolors-standard theme-H"></div>
-		<!-- Theming 2 -->
-		<div class="cpe-theming visualcolors-nocolormanagement theme-A"></div>
-		<div class="cpe-theming visualcolors-nocolormanagement theme-B"></div>
-		<div class="cpe-theming visualcolors-nocolormanagement theme-C"></div>
-		<div class="cpe-theming visualcolors-nocolormanagement theme-D"></div>
-		<div class="cpe-theming visualcolors-nocolormanagement theme-E"></div>
-		<div class="cpe-theming visualcolors-nocolormanagement theme-F"></div>
-		<div class="cpe-theming visualcolors-nocolormanagement theme-G"></div>
-		<div class="cpe-theming visualcolors-nocolormanagement theme-H"></div>
+		<!-- Theming (Standard Color Scheme) -->
+		<div class="cpe-theming visualcolors-standard colorscheme-light theme-A"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-light theme-B"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-light theme-C"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-light theme-D"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-light theme-E"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-light theme-F"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-light theme-G"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-light theme-H"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-dark theme-A"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-dark theme-B"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-dark theme-C"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-dark theme-D"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-dark theme-E"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-dark theme-F"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-dark theme-G"></div>
+		<div class="cpe-theming visualcolors-standard colorscheme-dark theme-H"></div>
+
+		<!-- Theming 2 (Slots B to H are unused but kept for compatibility) -->
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-light theme-A"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-light theme-B"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-light theme-C"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-light theme-D"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-light theme-E"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-light theme-F"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-light theme-G"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-light theme-H"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-dark theme-A"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-dark theme-B"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-dark theme-C"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-dark theme-D"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-dark theme-E"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-dark theme-F"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-dark theme-G"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement colorscheme-dark theme-H"></div>
+		<!-- Theming 3 (DCM Color Scheme) -->
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-standard"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-lite"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-general"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-basic"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-simple"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-classic"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-contrast"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-retro"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-custom_1"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-custom_2"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-custom_3"></div>
+		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-custom_4"></div>
 	</div>
 	<div tabindex="-1" class="focus-overlay" style="pointer-events:none;"></div>
 	<div id="LunaLevit" style=" pointer-events: none; position: fixed; z-index: -2; width: 100%; height: 100%;">
-		<div id="LunaLevit2" class="gradient-overlay" style="pointer-events:none;"></div>
 		<div class="invertion-on" style=" pointer-events: none; position: fixed; z-index: -2; width: 100%; height: 100%;">
 			<div id="LunaLevit3" class="desktop-background fandom-community-header__background" style="position:absolute; pointer-events:none;" id="desktop-background">
 			</div>
@@ -85,8 +114,7 @@
 		<link rel="stylesheet" type="text/css" href="CPE.css"> <!-- Language CSS -->
 		<script src="jQuery.js"></script>
 		<script src="Chroma.js"></script>
-		<script src="FileSaver.js"></script>
-		<script src="UserAgents.js" ></script>
 		<script src="Themes.js"></script>
+		<script src="UserAgents.js" ></script>
 	</head>
 </html>
