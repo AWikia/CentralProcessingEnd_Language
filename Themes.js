@@ -18,8 +18,6 @@ window.MW18ActiveColorScheme = 'light';
 window.MW18ActiveStyle = '-';
 window.MW18ActiveStyleMode = '-';
 window.MW18ActiveStyleMode2 = '-'; // This is like MW18ActiveStyleMode but different for High Contrast Mode (where it is contrast)
-/* Auto Accent (Unused for now) */
-window.MW18AutoAccent = '0';
 /* DCM Modes */
 window.MW18DCMMode = 'standard';
 window.MW18DCMType = 'standard';
@@ -41,17 +39,14 @@ window.MW18highContrast = 4.50;
 ** First item of a subarray should be the visualcolor class name to be used.
 ** Second item should be the narrative name done in Yorkbook Digital Professional (title) 
 ** Third item should be an arry of three items with material icons to be used
-**** First item should be the icon for the Standard Visual Mode
-**** Second item should be the icon for the Lite Visual Mode
-**** Third item should be the icon for the Contrast Visual Mode
+**** First item should be the icon for the 3D Visual Mode
+**** Second item should be the icon for the Standard Visual Mode
+**** Third item should be the icon for the Lite Visual Mode
+**** Fourth item should be the icon for the Contrast Visual Mode
 **
 */
 
 var visualStyles = [
-					['general', '{{msg-evelution-style-general}}', ['computer', 'smartphone','monochrome_photos']],
-					['basic', '{{msg-evelution-style-basic}}', ['home', 'inbox', 'invert_colors']],
-					['simple', '{{msg-evelution-style-simple}}', ['opacity', 'brush', 'filter_alt']],
-					['retro', '{{msg-evelution-color-retro}}', ['gradient', 'smart_toy', 'filter_b_and_w']]
 				    ];
 
 /*
@@ -67,12 +62,6 @@ var visualStyles = [
 */
 
 var visualColors = [
-					['forced', '{{msg-evelution-color-forced}}', 'contrast'],
-					['evelution', 'Evelution', 'evelution'],
-					['colors', '{{msg-evelution-color-colors}}', 'format_paint'],
-					['android', 'Android', 'android'],
-					['qqore', 'Qora Qore', 'qqore'],
-					['dynamic', '{{msg-evelution-color-dynamic}}', 'colorize'],
 				    ];
 var visualColorNames = ['standard', 'nocolormanagement'];
 
@@ -261,7 +250,7 @@ var visualColorNames = ['standard', 'nocolormanagement'];
                 break;
         }
     });
-    var themes = '';
+    var themes = "" // @REMOVEME: In Ivilution, Parmalution and CPE Language (Change to Empty String instead)
 	document.querySelector("head").insertAdjacentHTML('afterbegin','<style class="devicetheme"></style><style class="themes">' + themes + '</style><style class="theming"></style>');
 	ToggleTheme(theme_selected,false,false);
 	colortheme(color_style,device_theme,color_hue,color_sat,color_style_behavior,false,false);
@@ -328,7 +317,7 @@ function SupportsColorContrast() {
 }
 
 function DisabledColorManagement() {
-	return ( (ForcedColors()) || (document.querySelector("container.no-color-management") ) ||  (window.MW18ActiveColors === 'nocolormanagement') )
+	return ( (ForcedColors()) || (document.querySelector("body.no-color-management") ) ||  (window.MW18ActiveColors === 'nocolormanagement') )
 }
 
 function ForcedColors() {
@@ -537,9 +526,10 @@ function VisualStyleCompile() {
 	for (let i = 0; i < visualStyles.length; i++) {
 		str = 	'<li data-visual-style="' + visualStyles[i][0] + '" title="' + visualStyles[i][1] + '">' +
 					'<a onclick="VisualStyle(' + "'" + visualStyles[i][0]  + "'" + ')">' +
-						'<span class="cpe-icon material-icons standard-on">' + visualStyles[i][2][0] + '</span>' +
-						'<span class="cpe-icon material-icons lite-on">' + visualStyles[i][2][1] + '</span>' +
-						'<span class="cpe-icon material-icons contrast-on">' + visualStyles[i][2][2] + '</span>' +
+						'<span class="cpe-icon material-icons threeD-on">' + visualStyles[i][2][0] + '</span>' +
+						'<span class="cpe-icon material-icons standard-on">' + visualStyles[i][2][1] + '</span>' +
+						'<span class="cpe-icon material-icons lite-on">' + visualStyles[i][2][2] + '</span>' +
+						'<span class="cpe-icon material-icons contrast-on">' + visualStyles[i][2][3] + '</span>' +
 					'</a>' +
 				'</li>'
 		var x = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-visual-styles > .base-visual-style");
@@ -557,7 +547,6 @@ function VisualStyleCompile() {
 function VisualColorCompile() {
 // Puts new options
 /* Visual Colors */
-	if (! (document.querySelector("container.no-color-management") ) ) {
 		var length = visualColorNames.length
 		for (let i = 0; i < visualColors.length; i++) {
 			visualColorNames[i+length] =  visualColors[i][0];
@@ -577,6 +566,12 @@ function VisualColorCompile() {
 					badge2 ='<span class="cpe-icon cpe-icon-small material-icons cpe-icon-badge">'+ visualColors[i][4] +'</span>'
 				}
 			}
+			theme = "";
+			themeD = "";
+			for (let j = 0; j < 8; j++) {
+				theme += '<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-'+ ['A','B','C','D','E','F','G','H'][j] + '"></div>'
+				themeD += '<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-'+ ['A','B','C','D','E','F','G','H'][j] + '"></div>'
+			}
 			str = 	'<li data-visual-color="' + visualColors[i][0] + '" title="' + visualColors[i][1] + '">' +
 						'<a onclick="VisualColor(' + "'" + visualColors[i][0]  + "'" + ')">' +
 							badge2 +
@@ -584,22 +579,7 @@ function VisualColorCompile() {
 							icon +
 						'</a>' +
 						'<div style="position:absolute; z-index:-1; pointer-events:none;">' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-A"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-B"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-C"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-D"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-E"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-F"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-G"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-light theme-H"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-A"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-B"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-C"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-D"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-E"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-F"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-G"></div>' +
-							'<div class="cpe-theming visualcolors-' + visualColors[i][0] + ' colorscheme-dark theme-H"></div>' +
+							theme + themeD +
 						'</div>' +
 					'</li>'
 			var x = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-visual-colors");
@@ -607,7 +587,6 @@ function VisualColorCompile() {
 				x.insertAdjacentHTML('beforeend',str);
 			}
 		}
-	}
 
 
 // In the Visual Styles Options
@@ -617,7 +596,11 @@ function VisualColorCompile() {
 /* Getting non-generic color values */
 
 function GetActiveThemeConfiguration() { // Used for ECM (Enabled Color Management)
-	return document.querySelector('.cpe-theming.colorscheme-' + getColorScheme()  + '.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme);
+	if (DisabledColorManagement()) {
+		return document.querySelector('.cpe-theming.visualcolors-nocolormanagement');
+	} else {
+		return document.querySelector('.cpe-theming.colorscheme-' + getColorScheme()  + '.visualcolors-' + window.MW18ActiveColors + '.theme-' + window.MW18ActiveTheme);
+	}
 }
 
 function GetActiveDCMConfiguration() { // Used for DCM (Disabled Color Management)
@@ -644,50 +627,15 @@ function GetDesktop() {
 	}
 }
 
-function GetDesktopImage(trimmed=false) {
+function GetDesktopImage() {
 	var img = getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-image").trim();
 	if ( (img === '') || (img === 'url()') || (img === "url('')") || (img === 'url("")') || (img === 'none') || (img === "'none'") || (img === '"none"')) {
 		return '';
-	} else if (trimmed) {
-		return img.replace('url(', '').replace(')', '').split('\\').join('').split("&amp;").join("&").split("&quot;").join("").split("\"").join("");
 	} else {
 		return 'url(' + img.replace('url(', '').replace(')', '').split('\\').join('').split("&amp;").join("&").split("&quot;").join("").split("\"").join("") + ')';
 	}
 }
 
-/*
-GetAutoColorDesktop()
-var s = window.MW18AutoAccent;
-s
-*/
-function GetAutoColorDesktop() {
-const myImg = new Image();
-myImg.crossOrigin = "Anonymous";
-myImg.onload =  () => {
- const x = document.createElement('canvas');
-    x.width=myImg.width
-    x.height=myImg.height
-  const context = x.getContext('2d');
-  context.drawImage(myImg, 0, 0);
-  const {
-    data
-  } = context.getImageData((Math.round(myImg.width /2) - 1), (Math.round(myImg.height /2) - 1), 1, 1);
-  if (myImg.src === '""') {
-	window.MW18AutoAccent = '';
-  } else {
-	window.MW18AutoAccent = chroma('rgb(' + data[0] + ',' + data[1] + ',' + data[2] + ')').hex();
-	
-  }
-}
-
-var img = GetDesktopImage(true);
-
-if (img == '""') {
-	window.MW18AutoAccent = '';
-} else {
-	myImg.src = img;
-}
-}
 
 function GetDesktopText() {
 	if (DisabledColorManagement()) {
@@ -876,6 +824,7 @@ function GetProgress() {
 function GetMessage() {
 		return CompileGenericColors(window.MW18PageColor)[5];
 }
+
 
 function GetCustomFont() {
 	var img = getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--custom-sans-serif-font").trim();
@@ -1465,651 +1414,10 @@ function SetDCM(type='match-parent',tick='match-parent',save='true',repaint='tru
 
 }
 
-
-
-
-
-
 /* Downloads all modificative values of the current selected theme to a file */
-function DownloadTheme(full=false) {
-	wordfilter2 = getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--icon-filter-hover")
-	if ( wordfilter2 == "" ) {
-		wordfilter2 == 'initial'
-	}
-	if (full) { // For use without Theme Management
-		result = '.visualcolors-standard.theme-A {\n' + // Beginning
-				// Body BG
-				 '--desktop-background-image:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-image")  + ';\n' +
-				 '--desktop-background-image-filter:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-image-filter")  + ';\n' +
-				 '--desktop-background-image-blend-mode:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-image-blend-mode")  + ';\n' +
-				// Body Color
-				 '--desktop-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-color")  + ';\n' +
-				 '--desktop-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-color-hover")  + ';\n' +
-				 '--desktop-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-fadeout-color")  + ';\n' +
-				 '--desktop-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-gradient-color")  + ';\n' +
-				 '--desktop-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-gradient-color-hover")  + ';\n' +
-				 '--desktop-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-foreground-color")  + ';\n' +
-				 '--desktop-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-foreground-color-hover")  + ';\n' +
-				 '--desktop-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-foreground-color-inverted")  + ';\n' +
-				 '--desktop-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-foreground-color-inverted-rgb")  + ';\n' +
-				 '--desktop-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-alternative-foreground-color")  + ';\n' +
-				 '--desktop-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-alternative-foreground-color-hover")  + ';\n' +
-				 '--desktop-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-color-rgb")  + ';\n' +
-				 '--desktop-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-color-hover-rgb")  + ';\n' +
-				 '--desktop-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-foreground-color-rgb")  + ';\n' +
-				 '--desktop-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-foreground-color-hover-rgb")  + ';\n' +
-				 '--desktop-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-alternative-foreground-color-rgb")  + ';\n' +
-				 '--desktop-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-alternative-foreground-color-hover-rgb")  + ';\n' +
-				// Superbar Text Color
-				 '--desktop-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-background-color")  + ';\n' +
-				 '--desktop-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-background-color-hover")  + ';\n' +
-				 '--desktop-text-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-fadeout-color")  + ';\n' +
-				 '--desktop-text-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-gradient-color")  + ';\n' +
-				 '--desktop-text-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-gradient-color-hover")  + ';\n' +
-				 '--desktop-text-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-foreground-color")  + ';\n' +
-				 '--desktop-text-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-foreground-color-hover")  + ';\n' +
-				 '--desktop-text-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-alternative-foreground-color")  + ';\n' +
-				 '--desktop-text-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-alternative-foreground-color-hover")  + ';\n' +
-				 '--desktop-text-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-background-color-rgb")  + ';\n' +
-				 '--desktop-text-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-background-color-hover-rgb")  + ';\n' +
-				 '--desktop-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-foreground-color-rgb")  + ';\n' +
-				 '--desktop-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-foreground-color-hover-rgb")  + 
-';\n' +
-				 '--desktop-text-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-alternative-foreground-color-rgb")  + ';\n' +
-				 '--desktop-text-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-text-alternative-foreground-color-hover-rgb")  + ';\n' +
-				// Body BG Settings
-				 '--desktop-background-size:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-size")  + ';\n' +
-				 '--desktop-background-horizontal-alignment:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-horizontal-alignment")  + ';\n' +
-				 '--desktop-background-vertical-alignment:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-vertical-alignment")  + ';\n' +
-				 '--desktop-background-no-horizontal-tiling:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-no-horizontal-tiling")  + ';\n' +
-				 '--desktop-background-no-vertical-tiling:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--desktop-background-no-vertical-tiling")  + ';\n' +
-				 // Page Color
-				 '--canvas-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-background-color")  + ';\n' +
-				 '--canvas-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-background-color-hover")  + ';\n' +
-				 '--canvas-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-fadeout-color")  + ';\n' +
-				 '--canvas-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-gradient-color")  + ';\n' +
-				 '--canvas-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-gradient-color-hover")  + ';\n' +
-				 '--canvas-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color")  + ';\n' +
-				 '--canvas-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color-hover")  + ';\n' +
-				 '--canvas-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color-inverted")  + ';\n' +
-				 '--canvas-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color-inverted-rgb")  + ';\n' +
-				 '--canvas-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-alternative-foreground-color")  + ';\n' +
-				 '--canvas-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-alternative-foreground-color-hover")  + ';\n' +
-				 '--canvas-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-background-color-rgb")  + ';\n' +
-				 '--canvas-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-background-color-hover-rgb")  + ';\n' +
-				 '--canvas-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color-rgb")  + ';\n' +
-				 '--canvas-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-foreground-color-hover-rgb")  + ';\n' +
-				 '--canvas-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-alternative-foreground-color-rgb")  + ';\n' +
-				 '--canvas-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Page Color
-				 '--canvas-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color")  + ';\n' +
-				 '--canvas-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color-hover")  + ';\n' +
-				 '--canvas-3d-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-3d-background-color")  + ';\n' +
-				 '--canvas-3d-background-color-dark:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-3d-background-color-dark")  + ';\n' +
-				 '--canvas-secondary-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-fadeout-color")  + ';\n' +
-				 '--canvas-secondary-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-gradient-color")  + ';\n' +
-				 '--canvas-secondary-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-gradient-color-hover")  + ';\n' +
-				 '--canvas-secondary-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color")  + ';\n' +
-				 '--canvas-secondary-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color-hover")  + ';\n' +
-				 '--canvas-secondary-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color-inverted")  + ';\n' +
-				 '--canvas-secondary-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color-inverted-rgb")  + ';\n' +
-				 '--canvas-secondary-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-alternative-foreground-color")  + ';\n' +
-				 '--canvas-secondary-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-alternative-foreground-color-hover")  + ';\n' +
-				 '--canvas-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color-rgb")  + ';\n' +
-				 '--canvas-secondary-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-background-color-hover-rgb")  + ';\n' +
-				 '--canvas-secondary-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color-rgb")  + ';\n' +
-				 '--canvas-secondary-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-foreground-color-hover-rgb")  + ';\n' +
-				 '--canvas-secondary-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-alternative-foreground-color-rgb")  + ';\n' +
-				 '--canvas-secondary-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-secondary-alternative-foreground-color-hover-rgb")  + ';\n' +
-
-				 // Page Border Color
-				 '--inactive-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-background-color")  + ';\n' +
-				 '--inactive-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-background-color-hover")  + ';\n' +
-				 '--inactive-text-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-fadeout-color")  + ';\n' +
-				 '--inactive-text-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-gradient-color")  + ';\n' +
-				 '--inactive-text-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-gradient-color-hover")  + ';\n' +
-				 '--inactive-text-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-foreground-color")  + ';\n' +
-				 '--inactive-text-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-foreground-color-inverted")  + ';\n' +
-				 '--inactive-text-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-foreground-color-inverted-rgb")  + ';\n' +
-				 '--inactive-text-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-foreground-color-hover")  + ';\n' +
-				 '--inactive-text-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-alternative-foreground-color")  + ';\n' +
-				 '--inactive-text-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-alternative-foreground-color-hover")  + ';\n' +
-				 '--inactive-text-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-background-color-rgb")  + ';\n' +
-				 '--inactive-text-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-background-color-hover-rgb")  + ';\n' +
-				 '--inactive-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-foreground-color-rgb")  + ';\n' +
-				 '--inactive-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-foreground-color-hover-rgb")  + ';\n' +
-				 '--inactive-text-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-alternative-foreground-color-rgb")  + ';\n' +
-				 '--inactive-text-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Page Border Color
-				 '--inactive-text-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-secondary-background-color")  + ';\n' +
-				 '--inactive-text-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-secondary-background-color-hover")  + ';\n' +
-				 '--inactive-text-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Page Border Color
-				 '--inactive-text-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-tertiary-background-color")  + ';\n' +
-				 '--inactive-text-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-tertiary-background-color-hover")  + ';\n' +
-				 '--inactive-text-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Page Border Color
-				 '--inactive-text-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-quaternary-background-color")  + ';\n' +
-				 '--inactive-text-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-quaternary-background-color-hover")  + ';\n' +
-				 '--inactive-text-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-text-quaternary-background-color-rgb")  + ';\n' +
-
-				 // Secondary Page Border Color
-				 '--active-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-background-color")  + ';\n' +
-				 '--active-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-background-color-hover")  + ';\n' +
-				 '--active-text-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-fadeout-color")  + ';\n' +
-				 '--active-text-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-gradient-color")  + ';\n' +
-				 '--active-text-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-gradient-color-hover")  + ';\n' +
-				 '--active-text-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-foreground-color")  + ';\n' +
-				 '--active-text-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-foreground-color-hover")  + ';\n' +
-				 '--active-text-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-foreground-color-inverted")  + ';\n' +
-				 '--active-text-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-foreground-color-inverted-rgb")  + ';\n' +
-				 '--active-text-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-alternative-foreground-color")  + ';\n' +
-				 '--active-text-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-alternative-foreground-color-hover")  + ';\n' +
-				 '--active-text-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-background-color-rgb")  + ';\n' +
-				 '--active-text-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-background-color-hover-rgb")  + ';\n' +
-				 '--active-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-foreground-color-rgb")  + ';\n' +
-				 '--active-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-foreground-color-hover-rgb")  + ';\n' +
-				 '--active-text-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-alternative-foreground-color-rgb")  + ';\n' +
-				 '--active-text-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Secondary Page Border Color
-				 '--active-text-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-secondary-background-color")  + ';\n' +
-				 '--active-text-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-secondary-background-color-hover")  + ';\n' +
-				 '--active-text-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Secondary Page Border Color
-				 '--active-text-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-tertiary-background-color")  + ';\n' +
-				 '--active-text-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-tertiary-background-color-hover")  + ';\n' +
-				 '--active-text-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Secondary Page Border Color
-				 '--active-text-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-quaternary-background-color")  + ';\n' +
-				 '--active-text-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-quaternary-background-color-hover")  + ';\n' +
-				 '--active-text-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-text-quaternary-background-color-rgb")  + ';\n' +
-
-				 // Page Text Color
-				 '--canvas-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-background-color")  + ';\n' +
-				 '--canvas-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-background-color-hover")  + ';\n' +
-				 '--canvas-text-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-fadeout-color")  + ';\n' +
-				 '--canvas-text-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-gradient-color")  + ';\n' +
-				 '--canvas-text-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-gradient-color-hover")  + ';\n' +
-				 '--canvas-text-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-foreground-color")  + ';\n' +
-				 '--canvas-text-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-foreground-color-hover")  + ';\n' +
-				 '--canvas-text-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-foreground-color-inverted")  + ';\n' +
-				 '--canvas-text-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-foreground-color-inverted-rgb")  + ';\n' +
-				 '--canvas-text-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-alternative-foreground-color")  + ';\n' +
-				 '--canvas-text-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-alternative-foreground-color-hover")  + ';\n' +
-				 '--canvas-text-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-background-color-rgb")  + ';\n' +
-				 '--canvas-text-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-background-color-hover-rgb")  + ';\n' +
-				 '--canvas-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-foreground-color-rgb")  + ';\n' +
-				 '--canvas-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-foreground-color-hover-rgb")  + ';\n' +
-				 '--canvas-text-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-alternative-foreground-color-rgb")  + ';\n' +
-				 '--canvas-text-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Page Text Color
-				 '--canvas-text-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-background-color")  + ';\n' +
-				 '--canvas-text-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-background-color-hover")  + ';\n' +
-				 '--canvas-text-secondary-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-fadeout-color")  + ';\n' +
-				 '--canvas-text-secondary-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-gradient-color")  + ';\n' +
-				 '--canvas-text-secondary-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-gradient-color-hover")  + ';\n' +
-				 '--canvas-text-secondary-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color")  + ';\n' +
-				 '--canvas-text-secondary-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-hover")  + ';\n' +
-				 '--canvas-text-secondary-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-inverted")  + ';\n' +
-				 '--canvas-text-secondary-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-inverted-rgb")  + ';\n' +
-				 '--canvas-text-secondary-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-alternative-foreground-color")  + ';\n' +
-				 '--canvas-text-secondary-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-alternative-foreground-color-hover")  + ';\n' +
-				 '--canvas-text-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-background-color-rgb")  + ';\n' +
-				 '--canvas-text-secondary-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-background-color-hover-rgb")  + ';\n' +
-				 '--canvas-text-secondary-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-rgb")  + ';\n' +
-				 '--canvas-text-secondary-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-foreground-color-hover-rgb")  + ';\n' +
-				 '--canvas-text-secondary-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-alternative-foreground-color-rgb")  + ';\n' +
-				 '--canvas-text-secondary-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--canvas-text-secondary-alternative-foreground-color-hover-rgb")  + ';\n' +
-
-				 // Accent Color
-				 '--highlight-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-background-color")  + ';\n' +
-				 '--highlight-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-background-color-hover")  + ';\n' +
-				 '--highlight-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-fadeout-color")  + ';\n' +
-				 '--highlight-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-gradient-color")  + ';\n' +
-				 '--highlight-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-gradient-color-hover")  + ';\n' +
-				 '--highlight-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-foreground-color")  + ';\n' +
-				 '--highlight-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-foreground-color-hover")  + ';\n' +
-				 '--highlight-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-foreground-color-inverted")  + ';\n' +
-				 '--highlight-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-foreground-color-inverted-rgb")  + ';\n' +
-				 '--highlight-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-alternative-foreground-color")  + ';\n' +
-				 '--highlight-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-alternative-foreground-color-hover")  + ';\n' +
-				 '--highlight-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-background-color-rgb")  + ';\n' +
-				 '--highlight-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-background-color-hover-rgb")  + ';\n' +
-				 '--highlight-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-foreground-color-rgb")  + ';\n' +
-				 '--highlight-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-foreground-color-hover-rgb")  + ';\n' +
-				 '--highlight-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-alternative-foreground-color-rgb")  + ';\n' +
-				 '--highlight-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // Accent Text Color
-				 '--highlight-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-background-color")  + ';\n' +
-				 '--highlight-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-background-color-hover")  + ';\n' +
-				 '--highlight-text-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-fadeout-color")  + ';\n' +
-				 '--highlight-text-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-gradient-color")  + ';\n' +
-				 '--highlight-text-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-gradient-color-hover")  + ';\n' +
-				 '--highlight-text-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-foreground-color")  + ';\n' +
-				 '--highlight-text-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-foreground-color-hover")  + ';\n' +
-				 '--highlight-text-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-foreground-color-inverted")  + ';\n' +
-				 '--highlight-text-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-foreground-color-inverted-rgb")  + ';\n' +
-				 '--highlight-text-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-alternative-foreground-color")  + ';\n' +
-				 '--highlight-text-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-alternative-foreground-color-hover")  + ';\n' +
-				 '--highlight-text-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-background-color-rgb")  + ';\n' +
-				 '--highlight-text-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-background-color-hover-rgb")  + ';\n' +
-				 '--highlight-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-foreground-color-rgb")  + ';\n' +
-				 '--highlight-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-foreground-color-hover-rgb")  + ';\n' +
-				 '--highlight-text-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-alternative-foreground-color-rgb")  + ';\n' +
-				 '--highlight-text-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-text-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Accent Color
-				 '--highlight-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-secondary-background-color")  + ';\n' +
-				 '--highlight-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-secondary-background-color-hover")  + ';\n' +
-				 '--highlight-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Accent Color
-				 '--highlight-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-tertiary-background-color")  + ';\n' +
-				 '--highlight-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-tertiary-background-color-hover")  + ';\n' +
-				 '--highlight-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Accent Color
-				 '--highlight-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-quaternary-background-color")  + ';\n' +
-				 '--highlight-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-quaternary-background-color-hover")  + ';\n' +
-				 '--highlight-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--highlight-quaternary-background-color-rgb")  + ';\n' +
-
-				 // Secondary Accent Color
-				 '--hyperlink-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-background-color")  + ';\n' +
-				 '--hyperlink-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-background-color-hover")  + ';\n' +
-				 '--hyperlink-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-fadeout-color")  + ';\n' +
-				 '--hyperlink-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-gradient-color")  + ';\n' +
-				 '--hyperlink-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-gradient-color-hover")  + ';\n' +
-				 '--hyperlink-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-foreground-color")  + ';\n' +
-				 '--hyperlink-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-foreground-color-hover")  + ';\n' +
-				 '--hyperlink-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-foreground-color-inverted")  + ';\n' +
-				 '--hyperlink-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-foreground-color-inverted-rgb")  + ';\n' +
-				 '--hyperlink-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-alternative-foreground-color")  + ';\n' +
-				 '--hyperlink-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-alternative-foreground-color-hover")  + ';\n' +
-				 '--hyperlink-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-background-color-rgb")  + ';\n' +
-				 '--hyperlink-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-background-color-hover-rgb")  + ';\n' +
-				 '--hyperlink-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-foreground-color-rgb")  + ';\n' +
-				 '--hyperlink-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-foreground-color-hover-rgb")  + ';\n' +
-				 '--hyperlink-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-alternative-foreground-color-rgb")  + ';\n' +
-				 '--hyperlink-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Secondary Accent Color
-				 '--hyperlink-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-secondary-background-color")  + ';\n' +
-				 '--hyperlink-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-secondary-background-color-hover")  + ';\n' +
-				 '--hyperlink-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Secondary Accent Color
-				 '--hyperlink-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-tertiary-background-color")  + ';\n' +
-				 '--hyperlink-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-tertiary-background-color-hover")  + ';\n' +
-				 '--hyperlink-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Secondary Accent Color
-				 '--hyperlink-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-tertiary-background-color")  + ';\n' +
-				 '--hyperlink-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-tertiary-background-color-hover")  + ';\n' +
-				 '--hyperlink-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--hyperlink-tertiary-background-color-rgb")  + ';\n' +
-
-				 // Secondary Visited Accent Color
-				 '--visited-hyperlink-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-background-color")  + ';\n' +
-				 '--visited-hyperlink-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-background-color-hover")  + ';\n' +
-				 '--visited-hyperlink-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-fadeout-color")  + ';\n' +
-				 '--visited-hyperlink-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-gradient-color")  + ';\n' +
-				 '--visited-hyperlink-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-gradient-color-hover")  + ';\n' +
-				 '--visited-hyperlink-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-foreground-color")  + ';\n' +
-				 '--visited-hyperlink-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-foreground-color-hover")  + ';\n' +
-				 '--visited-hyperlink-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-foreground-color-inverted")  + ';\n' +
-				 '--visited-hyperlink-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-foreground-color-inverted-rgb")  + ';\n' +
-				 '--visited-hyperlink-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-alternative-foreground-color")  + ';\n' +
-				 '--visited-hyperlink-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-alternative-foreground-color-hover")  + ';\n' +
-				 '--visited-hyperlink-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-background-color-rgb")  + ';\n' +
-				 '--visited-hyperlink-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-background-color-hover-rgb")  + ';\n' +
-				 '--visited-hyperlink-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-foreground-color-rgb")  + ';\n' +
-				 '--visited-hyperlink-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-foreground-color-hover-rgb")  + ';\n' +
-				 '--visited-hyperlink-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-alternative-foreground-color-rgb")  + ';\n' +
-				 '--visited-hyperlink-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Secondary Visited Accent Color
-				 '--visited-hyperlink-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-secondary-background-color")  + ';\n' +
-				 '--visited-hyperlink-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-secondary-background-color-hover")  + ';\n' +
-				 '--visited-hyperlink-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Secondary Visited Accent Color
-				 '--visited-hyperlink-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-tertiary-background-color")  + ';\n' +
-				 '--visited-hyperlink-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-tertiary-background-color-hover")  + ';\n' +
-				 '--visited-hyperlink-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Secondary Visited Accent Color
-				 '--visited-hyperlink-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-quaternary-background-color")  + ';\n' +
-				 '--visited-hyperlink-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-quaternary-background-color-hover")  + ';\n' +
-				 '--visited-hyperlink-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--visited-hyperlink-quaternary-background-color-rgb")  + ';\n' +
-
-				 // Tertiary Accent Color
-				 '--active-title-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-background-color")  + ';\n' +
-				 '--active-title-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-background-color-hover")  + ';\n' +
-				 '--active-title-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-fadeout-color")  + ';\n' +
-				 '--active-title-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-gradient-color")  + ';\n' +
-				 '--active-title-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-gradient-color-hover")  + ';\n' +
-				 '--active-title-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-foreground-color")  + ';\n' +
-				 '--active-title-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-foreground-color-hover")  + ';\n' +
-				 '--active-title-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-foreground-color-inverted")  + ';\n' +
-				 '--active-title-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-foreground-color-inverted-rgb")  + ';\n' +
-				 '--active-title-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-alternative-foreground-color")  + ';\n' +
-				 '--active-title-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-alternative-foreground-color-hover")  + ';\n' +
-
-				 '--active-title-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-background-color-rgb")  + ';\n' +
-				 '--active-title-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-background-color-hover-rgb")  + ';\n' +
-				 '--active-title-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-foreground-color-rgb")  + ';\n' +
-				 '--active-title-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-foreground-color-hover-rgb")  + ';\n' +
-				 '--active-title-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-alternative-foreground-color-rgb")  + ';\n' +
-				 '--active-title-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // Tertiary Accent Text Color
-				 '--active-title-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-background-color")  + ';\n' +
-				 '--active-title-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-background-color-hover")  + ';\n' +
-				 '--active-title-text-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-fadeout-color")  + ';\n' +
-				 '--active-title-text-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-gradient-color")  + ';\n' +
-				 '--active-title-text-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-gradient-color-hover")  + ';\n' +
-				 '--active-title-text-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-foreground-color")  + ';\n' +
-				 '--active-title-text-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-foreground-color-hover")  + ';\n' +
-				 '--active-title-text-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-foreground-color-inverted")  + ';\n' +
-				 '--active-title-text-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-foreground-color-inverted-rgb")  + ';\n' +
-				 '--active-title-text-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-alternative-foreground-color")  + ';\n' +
-				 '--active-title-text-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-alternative-foreground-color-hover")  + ';\n' +
-
-				 '--active-title-text-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-background-color-rgb")  + ';\n' +
-				 '--active-title-text-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-background-color-hover-rgb")  + ';\n' +
-				 '--active-title-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-foreground-color-rgb")  + ';\n' +
-				 '--active-title-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-foreground-color-hover-rgb")  + ';\n' +
-				 '--active-title-text-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-alternative-foreground-color-rgb")  + ';\n' +
-				 '--active-title-text-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-text-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Tertiary Accent Color
-				 '--active-title-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-secondary-background-color")  + ';\n' +
-				 '--active-title-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-secondary-background-color-hover")  + ';\n' +
-				 '--active-title-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Tertiary Accent Color
-				 '--active-title-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-tertiary-background-color")  + ';\n' +
-				 '--active-title-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-tertiary-background-color-hover")  + ';\n' +
-				 '--active-title-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Tertiary Accent Color
-				 '--active-title-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-quaternary-background-color")  + ';\n' +
-				 '--active-title-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-quaternary-background-color-hover")  + ';\n' +
-				 '--active-title-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--active-title-quaternary-background-color-rgb")  + ';\n' +
-
-				 // Quaternary Accent Color
-				 '--inactive-title-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-background-color")  + ';\n' +
-				 '--inactive-title-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-background-color-hover")  + ';\n' +
-				 '--inactive-title-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-fadeout-color")  + ';\n' +
-				 '--inactive-title-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-gradient-color")  + ';\n' +
-				 '--inactive-title-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-gradient-color-hover")  + ';\n' +
-				 '--inactive-title-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-foreground-color")  + ';\n' +
-				 '--inactive-title-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-foreground-color-hover")  + ';\n' +
-				 '--inactive-title-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-foreground-color-inverted")  + ';\n' +
-				 '--inactive-title-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-foreground-color-inverted-rgb")  + ';\n' +
-				 '--inactive-title-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-alternative-foreground-color")  + ';\n' +
-				 '--inactive-title-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-alternative-foreground-color-hover")  + ';\n' +
-				 '--inactive-title-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-background-color-rgb")  + ';\n' +
-				 '--inactive-title-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-background-color-hover-rgb")  + ';\n' +
-				 '--inactive-title-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-foreground-color-rgb")  + ';\n' +
-				 '--inactive-title-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-foreground-color-hover-rgb")  + ';\n' +
-				 '--inactive-title-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-alternative-foreground-color-rgb")  + ';\n' +
-				 '--inactive-title-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // Quaternary Accent Text Color
-				 '--inactive-title-text-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-background-color")  + ';\n' +
-				 '--inactive-title-text-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-background-color-hover")  + ';\n' +
-				 '--inactive-title-text-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-fadeout-color")  + ';\n' +
-				 '--inactive-title-text-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-gradient-color")  + ';\n' +
-				 '--inactive-title-text-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-gradient-color-hover")  + ';\n' +
-				 '--inactive-title-text-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-foreground-color")  + ';\n' +
-				 '--inactive-title-text-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-foreground-color-hover")  + ';\n' +
-				 '--inactive-title-text-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-foreground-color-inverted")  + ';\n' +
-				 '--inactive-title-text-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-foreground-color-inverted-rgb")  + ';\n' +
-				 '--inactive-title-text-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-alternative-foreground-color")  + ';\n' +
-				 '--inactive-title-text-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-alternative-foreground-color-hover")  + ';\n' +
-				 '--inactive-title-text-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-background-color-rgb")  + ';\n' +
-				 '--inactive-title-text-background-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-background-color-hover-rgb")  + ';\n' +
-				 '--inactive-title-text-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-foreground-color-rgb")  + ';\n' +
-				 '--inactive-title-text-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-foreground-color-hover-rgb")  + ';\n' +
-				 '--inactive-title-text-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-alternative-foreground-color-rgb")  + ';\n' +
-				 '--inactive-title-text-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--inactive-title-text-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // Alert
-				 '--alert-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-background-color")  + ';\n' +
-				 '--alert-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-background-color-hover")  + ';\n' +
-				 '--alert-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-background-color-hover-2")  + ';\n' +
-				 '--alert-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-fadeout-color")  + ';\n' +
-				 '--alert-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-gradient-color")  + ';\n' +
-				 '--alert-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-gradient-color-hover")  + ';\n' +
-				 '--alert-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-foreground-color")  + ';\n' +
-				 '--alert-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-foreground-color-hover")  + ';\n' +
-				 '--alert-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-foreground-color-inverted")  + ';\n' +
-				 '--alert-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-alternative-foreground-color")  + ';\n' +
-				 '--alert-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-alternative-foreground-color-hover")  + ';\n' +
-				 '--alert-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-background-color-rgb")  + ';\n' +
-				 '--alert-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-foreground-color-rgb")  + ';\n' +
-				 '--alert-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-foreground-color-hover-rgb")  + ';\n' +
-				 '--alert-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-foreground-color-inverted-rgb")  + ';\n' +
-				 '--alert-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-alternative-foreground-color-rgb")  + ';\n' +
-				 '--alert-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Alert Color
-				 '--alert-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-secondary-background-color")  + ';\n' +
-				 '--alert-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-secondary-background-color-hover")  + ';\n' +
-				 '--alert-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Alert Color
-				 '--alert-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-tertiary-background-color")  + ';\n' +
-				 '--alert-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-tertiary-background-color-hover")  + ';\n' +
-				 '--alert-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Alert Color
-				 '--alert-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-quaternary-background-color")  + ';\n' +
-				 '--alert-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-quaternary-background-color-hover")  + ';\n' +
-				 '--alert-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--alert-quaternary-background-color-rgb")  + ';\n' +
-				 // Pause
-				 '--pause-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-background-color")  + ';\n' +
-				 '--pause-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-background-color-hover")  + ';\n' +
-				 '--pause-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-background-color-hover-2")  + ';\n' +
-				 '--pause-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-fadeout-color")  + ';\n' +
-				 '--pause-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-gradient-color")  + ';\n' +
-				 '--pause-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-gradient-color-hover")  + ';\n' +
-				 '--pause-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color")  + ';\n' +
-				 '--pause-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-hover")  + ';\n' +
-				 '--pause-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-inverted")  + ';\n' +
-				 '--pause-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-alternative-foreground-color")  + ';\n' +
-				 '--pause-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-alternative-foreground-color-hover")  + ';\n' +
-				 '--pause-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-background-color-rgb")  + ';\n' +
-				 '--pause-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-rgb")  + ';\n' +
-				 '--pause-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-hover-rgb")  + ';\n' +
-				 '--pause-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-foreground-color-inverted-rgb")  + ';\n' +
-				 '--pause-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-alternative-foreground-color-rgb")  + ';\n' +
-				 '--pause-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Pause Color
-				 '--pause-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-secondary-background-color")  + ';\n' +
-				 '--pause-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-secondary-background-color-hover")  + ';\n' +
-				 '--pause-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Pause Color
-				 '--pause-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-tertiary-background-color")  + ';\n' +
-				 '--pause-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-tertiary-background-color-hover")  + ';\n' +
-				 '--pause-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Pause Color
-				 '--pause-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-quaternary-background-color")  + ';\n' +
-				 '--pause-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-quaternary-background-color-hover")  + ';\n' +
-				 '--pause-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--pause-quaternary-background-color-rgb")  + ';\n' +
-				 // Warning
-				 '--warning-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-background-color")  + ';\n' +
-				 '--warning-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-background-color-hover")  + ';\n' +
-				 '--warning-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-background-color-hover-2")  + ';\n' +
-				 '--warning-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-fadeout-color")  + ';\n' +
-				 '--warning-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-gradient-color")  + ';\n' +
-				 '--warning-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-gradient-color-hover")  + ';\n' +
-				 '--warning-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-foreground-color")  + ';\n' +
-				 '--warning-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-foreground-color-hover")  + ';\n' +
-				 '--warning-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-foreground-color-inverted")  + ';\n' +
-				 '--warning-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-alternative-foreground-color")  + ';\n' +
-				 '--warning-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-alternative-foreground-color-hover")  + ';\n' +
-				 '--warning-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-background-color-rgb")  + ';\n' +
-				 '--warning-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-foreground-color-rgb")  + ';\n' +
-				 '--warning-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-foreground-color-hover-rgb")  + ';\n' +
-				 '--warning-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-foreground-color-inverted-rgb")  + ';\n' +
-				 '--warning-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-alternative-foreground-color-rgb")  + 
-';\n' +
-				 '--warning-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Warning Color
-				 '--warning-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-secondary-background-color")  + ';\n' +
-				 '--warning-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-secondary-background-color-hover")  + ';\n' +
-				 '--warning-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Warning Color
-				 '--warning-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-tertiary-background-color")  + ';\n' +
-				 '--warning-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-tertiary-background-color-hover")  + ';\n' +
-				 '--warning-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Warning Color
-				 '--warning-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-quaternary-background-color")  + ';\n' +
-				 '--warning-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-quaternary-background-color-hover")  + ';\n' +
-				 '--warning-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--warning-quaternary-background-color-rgb")  + ';\n' +
-
-				 // Success
-				 '--success-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-background-color")  + ';\n' +
-				 '--success-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-background-color-hover")  + ';\n' +
-				 '--success-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-background-color-hover-2")  + ';\n' +
-				 '--success-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-fadeout-color")  + ';\n' +
-				 '--success-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-gradient-color")  + ';\n' +
-				 '--success-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-gradient-color-hover")  + ';\n' +
-				 '--success-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-foreground-color")  + ';\n' +
-				 '--success-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-foreground-color-hover")  + ';\n' +
-				 '--success-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-foreground-color-inverted")  + ';\n' +
-				 '--success-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-alternative-foreground-color")  + ';\n' +
-				 '--success-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-alternative-foreground-color-hover")  + ';\n' +
-				 '--success-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-background-color-rgb")  + ';\n' +
-				 '--success-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-foreground-color-rgb")  + ';\n' +
-				 '--success-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-foreground-color-hover-rgb")  + ';\n' +
-				 '--success-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-foreground-color-inverted-rgb")  + ';\n' +
-				 '--success-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-alternative-foreground-color-rgb")  + ';\n' +
-				 '--success-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Success Color
-				 '--success-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-secondary-background-color")  + ';\n' +
-				 '--success-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-secondary-background-color-hover")  + ';\n' +
-				 '--success-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Success Color
-				 '--success-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-tertiary-background-color")  + ';\n' +
-				 '--success-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-tertiary-background-color-hover")  + ';\n' +
-				 '--success-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Success Color
-				 '--success-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-quaternary-background-color")  + ';\n' +
-				 '--success-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-quaternary-background-color-hover")  + ';\n' +
-				 '--success-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--success-quaternary-background-color-rgb")  + ';\n' +
-				 // Progress
-				 '--progress-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-background-color")  + ';\n' +
-				 '--progress-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-background-color-hover")  + ';\n' +
-				 '--progress-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-background-color-hover-2")  + ';\n' +
-				 '--progress-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-fadeout-color")  + ';\n' +
-				 '--progress-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-gradient-color")  + ';\n' +
-				 '--progress-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-gradient-color-hover")  + ';\n' +
-				 '--progress-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color")  + ';\n' +
-				 '--progress-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-hover")  + ';\n' +
-				 '--progress-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-inverted")  + ';\n' +
-				 '--progress-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-alternative-foreground-color")  + ';\n' +
-				 '--progress-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-alternative-foreground-color-hover")  + ';\n' +
-				 '--progress-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-background-color-rgb")  + ';\n' +
-				 '--progress-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-rgb")  + ';\n' +
-				 '--progress-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-hover-rgb")  + ';\n' +
-				 '--progress-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-foreground-color-inverted-rgb")  + ';\n' +
-				 '--progress-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-alternative-foreground-color-rgb")  + ';\n' +
-				 '--progress-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Progress Color
-				 '--progress-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-secondary-background-color")  + ';\n' +
-				 '--progress-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-secondary-background-color-hover")  + ';\n' +
-				 '--progress-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Progress Color
-				 '--progress-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-tertiary-background-color")  + ';\n' +
-				 '--progress-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-tertiary-background-color-hover")  + ';\n' +
-				 '--progress-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Progress Color
-				 '--progress-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-quaternary-background-color")  + ';\n' +
-				 '--progress-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-quaternary-background-color-hover")  + ';\n' +
-				 '--progress-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--progress-quaternary-background-color-rgb")  + ';\n' +
-				 // Message
-				 '--message-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-background-color")  + ';\n' +
-				 '--message-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-background-color-hover")  + ';\n' +
-				 '--message-background-color-hover-2:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-background-color-hover-2")  + ';\n' +
-				 '--message-fadeout-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-fadeout-color")  + ';\n' +
-				 '--message-gradient-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-gradient-color")  + ';\n' +
-				 '--message-gradient-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-gradient-color-hover")  + ';\n' +
-				 '--message-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-foreground-color")  + ';\n' +
-				 '--message-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-foreground-color-hover")  + ';\n' +
-				 '--message-foreground-color-inverted:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-foreground-color-inverted")  + ';\n' +
-				 '--message-alternative-foreground-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-alternative-foreground-color")  + ';\n' +
-				 '--message-alternative-foreground-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-alternative-foreground-color-hover")  + ';\n' +
-				 '--message-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-background-color-rgb")  + ';\n' +
-				 '--message-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-foreground-color-rgb")  + ';\n' +
-				 '--message-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-foreground-color-hover-rgb")  + ';\n' +
-				 '--message-foreground-color-inverted-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-foreground-color-inverted-rgb")  + ';\n' +
-				 '--message-alternative-foreground-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-alternative-foreground-color-rgb")  + ';\n' +
-				 '--message-alternative-foreground-color-hover-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-alternative-foreground-color-hover-rgb")  + ';\n' +
-				 // 2nd Message Color
-				 '--message-secondary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-secondary-background-color")  + ';\n' +
-				 '--message-secondary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-secondary-background-color-hover")  + ';\n' +
-				 '--message-secondary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-secondary-background-color-rgb")  + ';\n' +
-				 // 3rd Message Color
-				 '--message-tertiary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-tertiary-background-color")  + ';\n' +
-				 '--message-tertiary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-tertiary-background-color-hover")  + ';\n' +
-				 '--message-tertiary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-tertiary-background-color-rgb")  + ';\n' +
-				 // 4th Message Color
-				 '--message-quaternary-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-quaternary-background-color")  + ';\n' +
-				 '--message-quaternary-background-color-hover:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-quaternary-background-color-hover")  + ';\n' +
-				 '--message-quaternary-background-color-rgb:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--message-quaternary-background-color-rgb")  + ';\n' +
-				 // Font
-				 '--custom-sans-serif-font:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--custom-sans-serif-font")  + ';\n' +
-				 '--custom-serif-font:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--custom-serif-font")  + ';\n' +
-				 '--custom-rounded-font:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--custom-rounded-font")  + ';\n' +
-				 '--custom-monospace-font:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--custom-monospace-font")  + ';\n' +
-				 // Border Radius
-				 '--border-radius:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--border-radius")  + ';\n' +
-				 '--window-border-radius:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--window-border-radius")  + ';\n' +
-				 '--menu-border-radius:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--menu-border-radius")  + ';\n' +
-				 // Icon Filter
-				 '--icon-filter:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--icon-filter")  + ';\n' +
-				 '--icon-filter-hover:' + wordfilter2  + ';\n' +
-				 '--icon-filter-duration:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--icon-filter-duration")  + ';\n' +
-				 '--icon-filter-delay:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--icon-filter-delay")  + ';\n' +
-				 // Elements Opacity
-				 '--system-acryllic-opacity:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--system-acryllic-opacity")  + ';\n' +
-				 '--system-mica-opacity:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--system-mica-opacity")  + ';\n' +
-				 // Generic Color Shift
-				 '--system-generic-color-hue-shift:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--system-generic-color-hue-shift")  + ';\n' +
-				 '--system-generic-color-saturation:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--system-generic-color-saturation")  + ';\n' +
-				 // Misc
-				 '--mica-background-color:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--mica-background-color")  + ';\n' +
-				 '--fadeout-opacity:' + getComputedStyle(document.querySelector('body')).getPropertyValue("--fadeout-opacity")  + ';\n' +
-				 '}' // Ending
-	} else { // For use with Theme Management
-		result = '.visualcolors-standard.theme-A {\n' + // Beginning
-				 '--desktop-background-image:' + GetDesktopImage()  + ';\n' +
-				 '--desktop-background-image-filter:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-image-filter")  + ';\n' +
-				 '--desktop-background-image-blend-mode:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-image-blend-mode")  + ';\n' +
-				 '--desktop-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-color")  + ';\n' +
-				 '--desktop-text-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-text-background-color")  + ';\n' +
-				 '--desktop-background-size:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-size")  + ';\n' +
-				 '--desktop-background-horizontal-alignment:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-horizontal-alignment")  + ';\n' +
-				 '--desktop-background-vertical-alignment:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-vertical-alignment")  + ';\n' +
-				 '--desktop-background-no-horizontal-tiling:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-no-horizontal-tiling")  + ';\n' +
-				 '--desktop-background-no-vertical-tiling:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-no-vertical-tiling")  + ';\n' +
-				 '--canvas-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-background-color")  + ';\n' +
-				 '--canvas-secondary-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-secondary-background-color")  + ';\n' +
-				 '--inactive-text-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactive-text-background-color")  + ';\n' +
-				 '--active-text-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-text-background-color")  + ';\n' +
-				 '--canvas-text-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-text-background-color")  + ';\n' +
-				 '--canvas-text-secondary-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-text-secondary-background-color")  + ';\n' +
-				 '--highlight-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--highlight-background-color")  + ';\n' +
-				 '--highlight-text-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--highlight-text-background-color")  + ';\n' +
-				 '--hyperlink-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--hyperlink-background-color")  + ';\n' +
-				 '--visited-hyperlink-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--visited-hyperlink-background-color")  + ';\n' +
-				 '--active-title-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-title-background-color")  + ';\n' +
-				 '--active-title-text-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-title-text-background-color")  + ';\n' +
-				 '--inactive-title-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactive-title-background-color")  + ';\n' +
-				 '--inactive-title-text-background-color:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactive-title-text-background-color")  + ';\n' +
-				 '--custom-sans-serif-font:' + GetCustomFont()  + ';\n' +
-				 '--custom-serif-font:' + GetCustomFont4()  + ';\n' +
-				 '--custom-rounded-font:' + GetCustomFont2()  + ';\n' +
-				 '--custom-monospace-font:' + GetCustomFont3()  + ';\n' +
-				 '--border-radius:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--border-radius")  + ';\n' +
-				 '--icon-filter:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--icon-filter")  + ';\n' +
-				 '--icon-filter-hover:' + wordfilter2  + ';\n' +
-				 '--icon-filter-duration:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--icon-filter-duration")  + ';\n' +
-				 '--icon-filter-delay:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--icon-filter-delay")  + ';\n' +
-				 '--system-acryllic-opacity:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-acryllic-opacity")  + ';\n' +
-				 '--system-generic-color-hue-shift:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-generic-color-hue-shift")  + ';\n' +
-				 '--system-generic-color-saturation:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-generic-color-hue-shift")  + ';\n' +
-
-				 '}' // Ending
-	}
-	alert('Once you save the file, put the stylesheet contents to MediaWiki:Common.css for use in the wiki or upload it to any website.');
-	DownloadData(result,'MyTheme','css');
-}
-
+/**
+*** Moved to Debug.js 
+**/
 
 /* Begin Color Parsers */
 function ColorMix(color1,color2,intensity=1,hue='nil') {
@@ -2258,6 +1566,11 @@ var contrast = window.MW18lowContrast*ContrastRatio3()
 return ((chroma.contrast(color, color2)) >= contrast) // For Border Color
 }
 
+function getDefaultHyperlinkTextDecoration(color,color2) {
+var contrast = window.MW18lowContrast / 2.0
+return ((chroma.contrast(color, color2)) >= contrast) ? 'none' : 'underline' // For Border Color
+}
+
 
 
 /* End Color Parsers */
@@ -2288,11 +1601,6 @@ if (refresh === true) {
 		var colorstyle= ".color-management-off { display:none!important;}\n"
 	}
 
-if (refresh) {
-//	GetAutoColorDesktop();
-//alert(window.MW18AutoAccent);
-}
-
 /** Page BG **/
 /* Set Vars */
 // content_text is Content Color
@@ -2311,7 +1619,7 @@ var content_color =  GetCanvas();
 	var content_color = ColorStyleAdjust(content_color)
 
 	window.MW18PageColor = content_color;
-	var darkpage = isLightColor(content_color);
+	var lightPage = isLightColor(content_color);
 
 
 var content_color2 = ColorHover(content_color);
@@ -2319,7 +1627,7 @@ var content_color2 = ColorHover(content_color);
 var adjustment = ContrastRatio2();
 window.MW18FinalContrast = ContrastRatio4();
 
-	if (darkpage) {
+	if (lightPage) {
 		var lightness = '#000000';
 		var lightnessR = '#ffffff';
 		var fadeouto = 0.2;
@@ -2328,10 +1636,12 @@ window.MW18FinalContrast = ContrastRatio4();
 		var lightnessR = '#000000';
 		var fadeouto = 0.3;
 	}
+
+		var disabledo = 0.7;
 		window.MW18PageColorFG = lightness
 
 if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-secondary-background-color") == 'auto') ) {
-	if (darkpage) {
+	if (lightPage) {
 		var dropdowncolor = ColorMix(content_color,"#000000",adjustment);
 	} else {
 		var dropdowncolor = ColorMix(content_color,"#ffffff",adjustment);
@@ -2346,15 +1656,15 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-
 
 
 }
-	var darkpage2 = isLightColor(dropdowncolor);
-	if (darkpage2) {
-		var lightness3 = '#000000';
-		var c3dlight = 0.75;
-		var c3ddark = 0.5;
+	var lightDropdown = isLightColor(dropdowncolor);
+	if (lightDropdown) {
+		var lightnessDropdown = '#000000';
+		var tabscPage = '255,255,255';
+		var tabsoPage = 0.1 + (chroma(dropdowncolor).luminance() * 0.4 );
 	} else {
-		var lightness3 = '#ffffff';
-		var c3dlight = 0.5;
-		var c3ddark = 0.75;
+		var lightnessDropdown = '#ffffff';
+		var tabscPage = '58,58,58';
+		var tabsoPage = 0.1 + ((1 - chroma(dropdowncolor).luminance()) * 0.4 );
 	}
 
 var dropdowncolor2 = GetInactiveText();
@@ -2380,7 +1690,7 @@ var content2_text= GetCanvasText2();
 var content2_text = ColorStyleAdjust(content2_text);
 
 	
-while ( ( !(isSuitableColorText(content2_text, dropdowncolor)) ) && (content2_text !== lightness3) ) {
+while ( ( !(isSuitableColorText(content2_text, dropdowncolor)) ) && (content2_text !== lightnessDropdown) ) {
 	var content2_text= ColorAdjust(content2_text,dropdowncolor);
 }
 
@@ -2396,11 +1706,11 @@ var head_color =	GetDesktop();
 
 // Liatch Quirk
 		var head_color = ColorStyleAdjust(head_color);
-	var lighthead = isLightColor(head_color);
-	if (lighthead) {
-		var lightness2 = '#000000';
+	var lightHead = isLightColor(head_color);
+	if (lightHead) {
+		var lightnessHead = '#000000';
 	} else {
-		var lightness2 = '#ffffff';
+		var lightnessHead = '#ffffff';
 	}
 
 window.MW18BgColor = head_color
@@ -2423,7 +1733,7 @@ var headertext_color= GetDesktopText();
 	// Liatch Quirk
 		var headertext_color = ColorStyleAdjust(headertext_color);
 	
-		while ( ( !(isSuitableColorText(headertext_color, head_color)) ) && (headertext_color !== lightness2)  ) {
+		while ( ( !(isSuitableColorText(headertext_color, head_color)) ) && (headertext_color !== lightnessHead)  ) {
 			var headertext_color= ColorAdjust(headertext_color,window.MW18BgColor);
 		}
 
@@ -2447,22 +1757,26 @@ var caret_color = GetActiveTitle();
 			var caret_color= ColorAdjust(caret_color,window.MW18PageColor);
 		}
 
-		var lightcaret = isLightColor(caret_color);
-		if (lightcaret) {
-			var lightnessAT = '#000000';
+		var lightCaret = isLightColor(caret_color);
+		if (lightCaret) {
+			var lightnessCaret = '#000000';
+			var tabscCaret = '255,255,255';
+			var tabsoCaret = 0.1 + (chroma(caret_color).luminance() * 0.4 );
 		} else {
-			var lightnessAT = '#ffffff';
+			var lightnessCaret = '#ffffff';
+			var tabscCaret = '58,58,58';
+			var tabsoCaret = 0.1 + ((1 - chroma(caret_color).luminance()) * 0.4 );
 		}
 
 
 
-		while ( ( !(isSuitableColorFormControls(caret2_color, dropdowncolor)) ) && (caret2_color !== lightness3) ) {
+		while ( ( !(isSuitableColorFormControls(caret2_color, dropdowncolor)) ) && (caret2_color !== lightnessDropdown) ) {
 			var caret2_color= ColorAdjust(caret2_color,dropdowncolor);
 		}
-		while ( ( !(isSuitableColorFormControls(caret3_color, caret_color)) ) && (caret3_color !== lightnessAT) ) {
+		while ( ( !(isSuitableColorFormControls(caret3_color, caret_color)) ) && (caret3_color !== lightnessCaret) ) {
 			var caret3_color= ColorAdjust(caret3_color,caret_color);
 		}
-		while ( ( !(isSuitableColorFormControls(caret4_color, head_color)) ) && (caret4_color !== lightness2)  ) {
+		while ( ( !(isSuitableColorFormControls(caret4_color, head_color)) ) && (caret4_color !== lightnessHead)  ) {
 			var caret4_color= ColorAdjust(caret4_color,window.MW18BgColor);
 		}
 
@@ -2485,7 +1799,7 @@ var carettext_color= GetActiveTitleText();
 if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-title-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
 		var carettext_color = ColorStyleAdjust(carettext_color);
 }
-			while ( ( !(isSuitableColorText(carettext_color, caret_color)) ) && (carettext_color !== lightnessAT)  ) {
+			while ( ( !(isSuitableColorText(carettext_color, caret_color)) ) && (carettext_color !== lightnessCaret)  ) {
 				var carettext_color= ColorAdjust(carettext_color,caret_color);
 			}
 
@@ -2505,11 +1819,15 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactiv
 		}
 
 
-	var lightcaretIT = isLightColor(caretIT_color);
-	if (lightcaretIT) {
-		var lightnessIT = '#000000';
+	var lightCaretIT = isLightColor(caretIT_color);
+	if (lightCaretIT) {
+		var lightnessCaretIT = '#000000';
+		var tabscCaretIT = '255,255,255';
+		var tabsoCaretIT = 0.1 + (chroma(caretIT_color).luminance() * 0.4 );
 	} else {
-		var lightnessIT = '#ffffff';
+		var lightnessCaretIT = '#ffffff';
+		var tabscCaretIT = '58,58,58';
+		var tabsoCaretIT = 0.1 + ((1 - chroma(caretIT_color).luminance()) * 0.4 );
 	}
 
 window.MW18ITColor = caretIT_color
@@ -2529,7 +1847,7 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactiv
 		var caretITtext_color = ColorStyleAdjust(caretITtext_color);
 }
 
-			while ( ( !(isSuitableColorFormControls(caretITtext_color, caretIT_color)) ) && (caretITtext_color !== lightnessIT)  ) {
+			while ( ( !(isSuitableColorFormControls(caretITtext_color, caretIT_color)) ) && (caretITtext_color !== lightnessCaretIT)  ) {
 				var caretITtext_color= ColorAdjust(caretITtext_color,caretIT_color);
 			}
 
@@ -2550,13 +1868,13 @@ var button_color = GetHighlight();
 		while ( ( !(isSuitableColorFormControls(button_color, content_color)) ) && (button_color !== lightness)  ) {
 			var button_color= ColorAdjust(button_color,window.MW18PageColor);
 		}
-		while ( ( !(isSuitableColorFormControls(button2_color, dropdowncolor)) ) && (button2_color !== lightness3) ) {
+		while ( ( !(isSuitableColorFormControls(button2_color, dropdowncolor)) ) && (button2_color !== lightnessDropdown) ) {
 			var button2_color= ColorAdjust(button2_color,dropdowncolor);
 		}
-		while ( ( !(isSuitableColorFormControls(button3_color, caret_color)) ) && (button3_color !== lightnessAT) ) {
+		while ( ( !(isSuitableColorFormControls(button3_color, caret_color)) ) && (button3_color !== lightnessCaret) ) {
 			var button3_color= ColorAdjust(button3_color,caret_color);
 		}
-		while ( ( !(isSuitableColorFormControls(button4_color, head_color)) ) && (button4_color !== lightness2)  ) {
+		while ( ( !(isSuitableColorFormControls(button4_color, head_color)) ) && (button4_color !== lightnessHead)  ) {
 			var button4_color= ColorAdjust(button4_color,window.MW18BgColor);
 		}
 
@@ -2608,13 +1926,13 @@ var link_color = GetHyperlink();
 		while ( ( !(isSuitableColorText(link_color, content_color)) ) && (link_color !== lightness) ) {
 			var link_color= ColorAdjust(link_color,window.MW18PageColor);
 		}
-		while ( ( !(isSuitableColorText(link2_color, dropdowncolor)) ) && (link2_color !== lightness3) ) {
+		while ( ( !(isSuitableColorText(link2_color, dropdowncolor)) ) && (link2_color !== lightnessDropdown) ) {
 			var link2_color= ColorAdjust(link2_color,dropdowncolor);
 		}
-		while ( ( !(isSuitableColorText(link3_color, caret_color)) ) && (link3_color !== lightnessAT) ) {
+		while ( ( !(isSuitableColorText(link3_color, caret_color)) ) && (link3_color !== lightnessCaret) ) {
 			var link3_color= ColorAdjust(link3_color,caret_color);
 		}
-		while ( ( !(isSuitableColorText(link4_color, head_color)) ) && (link4_color !== lightness2)  ) {
+		while ( ( !(isSuitableColorText(link4_color, head_color)) ) && (link4_color !== lightnessHead)  ) {
 			var link4_color= ColorAdjust(link4_color,window.MW18BgColor);
 		}
 
@@ -2623,6 +1941,18 @@ var linkcolor1 = ColorHover(link_color,content_color);
 var link2color1 = ColorHover(link2_color,content_color);
 var link3color1 = ColorHover(link3_color,caret_color);
 var link4color1 = ColorHover(link4_color,content_color);
+
+
+	var lightLink = isLightColor(link_color);
+	if (lightLink) {
+		var tabscLink = '255,255,255';
+		var tabsoLink = 0.1 + (chroma(link_color).luminance() * 0.4 );
+	} else {
+		var tabscLink = '58,58,58';
+		var tabsoLink = 0.1 + ((1 - chroma(link_color).luminance()) * 0.4 );
+	}
+
+
 
 
 /** Visited Link Color **/
@@ -2638,13 +1968,13 @@ var vlink_color = GetVisitedHyperlink();
 		while ( ( !(isSuitableColorText(vlink_color, content_color)) ) && (vlink_color !== lightness) ) {
 			var vlink_color= ColorAdjust(vlink_color,window.MW18PageColor);
 		}
-		while ( ( !(isSuitableColorText(vlink2_color, dropdowncolor)) ) && (vlink2_color !== lightness3) ) {
+		while ( ( !(isSuitableColorText(vlink2_color, dropdowncolor)) ) && (vlink2_color !== lightnessDropdown) ) {
 			var vlink2_color= ColorAdjust(vlink2_color,dropdowncolor);
 		}
-		while ( ( !(isSuitableColorText(vlink3_color, caret_color)) ) && (vlink3_color !== lightnessAT) ) {
+		while ( ( !(isSuitableColorText(vlink3_color, caret_color)) ) && (vlink3_color !== lightnessCaret) ) {
 			var vlink3_color= ColorAdjust(vlink3_color,caret_color);
 		}
-		while ( ( !(isSuitableColorText(vlink4_color, head_color)) ) && (vlink4_color !== lightness2)  ) {
+		while ( ( !(isSuitableColorText(vlink4_color, head_color)) ) && (vlink4_color !== lightnessHead)  ) {
 			var vlink4_color= ColorAdjust(vlink4_color,window.MW18BgColor);
 		}
 
@@ -2668,13 +1998,13 @@ var alink_color = GetActiveText();
 		while ( ( !(isSuitableColorText(alink_color, content_color)) ) && (alink_color !== lightness) ) {
 			var alink_color= ColorAdjust(alink_color,window.MW18PageColor);
 		}
-		while ( ( !(isSuitableColorText(alink2_color, dropdowncolor)) ) && (alink2_color !== lightness3) ) {
+		while ( ( !(isSuitableColorText(alink2_color, dropdowncolor)) ) && (alink2_color !== lightnessDropdown) ) {
 			var alink2_color= ColorAdjust(alink2_color,dropdowncolor);
 		}
-		while ( ( !(isSuitableColorText(alink3_color, caret_color)) ) && (alink3_color !== lightnessAT) ) {
+		while ( ( !(isSuitableColorText(alink3_color, caret_color)) ) && (alink3_color !== lightnessCaret) ) {
 			var alink3_color= ColorAdjust(alink3_color,caret_color);
 		}
-		while ( ( !(isSuitableColorText(alink4_color, head_color)) ) && (alink4_color !== lightness2)  ) {
+		while ( ( !(isSuitableColorText(alink4_color, head_color)) ) && (alink4_color !== lightnessHead)  ) {
 			var alink4_color= ColorAdjust(alink4_color,window.MW18BgColor);
 		}
 
@@ -2702,13 +2032,13 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactiv
 		while ( ( !(isSuitableColorFormControls(border_color, content_color)) ) && (border_color !== lightness)  ) {
 			var border_color= ColorAdjust(border_color,window.MW18PageColor);
 		}
-		while ( ( !(isSuitableColorFormControls(border2_color, dropdowncolor)) ) && (border2_color !== lightness3) ) {
+		while ( ( !(isSuitableColorFormControls(border2_color, dropdowncolor)) ) && (border2_color !== lightnessDropdown) ) {
 			var border2_color= ColorAdjust(border2_color,dropdowncolor);
 		}
-		while ( ( !(isSuitableColorFormControls(border3_color, caret_color)) ) && (border3_color !== lightnessAT) ) {
+		while ( ( !(isSuitableColorFormControls(border3_color, caret_color)) ) && (border3_color !== lightnessCaret) ) {
 			var border3_color= ColorAdjust(border3_color,caret_color);
 		}
-		while ( ( !(isSuitableColorFormControls(border4_color, head_color)) ) && (border4_color !== lightness2)  ) {
+		while ( ( !(isSuitableColorFormControls(border4_color, head_color)) ) && (border4_color !== lightnessHead)  ) {
 			var border4_color= ColorAdjust(border4_color,window.MW18BgColor);
 		}
 
@@ -2889,15 +2219,28 @@ var caretITtext_2fg = GetForegroundVariables(caretITtextcolor1);
 	if ( wordfilter2 == "" ) {
 		wordfilter2 == 'initial'
 	}
-	
-	var tdbg = ColorMix(dropdowncolor,"#ffffff",c3dlight);
-	var tdbg2 = ColorMix(dropdowncolor,"#000000",c3ddark);
+
+
+	if (getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-icon-style") === 'outlined') {
+		var iconstyle= 'Material Icons'
+ 	} else if (getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-icon-style") === 'sharp') {
+		var iconstyle=  'Material Icons Sharp'
+ 	} else {
+		var iconstyle=  'Material Icons Round'
+ 	}
+
 
 	micabg = [ColorMix(dropdowncolor,content_color,0.5),'color'];
 	
 	var saturation = (1 - (GetSaturation() / 100));
 	var hue = GetHueShift();	
 	brad = parseInt(getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--border-radius"));
+
+	var fon1 = GetCustomFont();
+	var fon2 = GetCustomFont4();
+	var fon3 = GetCustomFont2();
+	var fon4 = GetCustomFont3();
+
 
 var invfilters = [
 					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ')',			  					'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')'],						// Sp Dark Mode 0 (Normal)
@@ -2909,6 +2252,7 @@ var invfilters = [
 	var result = 		  colorstyle +
 						  ":root {" +
 						  "--fadeout-opacity:" + fadeouto + ";\n" + 
+						  "--disabled-elements-opacity:" + disabledo + ";\n" + 
 						  "--desktop-alternative-foreground-color:" + head_fg[4] + ";\n" + 
 						  "--desktop-alternative-foreground-color-hover:" + head_fg[6] + ";\n" + 
 						  "--desktop-alternative-foreground-color-rgb:" + head_fg[5] + ";\n" +
@@ -3058,8 +2402,6 @@ var invfilters = [
 						  "--canvas-secondary-foreground-color:" + dropdowncolor_fg[0] + ";\n" +
 						  "--canvas-secondary-foreground-color-hover:" +  dropdowncolor_fg[1] + ";\n" + 
 						  "--canvas-secondary-foreground-color-inverted:" + dropdowncolor_2fg[0] + ";\n" +
-						  "--canvas-3d-background-color:" + tdbg + ";\n" +
-						  "--canvas-3d-background-color-dark:" + tdbg2 + ";\n" +
 						  "--canvas-background-color:" + content_color + ";\n" +
 						  "--canvas-background-color-hover:" + content_color2 + ";\n" +
 						  "--canvas-gradient-color:" + content_color_gradient[0] + ";\n" +
@@ -3072,6 +2414,9 @@ var invfilters = [
 						  "--canvas-secondary-foreground-color-rgb:" + dropdowncolor_fg[2] + ";\n" +
 						  "--canvas-secondary-foreground-color-hover-rgb:" +  dropdowncolor_fg[3] + ";\n" + 
 						  "--canvas-secondary-foreground-color-inverted-rgb:" + dropdowncolor_2fg[2] + ";\n" +
+						  "--canvas-tabs-background-color:" + tabscPage  + ";\n" +
+						  "--canvas-tabs-opacity:" + (tabsoPage * 0.5)  + ";\n" +
+						  "--canvas-active-tabs-opacity:" + tabsoPage  + ";\n" +
 						  "--canvas-background-color-rgb:" + ColorRGB( content_color ) + ";\n" +
 						  "--canvas-background-color-hover-rgb:" + ColorRGB(content_color2) + ";\n" +
 						  "--canvas-foreground-color-rgb:" +  content_color_fg[2] + ";\n" +
@@ -3148,15 +2493,22 @@ var invfilters = [
 						  "--hyperlink-foreground-color-rgb:" + link_fg[2] + ";\n" +
 						  "--hyperlink-foreground-color-hover-rgb:" + link_fg[3] + ";\n" +
 						  "--hyperlink-foreground-color-inverted-rgb:" + link_2fg[2] + ";\n" +
+						  "--hyperlink-default-text-decoration:" + getDefaultHyperlinkTextDecoration(link_color,content_text) + ";\n" +
+						  "--hyperlink-tabs-background-color:" + tabscLink  + ";\n" +
+						  "--hyperlink-tabs-opacity:" + (tabsoLink * 0.5)  + ";\n" +
+						  "--hyperlink-active-tabs-opacity:" + tabsoLink  + ";\n" +
 						  "--hyperlink-secondary-background-color:" + link2_color + ";\n" +
 						  "--hyperlink-secondary-background-color-hover:" + link2color1 + ";\n" +
 						  "--hyperlink-secondary-background-color-rgb:" + ColorRGB(link2_color) + ";\n" +
+						  "--hyperlink-secondary-default-text-decoration:" + getDefaultHyperlinkTextDecoration(link2_color,content2_text) + ";\n" +
 						  "--hyperlink-tertiary-background-color:" + link3_color + ";\n" +
 						  "--hyperlink-tertiary-background-color-hover:" + link3color1 + ";\n" +
 						  "--hyperlink-tertiary-background-color-rgb:" + ColorRGB(link3_color) + ";\n" +
+						  "--hyperlink-tertiary-default-text-decoration:" + getDefaultHyperlinkTextDecoration(link3_color,carettext_color) + ";\n" +
 						  "--hyperlink-quaternary-background-color:" + link4_color + ";\n" +
 						  "--hyperlink-quaternary-background-color-hover:" + link4color1 + ";\n" +
 						  "--hyperlink-quaternary-background-color-rgb:" + ColorRGB(link4_color) + ";\n" +
+						  "--hyperlink-quaternary-default-text-decoration:" + getDefaultHyperlinkTextDecoration(link4_color,headertext_color) + ";\n" +
 						  "--visited-hyperlink-background-color:" + vlink_color + ";\n" +
 						  "--visited-hyperlink-background-color-hover:" + vlinkcolor1 + ";\n" +
 						  "--visited-hyperlink-gradient-color:" + vlink_gradient[0] + ";\n" +
@@ -3256,6 +2608,9 @@ var invfilters = [
 						  "--active-title-foreground-color-rgb:" + caret_fg[2] + ";\n" +
 						  "--active-title-foreground-color-hover-rgb:" + caret_fg[3] + ";\n" +
 						  "--active-title-foreground-color-inverted-rgb:" + caret_2fg[2] + ";\n" +
+						  "--active-title-tabs-background-color:" + tabscCaret  + ";\n" +
+						  "--active-title-tabs-opacity:" + (tabsoCaret * 0.5)  + ";\n" +
+						  "--active-title-active-tabs-opacity:" + tabsoCaret  + ";\n" +
 						  "--active-title-text-background-color:" + carettext_color + ";\n" +
 						  "--active-title-text-background-color-hover:" + carettextcolor1 + ";\n" +
 						  "--active-title-text-gradient-color:" + carettext_gradient[0] + ";\n" +
@@ -3289,6 +2644,9 @@ var invfilters = [
 						  "--inactive-title-foreground-color-rgb:" + caretIT_fg[2] + ";\n" +
 						  "--inactive-title-foreground-color-hover-rgb:" + caretIT_fg[3] + ";\n" +
 						  "--inactive-title-foreground-color-inverted-rgb:" + caretIT_fg[2] + ";\n" +
+						  "--inactive-title-tabs-background-color:" + tabscCaretIT  + ";\n" +
+						  "--inactive-title-tabs-opacity:" + (tabsoCaretIT * 0.5)  + ";\n" +
+						  "--inactive-title-active-tabs-opacity:" + tabsoCaretIT  + ";\n" +
 						  "--inactive-title-text-background-color:" + caretITtext_color + ";\n" +
 						  "--inactive-title-text-background-color-hover:" + caretITtextcolor1 + ";\n" +
 						  "--inactive-title-text-gradient-color:" + caretITtext_gradient[0] + ";\n" +
@@ -3435,10 +2793,10 @@ var invfilters = [
 						'--desktop-background-image-blend-mode:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-image-blend-mode")  + ';\n' +
 						'--desktop-background-horizontal-alignment:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-horizontal-alignment")  + ';\n' +
 						'--desktop-background-vertical-alignment:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-vertical-alignment")  + ';\n' +
-						 '--custom-sans-serif-font:' + GetCustomFont()  + ';\n' +
-						 '--custom-serif-font:' + GetCustomFont4()  + ';\n' +
-						 '--custom-rounded-font:' + GetCustomFont2()  + ';\n' +
-						 '--custom-monospace-font:' + GetCustomFont3()  + ';\n' +
+						 '--custom-sans-serif-font:' + fon1  + ';\n' +
+						 '--custom-serif-font:' + fon2  + ';\n' +
+						 '--custom-rounded-font:' + fon3  + ';\n' +
+						 '--custom-monospace-font:' + fon4  + ';\n' +
 						 '--border-radius:' + brad  + 'px;\n' +
 						 '--window-border-radius:' + (brad * 2)  + 'px;\n' +
 						 '--menu-border-radius:' + (brad * 0.6)  + 'px;\n' +
@@ -3450,6 +2808,8 @@ var invfilters = [
 						 '--system-mica-opacity:' + (1 - aopacity)  + ';\n' +
 						 '--system-generic-color-hue-shift:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-generic-color-hue-shift")  + ';\n' +
 						 '--system-generic-color-saturation:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-generic-color-saturation")  + ';\n' +
+						 '--system-icon-style:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-icon-style")  + ';\n' +
+						 '--system-icon-font-family:' + iconstyle  + ';\n' +
 
 
 // Misc Background Settings
@@ -3467,7 +2827,7 @@ document.querySelector("head .theming").innerHTML = result;
 
 		/* Theme Mode */
 		var oldtheme = window.MW18ActiveThemeMode;
-		if (!(darkpage)) {
+		if (!(lightPage)) {
 			 window.MW18ActiveThemeMode = 'dark';
 		} else {
 			 window.MW18ActiveThemeMode = 'light';
