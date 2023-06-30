@@ -11,14 +11,6 @@ if (navigator.userAgent.match("Linux")) {
 document.getElementById("Handler").className += " xubuntu"
 }
 
-/* (navigator.userAgent.match("Trident")) {
-document.getElementById("Handler").className += " explorer"
-}
-*/
-//if (navigator.userAgent.match("Edge")) {
-//document.getElementById("Handler").className += " edge"
-//}
-
 /* CSS for App */
 if (navigator.userAgent.match("MW18")) {
 document.getElementById("Handler").className += " mpisto-servers"
@@ -28,21 +20,21 @@ document.getElementById("Handler").className += " mpisto-servers"
 	var ua_agent = navigator.userAgent
 
 	if ( (ua_agent.match("Safari/")) && !( (ua_agent.match("Chrome/")) || (ua_agent.match("YNGT")) ) ) { // Safari
-		window.oldBrowser = ua_agent.match(/Version\/(\d+)/)[1] < 14
+		window.oldBrowser = ua_agent.match(/Version\/(\d+)/)[1] < 15
 	}
 
 	if ( (ua_agent.match("Firefox/")) && !( (ua_agent.match("PaleMoon/")) ) ) { // Mozilla Firefox
-		window.oldBrowser = ua_agent.match(/Firefox\/(\d+)/)[1] < 84
+		window.oldBrowser = ua_agent.match(/Firefox\/(\d+)/)[1] < 100
 	}
 
 	if ( (ua_agent.match("PaleMoon/")) ) { // Pale Moon
-		window.oldBrowser = ua_agent.match(/PaleMoon\/(\d+)/)[1] < 29
+		window.oldBrowser = ua_agent.match(/PaleMoon\/(\d+)/)[1] < 31
 	document.querySelector('html').classList.add('pale-moon')
 	}
 
 
 	if ( (ua_agent.match("Chrome/")) && !( (ua_agent.match("Edge/")) ) ) { // Google Chrome
-		window.oldBrowser = ua_agent.match(/Chrome\/(\d+)/)[1] < 84
+		window.oldBrowser = ua_agent.match(/Chrome\/(\d+)/)[1] < 100
 	}
 	
 
@@ -66,10 +58,12 @@ document.getElementById("Handler").className += " mpisto-servers"
 	window.location.replace("https://hm100.github.io/UnsupportedBanners/Mpisto.html");window.location.href = "https://hm100.github.io/UnsupportedBanners/Mpisto.html";
 }
 
+// <!--END-->
 
 /* Mobile Only CSS */
-if (navigator.userAgent.match("Mobile")) {
-document.querySelector("html").className += " phone"
+if (('ontouchstart' in window) ||
+     (navigator.maxTouchPoints > 0)) {
+document.querySelector("html").className += " touch-events"
 }
 
 /* Local Storage */
