@@ -56,7 +56,8 @@ document.getElementById("Handler").className += " mpisto-servers"
 						(ua_agent.match("PLAYSTATION PORTABLE")) || 	// PSP Browser
 						(ua_agent.match("Edge")) || 					// Classic Microsoft Edge
 						(ua_agent.match("BlackBerry")) || 				// Blackberry Browser
-						(ua_agent.match("IEMobile")) 					// Phone Internet Explorer
+						(ua_agent.match("IEMobile")) ||	 				// Phone Internet Explorer
+						(ua_agent.match("PaleMoon"))					// Pale Moon/
 						)
 	
 	if (window.oldBrowser) {
