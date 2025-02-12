@@ -20,13 +20,13 @@ document.getElementById("Handler").className += " mpisto-servers"
 	var ua_agent = navigator.userAgent
 
 	if ( (ua_agent.match("Safari/")) && !( (ua_agent.match("Chrome/")) || (ua_agent.match("YNGT")) ) ) { // Safari
-		window.oldBrowser = ua_agent.match(/Version\/(\d+)/)[1] < 16
-		window.oldBrowser2 = ua_agent.match(/Version\/(\d+)/)[1] < 16
+		window.oldBrowser = ua_agent.match(/Version\/(\d+)/)[1] < 18
+		window.oldBrowser2 = ua_agent.match(/Version\/(\d+)/)[1] < 18
 	}
 
 	if ( (ua_agent.match("Firefox/")) && !( (ua_agent.match("PaleMoon/")) ) ) { // Mozilla Firefox
-		window.oldBrowser = ua_agent.match(/Firefox\/(\d+)/)[1] < 113
-		window.oldBrowser2 = ua_agent.match(/Firefox\/(\d+)/)[1] < 113
+		window.oldBrowser = ua_agent.match(/Firefox\/(\d+)/)[1] < 127
+		window.oldBrowser2 = ua_agent.match(/Firefox\/(\d+)/)[1] < 133
 	}
 
 	if ( (ua_agent.match("PaleMoon/")) ) { // Pale Moon
@@ -37,14 +37,13 @@ document.getElementById("Handler").className += " mpisto-servers"
 
 
 	if ( (ua_agent.match("Chrome/")) && !( (ua_agent.match("Edge/")) ) ) { // Google Chrome
-		window.oldBrowser = ua_agent.match(/Chrome\/(\d+)/)[1] < 113
-		window.oldBrowser2 = ua_agent.match(/Chrome\/(\d+)/)[1] < 113
+		window.oldBrowser = ua_agent.match(/Chrome\/(\d+)/)[1] < 125
+		window.oldBrowser2 = ua_agent.match(/Chrome\/(\d+)/)[1] < 131
 	}
-
 	
 
 	window.oldBrowser =( 
-						(window.oldBrowser) ||						    // Old Chrome, Firefox, Safari and Pale Moon
+						(window.oldBrowser) ||						    // Old Chrome, Firefox and Safari 
 						(ua_agent.match("Trident")) ||					// Internet Explorer 				
 						(ua_agent.match("Presto")) || 					// Classic Opera
 						(ua_agent.match("Tessera")) || 					// 4x4 Browser
@@ -57,7 +56,7 @@ document.getElementById("Handler").className += " mpisto-servers"
 						(ua_agent.match("Edge")) || 					// Classic Microsoft Edge
 						(ua_agent.match("BlackBerry")) || 				// Blackberry Browser
 						(ua_agent.match("IEMobile")) ||	 				// Phone Internet Explorer
-						(ua_agent.match("PaleMoon"))					// Pale Moon/
+						(ua_agent.match("PaleMoon"))					// Pale Moon
 						)
 	
 	if (window.oldBrowser) {
@@ -281,7 +280,7 @@ function AddFloatingBanner(content='Sample Content',kind='message',extraclass=''
 	}
 
 	document.querySelector(".top-gap #floatingbanner .banners").insertAdjacentHTML('beforeend', 
-			'<div class=" cpe-banner-notification is-' + kind + '" id="' + extraclass  + '">' +
+			'<div class=" cpe-banner-notification is-transparent is-' + kind + '" id="' + extraclass  + '">' +
 			  '<div class="cpe-banner-notification__icon">' +
 				'<span class="cpe-icon cpe-icon-small material-icons">' +
 					icon + 
@@ -293,6 +292,11 @@ function AddFloatingBanner(content='Sample Content',kind='message',extraclass=''
 			  '</span>' +
 			'</div>' 
 	);
+
+setTimeout(
+		(function () {
+			document.querySelector(".top-gap #floatingbanner .banners .cpe-banner-notification.is-transparent").classList.remove("is-transparent")
+	}),0);
 	
 
 

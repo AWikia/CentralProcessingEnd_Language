@@ -4,7 +4,6 @@ window.ThemingEngine_ColorFilterMode = 0; // 0 = No special behavior  | 1 = Colo
 window.ThemingEngine_ColorFilterHueShift = 0; // From -180 to 180
 window.ThemingEngine_ColorFilterSaturation = 0; // From 0 to 100 (100 is grayscale)
 window.ThemingEngine_ActiveColorFilterTheme = 'light'; 	// auto | auto-dark | light | dark
-window.ThemingEngine_ActiveColorFilterBehavior = 'duo'; // solo means solo mode
 window.ThemingEngine_ActiveColorFilter = 'standard';
 /* Contrast Modes */
 window.ThemingEngine_ContrastMode = 'auto';
@@ -29,6 +28,7 @@ window.ThemingEngine_DesktopColor = GetDesktop();
 window.ThemingEngine_HighlightColor = GetHighlight();
 window.ThemingEngine_ActiveTitleColor = GetActiveTitle();
 window.ThemingEngine_InactiveTitleColor = GetInactiveTitle();
+window.AutoColor = '#3366cc'; // Fallback Starting color
 
 /*
 **
@@ -65,7 +65,7 @@ var visualStyles = [
 var visualColors = [
 					['forced', '{{msg-evelution-color-forced}}', 'contrast'],
 					['evelution', 'Evelution', 'evelution'],
-					['colors', '{{msg-evelution-color-colors}}', 'format_paint'],
+					['colors', '{{msg-evelution-color-colors}}', 'colors'],
 					['android', 'Android', 'android'],
 					['qqore', 'Qora Qore', 'qqore'],
 					['dynamic', '{{msg-evelution-color-dynamic}}', 'colorize'],
@@ -95,9 +95,6 @@ var visualColorNames = ['standard', 'nocolormanagement'];
 	}
 	if (getKey('color-style') === '-1') {
 		insertKey('color-style', 'standard' );
-	}
-	if (getKey('color-style-behavior') === '-1') {
-		insertKey('color-style-behavior', 'duo' );
 	}
 	if (getKey('color-hue') === '-1') {
 		insertKey('color-hue', 0 );
@@ -129,7 +126,6 @@ var visualColorNames = ['standard', 'nocolormanagement'];
 	var visual_color = getKey('visual-color');
 	var device_theme = getKey('device-theme');
 	var color_style = getKey('color-style');
-	var color_style_behavior = getKey('color-style-behavior');
 	var color_hue = getKey('color-hue');
 	var color_sat = getKey('color-sat');
 	var contrast_mode = getKey('contrast-mode');
@@ -216,10 +212,6 @@ var visualColorNames = ['standard', 'nocolormanagement'];
 				color_style = value;
 				console.info('Color style settings overriden');
                 break;
-            case 'usecolorstylebehavior':
-				color_style_behavior = value;
-				console.info('Color style behavior settings overriden');
-                break;
             case 'usedevicetheme':
 				device_theme = value;
 				console.info('Device theme settings overriden');
@@ -255,9 +247,10 @@ var visualColorNames = ['standard', 'nocolormanagement'];
         }
     });
     var themes = "";
+
 	document.querySelector("head").insertAdjacentHTML('afterbegin','<meta name="theme-color" content="#ffffff"><style class="devicetheme"></style><style class="themes">' + themes + '</style><style class="theming"></style>');
 	ToggleTheme(theme_selected,false,false);
-	colortheme(color_style,device_theme,color_hue,color_sat,color_style_behavior,false,false);
+	colortheme(color_style,device_theme,color_hue,color_sat,false,false);
 	contrastmode(contrast_mode,false,false);
 	SetDCM(dcm_type,dcm_mode,false,false);
 	VisualColorCompile(); // Compiles the Contrast Options
@@ -325,14 +318,15 @@ function DisabledColorManagement() {
 	return ( (ForcedColors()) || (document.querySelector("body.no-color-management") ) ||  (window.ThemingEngine_ActiveVisualColors === 'nocolormanagement') )
 }
 
-function APCAMode() {
-	return (document.querySelector("body.has-apca-contrast-rules") )
-}
-
 function ForcedColors() {
 	return ( window.matchMedia('(forced-colors: active)').matches )
 }
 
+function ShouldUseFallbackColor() {
+	return ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-background-color") === 'auto') &&
+			(getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-color") === 'auto') &&
+			(GetDesktopImage2() === ''))
+}
 
 function ForcedColorMode() {
 	return window.ThemingEngine_ActiveDCMMode;
@@ -628,6 +622,17 @@ function GetSystemColorValue(color='--desktop-background-color') { // Suppliment
 	return GetSystemColor(  getComputedStyle(GetActiveDCMConfiguration()).getPropertyValue(color) );
 }
 
+async function RecalcAutoColor() {
+	var clr = GetDesktop();
+	if (GetDesktopImage2() != '') {
+		clr = await colorjs.prominent(GetDesktopImage2(), { format: 'hex', amount: 1  });
+		/*colorjs.average(GetDesktopImage2(), { format: 'hex' }).then(color => {
+		  clr= color; return clr; // [241, 221, 63]
+		});*/
+	}
+	return clr;
+}
+
 function GetDesktop() {
 	if (DisabledColorManagement()) {
 		return GetSystemColorValue('--desktop-background-color')
@@ -645,6 +650,15 @@ function GetDesktopImage() {
 		return '';
 	} else {
 		return 'url(' + img.replace('url(', '').replace(')', '').split('\\').join('').split("&amp;").join("&").split("&quot;").join("").split("\"").join("") + ')';
+	}
+}
+
+function GetDesktopImage2() {
+	var img = getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-image").trim();
+	if ( (img === '') || (img === 'url()') || (img === "url('')") || (img === 'url("")') || (img === 'none') || (img === "'none'") || (img === '"none"')) {
+		return '';
+	} else {
+		return img.replace('url(', '').replace(')', '').split('\\').join('').split("&amp;").join("&").split("&quot;").join("").split("\"").join("");
 	}
 }
 
@@ -667,8 +681,8 @@ function GetCanvas() {
 		var color = GetHyperlink();
 		var fg = GetForegroundVariables(color);
 		var h2 = chroma(color).get('hsl.h');
-		var color = ColorStyleAdjust(chroma(color).set('lch.l',fg[8]).set('hsl.h',h2));
-		return ColorMix(color,ColorStyleAdjust(fg[0]),1.6);
+		var color = chroma(color).set('lch.l',fg[2]).set('hsl.h',h2);
+		return ColorMix(color,fg[0],1.6);
 	} else {
 		return getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-background-color").trim();
 	}
@@ -688,7 +702,11 @@ function GetHyperlink() {
 	if (DisabledColorManagement()) {
 		return GetSystemColorValue('--hyperlink-background-color')
 	} else if (getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--hyperlink-background-color") === 'auto') {
-		return chroma('#3366cc'); // Fallback method
+		if (ShouldUseFallbackColor()) {
+			return chroma('#3366cc'); // Fallback method
+		} else {
+			return ColorInvert(window.AutoColor); // Fallback method
+		}
 	} else {
 		return getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--hyperlink-background-color").trim();
 	}
@@ -866,44 +884,38 @@ function GetCustomFont4() {
 }
 
 
-function ContrastRatio() { // Used for Text (Non-APCA mode only)
-	if (APCAMode()) {
-		return ContrastRatioFormControls() // Not for non-APCA mode
-	}
+function ContrastRatio() { // Used for Text and Form Controls
 	var result = 0
 	if (ThemingEngine_ContrastMode == 'auto') {
-		result = (window.matchMedia('(prefers-contrast: more)').matches) ? 2.50 : (window.matchMedia('(prefers-contrast: custom)').matches) ? 1.25 : 0.0
-	} else if (ThemingEngine_ContrastMode == 'low') { // 4.5
+		result = (window.matchMedia('(prefers-contrast: more)').matches) ? 15 : (window.matchMedia('(prefers-contrast: custom)').matches) ? 7.5 : 0.0
+	} else if (ThemingEngine_ContrastMode == 'low') { // 3
 		result = 0.00
 	} else if (ThemingEngine_ContrastMode == 'custom1') { // Custom
-		result = 0.3125
-	} else if (ThemingEngine_ContrastMode == 'med-low') {
-		result = 0.625
-	} else if (ThemingEngine_ContrastMode == 'custom2') { // Custom
-		result = 0.9375
-	} else if (ThemingEngine_ContrastMode == 'med') {
-		result = 1.25
-	} else if (ThemingEngine_ContrastMode == 'custom3') { // Custom
-		result = 1.5625
-	} else if (ThemingEngine_ContrastMode == 'med-hi') {
 		result = 1.875
-	} else if (ThemingEngine_ContrastMode == 'custom4') { // Custom
-		result = 2.1875
-	} else if (ThemingEngine_ContrastMode == 'hi') { // 7
-		result = 2.50
-	} else if (ThemingEngine_ContrastMode == 'custom5') { // Custom
-		result = 2.8125
-	} else if (ThemingEngine_ContrastMode == 'hi-vhi') {
-		result = 3.125
-	} else if (ThemingEngine_ContrastMode == 'custom6') { // Custom
-		result = 3.4375
-	} else if (ThemingEngine_ContrastMode == 'vhi') {
+	} else if (ThemingEngine_ContrastMode == 'med-low') {
 		result = 3.75
+	} else if (ThemingEngine_ContrastMode == 'custom2') { // Custom
+		result = 5.625
+	} else if (ThemingEngine_ContrastMode == 'med') {
+		result = 7.5
+	} else if (ThemingEngine_ContrastMode == 'custom3') { // Custom
+		result = 9.375
+	} else if (ThemingEngine_ContrastMode == 'med-hi') {
+		result = 11.25
+	} else if (ThemingEngine_ContrastMode == 'custom4') { // Custom
+		result = 13.125
+	} else if (ThemingEngine_ContrastMode == 'hi') { // 4.5
+		result = 15
+	} else if (ThemingEngine_ContrastMode == 'custom5') { // Custom
+		result = 16.875
+	} else if (ThemingEngine_ContrastMode == 'hi-vhi') {
+		result = 18.75
+	} else if (ThemingEngine_ContrastMode == 'custom6') { // Custom
+		result = 20.625
+	} else if (ThemingEngine_ContrastMode == 'vhi') {
+		result = 22.5
 	} else {
-		result = (window.matchMedia('(prefers-contrast: more)').matches) ? 2.50 : (window.matchMedia('(prefers-contrast: custom)').matches) ? 1.25 : 0.0
-	}
-	if (APCAMode()) { // Unused
-		result*=10
+		result = (window.matchMedia('(prefers-contrast: more)').matches) ? 15 : (window.matchMedia('(prefers-contrast: custom)').matches) ? 7.5 : 0.0
 	}
 	return result
 }
@@ -943,45 +955,6 @@ function ContrastRatioDropdown() { // Used For Dropdown
 	}
 }
 
-function ContrastRatioFormControls() { // Used for Form Controls (And Text in APCA Mode)
-	var result = 0
-	if (ThemingEngine_ContrastMode == 'auto') {
-		result = (window.matchMedia('(prefers-contrast: more)').matches) ? 1.5 : (window.matchMedia('(prefers-contrast: custom)').matches) ? 0.75 : 0.0
-	} else if (ThemingEngine_ContrastMode == 'low') { // 3
-		result = 0.00
-	} else if (ThemingEngine_ContrastMode == 'custom1') { // Custom
-		result = 0.1875
-	} else if (ThemingEngine_ContrastMode == 'med-low') {
-		result = 0.375
-	} else if (ThemingEngine_ContrastMode == 'custom2') { // Custom
-		result = 0.5625
-	} else if (ThemingEngine_ContrastMode == 'med') {
-		result = 0.75
-	} else if (ThemingEngine_ContrastMode == 'custom3') { // Custom
-		result = 0.9375
-	} else if (ThemingEngine_ContrastMode == 'med-hi') {
-		result = 1.125
-	} else if (ThemingEngine_ContrastMode == 'custom4') { // Custom
-		result = 1.3125
-	} else if (ThemingEngine_ContrastMode == 'hi') { // 4.5
-		result = 1.5
-	} else if (ThemingEngine_ContrastMode == 'custom5') { // Custom
-		result = 1.6875
-	} else if (ThemingEngine_ContrastMode == 'hi-vhi') {
-		result = 1.875
-	} else if (ThemingEngine_ContrastMode == 'custom6') { // Custom
-		result = 2.0625
-	} else if (ThemingEngine_ContrastMode == 'vhi') {
-		result = 2.25
-	} else {
-		result = (window.matchMedia('(prefers-contrast: more)').matches) ? 1.5 : (window.matchMedia('(prefers-contrast: custom)').matches) ? 0.75 : 0.0
-	}
-	if (APCAMode()) {
-		result*=10
-	}
-	return result
-}
-
 function ContrastRatioAutoInactiveText() { // Used For Inactive Text
 
 	if (ThemingEngine_ContrastMode == 'auto') {
@@ -1019,27 +992,16 @@ function ContrastRatioAutoInactiveText() { // Used For Inactive Text
 
 
 function getLargeTextContrast() {
-	if (APCAMode()) {
-		return 45
-	} else {
-		return 3.00
-	}
+	return 45
 }
 
 function getSmallTextContrast() {
-	if (APCAMode()) {
-		return 60
-	} else {
-		return 4.50
-	}
+	return 60
 }
 
 function getContrast(color1,color2) {
-	if (APCAMode()) {
-		return Math.abs(chroma.contrastAPCA(color1,color2));
-	} else {
-		return chroma.contrast(color1,color2);
-	}
+	return Math.abs(chroma.contrastAPCA(color1,color2));
+
 }
 
 function CompileGenericColors(color) {
@@ -1166,39 +1128,24 @@ if (isLightColor(page)) {
 
 function GetForegroundVariables(color) {
 	var body = document.querySelector('body');
-	// Text Color
-	if (isSemiLightColor(color)) {
-		var fc1 =  getComputedStyle(body).getPropertyValue("--light-theme-text-background-color");
-		var fc2 =  getComputedStyle(body).getPropertyValue("--light-theme-text-background-color-rgb");
-		var fc3 =  getComputedStyle(body).getPropertyValue("--light-theme-text-background-color-hover");
-		var fc4 =  getComputedStyle(body).getPropertyValue("--light-theme-text-background-color-hover-rgb");
-	} else {
-		var fc1 =  getComputedStyle(body).getPropertyValue("--dark-theme-text-background-color");
-		var fc2 =  getComputedStyle(body).getPropertyValue("--dark-theme-text-background-color-rgb");
-		var fc3 =  getComputedStyle(body).getPropertyValue("--dark-theme-text-background-color-hover");
-		var fc4 =  getComputedStyle(body).getPropertyValue("--dark-theme-text-background-color-hover-rgb");
-	}
 	// Foreground Color
 	if (isLightColor(color)) {
 		var f1 =  getComputedStyle(body).getPropertyValue("--light-theme-foreground-color");
 		var f2 =  getComputedStyle(body).getPropertyValue("--light-theme-foreground-color-hover");
-		var f3 =  getComputedStyle(body).getPropertyValue("--light-theme-foreground-color-rgb");
-		var f4 =  getComputedStyle(body).getPropertyValue("--light-theme-foreground-color-hover-rgb");
 		var lt = 70;
 	} else {
 		var f1 =  getComputedStyle(body).getPropertyValue("--dark-theme-foreground-color");
 		var f2 =  getComputedStyle(body).getPropertyValue("--dark-theme-foreground-color-hover");
-		var f3 =  getComputedStyle(body).getPropertyValue("--dark-theme-foreground-color-rgb");
-		var f4 =  getComputedStyle(body).getPropertyValue("--dark-theme-foreground-color-hover-rgb");
 		var lt = 30;
 	}
-	return [f1, f2, f3, f4, fc1, fc2, fc3, fc4, lt]
+	return [f1, f2, lt]
 }
 
 
 /* Get Gradient Variables */
-function GetGradientVariable(color,name="canvas") {
-	if (isLightColor(color)) {
+function GetGradientVariable(color,name="canvas", invert=false) {
+	var func = invert ? (isDarkColor(color)) : (isLightColor(color));
+	if (func) {
 		return ['var(--' + name + '-background-color)', 'var(--' + name + '-background-color-hover)']
 	} else {
 		return ['var(--' + name + '-background-color-hover)', 'var(--' + name + '-background-color)']
@@ -1252,19 +1199,11 @@ function ManagerRows() {
 /* Changes Wiki theme style */
 
 function GetHueShift() {
-	if (DisabledColorManagement()) {
-		return 0;
-	} else {
-		return window.ThemingEngine_ColorFilterHueShift;
-	}
+	return window.ThemingEngine_ColorFilterHueShift;
 }
 
 function GetSaturation() {
-	if (DisabledColorManagement()) {
-		return 100;
-	} else {
-		return window.ThemingEngine_ColorFilterSaturation;
-	}
+	return window.ThemingEngine_ColorFilterSaturation;
 }
 
 
@@ -1272,13 +1211,13 @@ function GetSaturation() {
 function SliderColorHue() {
 	var range = document.querySelector('input[type="range"].colorhue');
 	if (range) {
-		colortheme('match-parent', 'match-parent', range.value, 'match-parent', 'match-parent', true, true, false);
+		colortheme('match-parent', 'match-parent', range.value, 'match-parent', true, true, false);
 	}
 }
 function SliderColorSaturation() {
 	var range = document.querySelector('input[type="range"].colorsat');
 	if (range) {
-		colortheme('match-parent', 'match-parent', 'match-parent', range.value, 'match-parent', true, true, false);
+		colortheme('match-parent', 'match-parent', 'match-parent', range.value, true, true, false);
 	}
 }
 
@@ -1288,10 +1227,9 @@ function SliderColorSaturation() {
 ** Theme = auto, auto-dark, light, dark (The code that hides colorstyle icons and sets the color scheme only supports Light and Dark Mode)
 ** hue = 0 to 360
 ** saturation = 0 to 100
-** Solo = duo, solo (Only two supported)
 ** All above = match-parent (Inherits the currently applied value)
 */
-function colortheme(style='match-parent', theme='match-parent', hue='match-parent', saturation='match-parent', solo='match-parent', repaint=true, save=true, notfromrange=true,updateinput=true) {
+function colortheme(style='match-parent', theme='match-parent', hue='match-parent', saturation='match-parent', repaint=true, save=true, notfromrange=true,updateinput=true) {
 	if (style === 'match-parent') {
 		style = window.ThemingEngine_ActiveColorFilter;
 	}
@@ -1304,16 +1242,14 @@ function colortheme(style='match-parent', theme='match-parent', hue='match-paren
 	if (saturation === 'match-parent') {
 		saturation = window.ThemingEngine_ColorFilterSaturation;
 	}
-	if (solo === 'match-parent') {
-		solo = window.ThemingEngine_ActiveColorFilterBehavior;
-	}
+
 
 
 	selected_theme = theme;
 	if (selected_theme === 'auto') {
-		theme = ( window.matchMedia('(prefers-color-scheme: light)').matches ) ? 'light' : 'dark';
+		theme = 'light';
 	} else if (selected_theme === 'auto-dark') {
-		theme = ( window.matchMedia('(prefers-color-scheme: dark)').matches ) ? 'light' : 'dark';
+		theme = 'dark';
 	}
     var body_bg =	GetCanvas();
     var old_dark = window.ThemingEngine_InvertColors;
@@ -1322,58 +1258,35 @@ function colortheme(style='match-parent', theme='match-parent', hue='match-paren
     var oldsat = window.ThemingEngine_ColorFilterSaturation;
     var muststay = false;
 		document.querySelector('head .devicetheme').innerHTML = '' ;
-    if (DisabledColorManagement()) {
-		window.ThemingEngine_InvertColors = false;
-		window.ThemingEngine_ColorFilterMode = 0;
-	} else {
+		window.ThemingEngine_InvertColors = (theme == 'dark');
 		if (style == 'standard') {
-			if (solo == 'solo') {
-				window.ThemingEngine_InvertColors = (isLightColor(body_bg)) ? (theme == 'dark') : (theme == 'light');
-			} else {
-				window.ThemingEngine_InvertColors = (theme == 'dark');
-			}
 			window.ThemingEngine_ColorFilterMode = 0;
-		} else if (style == 'colorscale') {
-			if (solo == 'solo') {
-				window.ThemingEngine_InvertColors = (isLightColor(body_bg)) ? (theme == 'dark') : (theme == 'light');
-			} else {
-				window.ThemingEngine_InvertColors = (theme == 'dark');
-			}
+		} else if (style == 'protanopia') {
 			window.ThemingEngine_ColorFilterMode = 1;
-		} else if (style == 'hottemperature') {
-			if (solo == 'solo') {
-				window.ThemingEngine_InvertColors = (theme == 'dark');
-			} else {
-				window.ThemingEngine_InvertColors = (isLightColor(body_bg)) ? (theme == 'dark') : (theme == 'light');
-			}
+		} else if (style == 'deuteranopia') {
 			window.ThemingEngine_ColorFilterMode = 2;
-		} else if (style == 'coldtemperature') {
-			if (solo == 'solo') {
-				window.ThemingEngine_InvertColors = (theme == 'dark');
-			} else {
-				window.ThemingEngine_InvertColors = (isLightColor(body_bg)) ? (theme == 'dark') : (theme == 'light');
-			}
+		} else if (style == 'tritanopia') {
 			window.ThemingEngine_ColorFilterMode = 3;
+		} else if (style == 'protanomaly') {
+			window.ThemingEngine_ColorFilterMode = 4;
+		} else if (style == 'deuteranomaly') {
+			window.ThemingEngine_ColorFilterMode = 5;
+		} else if (style == 'tritanomaly') {
+			window.ThemingEngine_ColorFilterMode = 6;
+		} else if (style == 'achromatomaly') {
+			window.ThemingEngine_ColorFilterMode = 7;
 		} else {
-			if (solo == 'solo') {
-				window.ThemingEngine_InvertColors = (isLightColor(body_bg)) ? (theme == 'dark') : (theme == 'light');
-			} else {
-				window.ThemingEngine_InvertColors = (theme == 'dark');
-			}
 			window.ThemingEngine_ColorFilterMode = 0;
 		}
-	}
 	colorscheme = getColorScheme();
 	document.querySelector('head .devicetheme').innerHTML += '.' + theme + 'device-off { display:none!important } .cpe-system-colors { color-scheme:' + getColorScheme() + '; color-scheme:only ' + getColorScheme() + '; }' ;
 	window.ThemingEngine_ActiveColorFilterTheme = selected_theme
 	window.ThemingEngine_ActiveColorFilter = style
 	window.ThemingEngine_ColorFilterHueShift = parseInt( hue )
 	window.ThemingEngine_ColorFilterSaturation = parseInt( saturation )
-	window.ThemingEngine_ActiveColorFilterBehavior = solo
 	if (save) {
 		insertKey('device-theme', selected_theme );
 		insertKey('color-style', style );
-		insertKey('color-style-behavior', solo );
 		insertKey('color-hue', hue );
 		insertKey('color-sat', saturation );
 	}
@@ -1394,15 +1307,6 @@ function colortheme(style='match-parent', theme='match-parent', hue='match-paren
 			x.classList.remove("selected");
 		}
 		var y = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-device-themes li[data-device-theme='" + selected_theme + "']");
-		if (y) {
-			y.classList.add("selected")
-		}
-	// Color Style Behaviors
-		var x = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-solo-modes li.selected");
-		if (x) {
-			x.classList.remove("selected");
-		}
-		var y = document.querySelector(".cpe-dropdown .cpe-dropdown__content .cpe-list.cpe-solo-modes li[data-solo-mode='" + solo + "']");
 		if (y) {
 			y.classList.add("selected")
 		}
@@ -1577,18 +1481,11 @@ function ColorMix(color1,color2,intensity=1,hue='nil') {
 	}
 }
 
-
-function ColorHover(color,color2) { // Regular Colors
-	var dledlen = (color2 != undefined) ? true : false; // Disable Doulgido Dledlen
-	if (dledlen === false) {
-		var color2 = color;
-	}
-	var func = (isLightColor(color2));
-	var light = chroma(color).get('hsl.l')
-	if (func) {
-		return chroma(color).set('hsl.l', light-0.2);
+function ColorHoverRatio(color) { // Regular Colors
+	if (isLightColor(color)) {
+		return -20;
 	} else {
-		return chroma(color).set('hsl.l', light+0.2);
+		return 20;
 	}
 }
 
@@ -1614,64 +1511,6 @@ function ColorInvert(color) {
 	return 	chroma(color).set('rgb.r', r).set('rgb.g', g).set('rgb.b', b).set('oklch.h', h).set('hsl.h', h2)
 }
 
-/* 
-** Adjust the Color based on the current active Device Theme, Color Hue and Color Style
-** r  = Red
-** g  = Green
-** b  = Blue
-** h  = LCH Hue
-** h2 = HSL Hue
-*/
-function ColorStyleAdjust(color) {
-	if (window.ThemingEngine_ColorFilterMode === 2) { // Special Case
-		var color2 = color;
-		var color = chroma( chroma.temperature(chroma(color2).temperature()) ).hex();
-	}
-	if (window.ThemingEngine_ColorFilterMode === 3) { // Special Case
-		var color2 = color;
-		var color = chroma( chroma.temperature(40000 - chroma(color2).temperature()) ).hex();
-	}
-	if ( (window.ThemingEngine_InvertColors === true) ) {
-		var color = ColorInvert(color);
-	}
-		var r = chroma(color).get('rgb.r');
-		var g = chroma(color).get('rgb.g');
-		var b = chroma(color).get('rgb.b');
-
-	var h = chroma(color).get('oklch.h');
-	var h2 = chroma(color).get('hsl.h');
-	var huea = GetHueShift();
-	var adjusth = (h + huea) % 360
-	var adjusth2 = (h2 + huea) % 360
-	color3 = chroma(color).set('rgb.r', r).set('rgb.g', g).set('rgb.b', b).set('oklch.h', adjusth).set('hsl.h', adjusth2)	
-
-	var s = chroma(color3).get('oklch.c');
-	var s2 = chroma(color3).get('hsl.s');
-	var sata = (GetSaturation() / 100);
-
-
-	var page = [
-				chroma(color3).set('oklch.c', s * sata).set('hsl.s', s2 * sata).set('hsl.h', adjusth2),	// Sp Dark Mode 0 (Normal)
-				chroma(color3).set('oklch.c', s * sata).set('hsl.s', s2 * sata).set('hsl.h', huea),		// Sp Dark Mode 1 (Colorscale)
-				chroma(color3).set('oklch.c', s * sata).set('hsl.s', s2 * sata).set('hsl.h', adjusth2),	// Sp Dark Mode 2 (Hot Temperature)
-				chroma(color3).set('oklch.c', s * sata).set('hsl.s', s2 * sata).set('hsl.h', adjusth2),	// Sp Dark Mode 3 (Cold Temperature)
-			   ][window.ThemingEngine_ColorFilterMode];
-	return page
-
-}
-
-
-
-
-// Only used for link and header colors
-function ColorHover2(color,color2) {
-	return ColorRGB(ColorHover(color,color2));
-}
-
-// Conversion for R,G,B syntax
-function ColorRGB(color) {
-	return chroma(color).get('rgb.r') + ' ' + chroma(color).get('rgb.g') + ' ' + chroma(color).get('rgb.b');
-}
 
 function isLightColor(color) {
 	var c1 = (getContrast('#000000',  chroma(color)))
@@ -1685,15 +1524,6 @@ function isLightColor(color) {
 
 }
 
-function isSemiLightColor(color) {
-	var c1 = (getContrast(getComputedStyle(document.querySelector('body')).getPropertyValue("--light-theme-text-background-color"),  chroma(color)))
-	var c2 = (getContrast(getComputedStyle(document.querySelector('body')).getPropertyValue("--dark-theme-text-background-color"),  chroma(color)))
-	return (c1 > c2);
-/*
-	return chroma.deltaE('#e6e6e6', color) >= chroma.deltaE('#3a3a3a', color);
-*/
-}
-
 
 function isDarkColor(color) {
 	return !isLightColor(color)
@@ -1705,7 +1535,7 @@ return ((getContrast(color, color2)) >= contrast)
 }
 
 function isSuitableColorFormControls(color,color2) {
-var contrast = getLargeTextContrast()+ContrastRatioFormControls()
+var contrast = getLargeTextContrast()+ContrastRatio()
 return ((getContrast(color, color2)) >= contrast) // For Border Color
 }
 
@@ -1720,22 +1550,15 @@ return ((getContrast(color, color2)) >= contrast) ? 'none' : 'underline' // For 
 
 /* Used to udpate all dynamical variables */
 function CompileThemingEngine(refresh=true) {
+
 if (refresh === true) {
-	colortheme('match-parent', 'match-parent', 'match-parent', 'match-parent', 'match-parent', false,false,true,false);
+	colortheme('match-parent', 'match-parent', 'match-parent', 'match-parent', false,false,true,false);
 
 	var cmode = window.ThemingEngine_ContrastMode;
 	contrastmode(cmode, false,false,true,false);
-	/** Foreground Colors 
-	document.querySelector('html').style.setProperty("--light-theme-foreground-color-hover", ColorHover(getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-foreground-color")) );
-	document.querySelector('html').style.setProperty("--dark-theme-foreground-color-hover", ColorHover(getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-foreground-color")) );
 
-	document.querySelector('html').style.setProperty("--light-theme-foreground-color-rgb", ColorRGB(getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-foreground-color")) );
-	document.querySelector('html').style.setProperty("--dark-theme-foreground-color-rgb", ColorRGB(getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-foreground-color")) );
-
-	document.querySelector('html').style.setProperty("--light-theme-foreground-color-hover-rgb", ColorRGB(ColorHover(getComputedStyle(document.querySelector('html')).getPropertyValue("--light-theme-foreground-color"))) );
-	document.querySelector('html').style.setProperty("--dark-theme-foreground-color-hover-rgb", ColorRGB(ColorHover(getComputedStyle(document.querySelector('html')).getPropertyValue("--dark-theme-foreground-color"))) );
-	**/
 }
+
 
 //	ToggleTheme(window.ThemingEngine_ActiveTheme,false,false);
 //	VisualColor(window.ThemingEngine_ActiveVisualColors,false,false);
@@ -1744,6 +1567,22 @@ if (refresh === true) {
 	} else {
 		var colorstyle= ".color-management-off { display:none!important;}\n"
 	}
+
+if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--hyperlink-background-color") === 'auto') && (GetDesktopImage2() != '')) {
+
+RecalcAutoColor().then( (v) => {
+    window.AutoColor=v; // "fulfilled!"
+	CompileThemingEngine2(colorstyle);
+  });
+} else {
+    window.AutoColor=GetDesktop(); // "fulfilled!"
+	CompileThemingEngine2(colorstyle);
+}
+}
+
+
+
+function CompileThemingEngine2(colorstyle='') {
 
 /** Page BG **/
 /* Set Vars */
@@ -1759,17 +1598,12 @@ var content_color =  GetCanvas();
 
 /* This goes before compiling Generic Colors or else they will think the theme is light */
 
-// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-	// Liatch Quirk
-	var content_color = ColorStyleAdjust(content_color)
-}
 
 	window.ThemingEngine_PageColor = content_color;
 	var lightPage = isLightColor(content_color);
 
 
-var content_color2 = ColorHover(content_color);
+var content_colorR = ColorHoverRatio(content_color);
 
 var adjustment = ContrastRatioDropdown();
 window.ThemingEngine_FinalContrast = ContrastRatioAutoInactiveText();
@@ -1777,14 +1611,11 @@ window.ThemingEngine_FinalContrast = ContrastRatioAutoInactiveText();
 	if (lightPage) {
 		var lightness = '#000000';
 		var lightnessR = '#ffffff';
-		var fadeouto = 0.2;
 	} else {
 		var lightness = '#ffffff';
 		var lightnessR = '#000000';
-		var fadeouto = 0.3;
 	}
 
-		var disabledo = 0.75;
 		window.ThemingEngine_PageColorFG = lightness
 
 if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-secondary-background-color") == 'auto') ) {
@@ -1795,7 +1626,6 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-
 	}
 } else {
 	var dropdowncolor = GetCanvas2();
-	var dropdowncolor = ColorStyleAdjust(dropdowncolor);
 
 	while ( ( isSuitableColorFormControls(dropdowncolor, content_color) ) && (dropdowncolor !== lightnessR)  ) {
 		var dropdowncolor= ColorAdjust(dropdowncolor,window.ThemingEngine_PageColor,true);
@@ -1815,36 +1645,26 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-
 	}
 
 var dropdowncolor2 = GetInactiveText();
-var dropdowncolorH = ColorHover(dropdowncolor,content_color);
 
 /** Page text color **/
 var content_text= GetCanvasText();
 
-	// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-		var content_text = ColorStyleAdjust(content_text);
-}	
+
 		while ( ( !(isSuitableColorText(content_text, content_color)) ) && (content_text !== lightness) ) {
 			var content_text= ColorAdjust(content_text,window.ThemingEngine_PageColor);
 		}
-
-var content_text1 = ColorHover(content_text);
 
 /** 2nd Page text color **/
 var content2_text= GetCanvasText2();
 
 
-// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-text-secondary-background-color") != 'auto') || (getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--canvas-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-var content2_text = ColorStyleAdjust(content2_text);
-}
-	
+
+
 while ( ( !(isSuitableColorText(content2_text, dropdowncolor)) ) && (content2_text !== lightnessDropdown) ) {
 	var content2_text= ColorAdjust(content2_text,dropdowncolor);
 }
 
 
-var content2_text1 = ColorHover(content2_text,content_text);
 
 /** Body Bg **/
 /* Set Vars */
@@ -1853,10 +1673,7 @@ var head_color =	GetDesktop();
 
 
 
-// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-		var head_color = ColorStyleAdjust(head_color);
-}
+
 	var lightHead = isLightColor(head_color);
 	if (lightHead) {
 		var lightnessHead = '#000000';
@@ -1867,8 +1684,6 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop
 window.ThemingEngine_DesktopColor = head_color
 
 
-var headcolor1 = ColorHover(head_color,content_color);
-
 /** Community Header text color **/
 
 var img = GetDesktopImage();
@@ -1876,29 +1691,23 @@ var img = GetDesktopImage();
 if (img == '') {
 	var deskfilter = 'none'
 } else {
-	var deskfilter = 'drop-shadow(0 0 6.5px rgb(var(--desktop-text-foreground-color-rgb) / 0.75))'
+	var deskfilter = 'drop-shadow(0 0 6.5px rgb(from var(--desktop-text-foreground-color) r g b / 0.75))'
 }
 
 var headertext_color= GetDesktopText();
 
-	// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-		var headertext_color = ColorStyleAdjust(headertext_color);
-}	
+
 		while ( ( !(isSuitableColorText(headertext_color, head_color)) ) && (headertext_color !== lightnessHead)  ) {
 			var headertext_color= ColorAdjust(headertext_color,window.ThemingEngine_DesktopColor);
 		}
 
 
 
-var headertextcolor1 = ColorHover(headertext_color,content_text);
-
 /** Link Color **/
 /* Set Vars */
 var link_color = GetHyperlink();
 
 // Liatch Quirk
-	var link_color = ColorStyleAdjust(link_color);
 	
 		while ( ( !(isSuitableColorText(link_color, content_color)) ) && (link_color !== lightness) ) {
 			var link_color= ColorAdjust(link_color,window.ThemingEngine_PageColor);
@@ -1908,8 +1717,6 @@ var link_color = GetHyperlink();
 	var link3_color = link_color;
 	var link4_color = link_color;
 
-
-var linkcolor1 = ColorHover(link_color,content_color);
 
 window.ThemingEngine_HyperlinkColor = link_color;
 
@@ -1930,10 +1737,7 @@ window.ThemingEngine_HyperlinkColor = link_color;
 /* Set Vars */
 var caret_color = GetActiveTitle();
 
-// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-title-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-		var caret_color = ColorStyleAdjust(caret_color);
-}
+
 		while ( ( !(isSuitableColorFormControls(caret_color, content_color)) ) && (caret_color !== lightness)  ) {
 			var caret_color= ColorAdjust(caret_color,window.ThemingEngine_PageColor);
 		}
@@ -1959,32 +1763,24 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-
 
 window.ThemingEngine_ActiveTitleColor = caret_color
 
-var caretcolor1 = ColorHover(caret_color);
+var caretcolorR = ColorHoverRatio(caret_color);
 
 /** Caret text color **/
 
 
 var carettext_color= GetActiveTitleText();
 
-	// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-title-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-		var carettext_color = ColorStyleAdjust(carettext_color);
-}
+
 			while ( ( !(isSuitableColorText(carettext_color, caret_color)) ) && (carettext_color !== lightnessCaret)  ) {
 				var carettext_color= ColorAdjust(carettext_color,caret_color);
 			}
 
 
-var carettextcolor1 = ColorHover(carettext_color);
-
 
 /** Caret 2 Color **/
 /* Set Vars */
 var caretIT_color = GetInactiveTitle();
-// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactive-title-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-		var caretIT_color = ColorStyleAdjust(caretIT_color);
-}
+
 			while ( ( isSuitableColorFormControls(caretIT_color, content_color) ) && (caretIT_color !== lightnessR)  ) {
 			var caretIT_color= ColorAdjust(caretIT_color,window.ThemingEngine_PageColor,true);
 		}
@@ -2005,25 +1801,17 @@ window.ThemingEngine_InactiveTitleColor = caretIT_color
 
 
 
-var caretITcolor1 = ColorHover(caretIT_color);
-
 
 /** Caret 2 text color **/
 
 
 var caretITtext_color= GetInactiveTitleText();
 
-	// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactive-title-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-		var caretITtext_color = ColorStyleAdjust(caretITtext_color);
-}
+
 
 			while ( ( !(isSuitableColorFormControls(caretITtext_color, caretIT_color)) ) && (caretITtext_color !== lightnessCaretIT)  ) {
 				var caretITtext_color= ColorAdjust(caretITtext_color,caretIT_color);
 			}
-
-
-var caretITtextcolor1 = ColorHover(caretITtext_color);
 
 
 /** Button Color **/
@@ -2031,10 +1819,7 @@ var caretITtextcolor1 = ColorHover(caretITtext_color);
 
 var button_color = GetHighlight();
 
-// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--highlight-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-	var button_color = ColorStyleAdjust(button_color);
-}
+
 
 	var button2_color = button_color;
 	var button3_color = button_color;
@@ -2065,7 +1850,8 @@ window.ThemingEngine_HighlightColor = button_color
 
 
 
-var buttoncolor1 = ColorHover(button_color);
+var buttoncolorR = ColorHoverRatio(button_color);
+
 
 
 /** Button text color **/
@@ -2073,16 +1859,11 @@ var buttoncolor1 = ColorHover(button_color);
 
 var buttontext_color= GetHighlightText();
 
-	// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--highlight-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-		var buttontext_color = ColorStyleAdjust(buttontext_color);
-}
+
 			while ( ( !(isSuitableColorText(buttontext_color, button_color)) ) && (buttontext_color !== lightnessBTN)  ) {
 				var buttontext_color= ColorAdjust(buttontext_color,button_color);
 			}
 
-
-var buttontextcolor1 = ColorHover(buttontext_color);
 
 
 
@@ -2090,10 +1871,7 @@ var buttontextcolor1 = ColorHover(buttontext_color);
 /* Set Vars */
 var vlink_color = GetVisitedHyperlink();
 
-// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--visited-hyperlink-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-	var vlink_color = ColorStyleAdjust(vlink_color);
-}
+
 
 	var vlink2_color = vlink_color;
 	var vlink3_color = vlink_color;
@@ -2104,17 +1882,12 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--visited
 		}
 
 
-var vlinkcolor1 = ColorHover(vlink_color,content_color);
-
 
 /** Active Text/Link Color **/
 /* Set Vars */
 var alink_color = GetActiveText();
 
-// Liatch Quirk
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-	var alink_color = ColorStyleAdjust(alink_color);
-}
+
 	
 		while ( ( !(isSuitableColorText(alink_color, content_color)) ) && (alink_color !== lightness) ) {
 			var alink_color= ColorAdjust(alink_color,window.ThemingEngine_PageColor);
@@ -2124,19 +1897,13 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--active-
 	var alink4_color = alink_color;
 
 
-var alinkcolor1 = ColorHover(alink_color,content_color);
-
 
 /** Content Border **/
 /* Set Vars */
 
 var border_color =	dropdowncolor2;
 
-if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactive-text-background-color") != 'auto') ) { // Only run Liatch quirk if not in autocolorization
-	// Liatch Quirk
 
-		var border_color = ColorStyleAdjust(border_color);
-}
 
 		while ( ( !(isSuitableColorFormControls(border_color, content_color)) ) && (border_color !== lightness)  ) {
 			var border_color= ColorAdjust(border_color,window.ThemingEngine_PageColor);
@@ -2148,7 +1915,7 @@ if ((getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--inactiv
 
 
 
-var bordercolor1 = ColorHover(border_color);
+var bordercolorR = ColorHoverRatio(border_color);
 
 
 /* Generic Colors */
@@ -2164,11 +1931,6 @@ var alert_color = generic[0];
 var alert2_color = generic2[0];
 var alert3_color = generic3[0];
 var alert4_color = generic4[0];
-var alertcolor1 = ColorHover(alert_color,content_color);
-var alert2color1 = ColorHover(alert2_color,content_color);
-var alert3color1 = ColorHover(alert3_color,caret_color);
-var alert4color1 = ColorHover(alert4_color,content_color);
-var alertcolor2 = ColorHover(alert_color);
 
 
 /** Pause Color **/
@@ -2177,11 +1939,6 @@ var pause_color = generic[1];
 var pause2_color = generic2[1];
 var pause3_color = generic3[1];
 var pause4_color = generic4[1];
-var pausecolor1 = ColorHover(pause_color,content_color);
-var pause2color1 = ColorHover(pause2_color,content_color);
-var pause3color1 = ColorHover(pause3_color,caret_color);
-var pause4color1 = ColorHover(pause4_color,content_color);
-var pausecolor2 = ColorHover(pause_color);
 
 /** Warning Color **/
 /* Set Vars */
@@ -2189,11 +1946,6 @@ var warning_color = generic[2];
 var warning2_color = generic2[2];
 var warning3_color = generic3[2];
 var warning4_color = generic4[2];
-var warningcolor1 = ColorHover(warning_color,content_color);
-var warning2color1 = ColorHover(warning2_color,content_color);
-var warning3color1 = ColorHover(warning3_color,caret_color);
-var warning4color1 = ColorHover(warning4_color,content_color);
-var warningcolor2 = ColorHover(warning_color);
 
 /** Success Color **/
 /* Set Vars */
@@ -2201,11 +1953,6 @@ var success_color = generic[3];
 var success2_color = generic2[3];
 var success3_color = generic3[3];
 var success4_color = generic4[3];
-var successcolor1 = ColorHover(success_color,content_color);
-var success2color1 = ColorHover(success2_color,content_color);
-var success3color1 = ColorHover(success3_color,caret_color);
-var success4color1 = ColorHover(success4_color,content_color);
-var successcolor2 = ColorHover(success_color);
 
 /** Progress Color **/
 /* Set Vars */
@@ -2213,11 +1960,6 @@ var progress_color = generic[4];
 var progress2_color = generic2[4];
 var progress3_color = generic3[4];
 var progress4_color = generic4[4];
-var progresscolor1 = ColorHover(progress_color,content_color);
-var progress2color1 = ColorHover(progress2_color,content_color);
-var progress3color1 = ColorHover(progress3_color,caret_color);
-var progress4color1 = ColorHover(progress4_color,content_color);
-var progresscolor2 = ColorHover(progress_color);
 
 /** Message Color **/
 /* Set Vars */
@@ -2225,11 +1967,6 @@ var message_color = generic[5];
 var message2_color = generic2[5];
 var message3_color = generic3[5];
 var message4_color = generic4[5];
-var messagecolor1 = ColorHover(message_color,content_color);
-var message2color1 = ColorHover(message2_color,content_color);
-var message3color1 = ColorHover(message3_color,caret_color);
-var message4color1 = ColorHover(message4_color,content_color);
-var messagecolor2 = ColorHover(message_color);
 
 /** Secondary, Tertiary and Quaternary Colors **/
 /* Active Title */
@@ -2244,11 +1981,6 @@ var messagecolor2 = ColorHover(message_color);
 			var caret4_color= ColorAdjust(caret4_color,window.ThemingEngine_DesktopColor);
 		}
 
-var caret2color1 = ColorHover(caret2_color);
-var caret3color1 = ColorHover(caret3_color,caret_color); // Ensure Legibility
-var caret4color1 = ColorHover(caret4_color);
-
-
 /* Highlight */
 
 		while ( ( !(isSuitableColorFormControls(button2_color, dropdowncolor)) ) && (button2_color !== lightnessDropdown) ) {
@@ -2261,10 +1993,6 @@ var caret4color1 = ColorHover(caret4_color);
 			var button4_color= ColorAdjust(button4_color,window.ThemingEngine_DesktopColor);
 		}
 		
-var button2color1 = ColorHover(button2_color);
-var button3color1 = ColorHover(button3_color,caret_color); // Ensure Legibility
-var button4color1 = ColorHover(button4_color);
-
 /* Hyperlink */
 
 		while ( ( !(isSuitableColorText(link2_color, dropdowncolor)) ) && (link2_color !== lightnessDropdown) ) {
@@ -2277,10 +2005,6 @@ var button4color1 = ColorHover(button4_color);
 			var link4_color= ColorAdjust(link4_color,window.ThemingEngine_DesktopColor);
 		}
 		
-var link2color1 = ColorHover(link2_color,content_color);
-var link3color1 = ColorHover(link3_color,caret_color);
-var link4color1 = ColorHover(link4_color,content_color);
-
 
 /* Visited Hyperlink */
 
@@ -2294,10 +2018,6 @@ var link4color1 = ColorHover(link4_color,content_color);
 			var vlink4_color= ColorAdjust(vlink4_color,window.ThemingEngine_DesktopColor);
 		}
 
-var vlink2color1 = ColorHover(vlink2_color,content_color);
-var vlink3color1 = ColorHover(vlink3_color,caret_color);
-var vlink4color1 = ColorHover(vlink4_color,caret_color);
-
 /* Active Text */
 		while ( ( !(isSuitableColorText(alink2_color, dropdowncolor)) ) && (alink2_color !== lightnessDropdown) ) {
 			var alink2_color= ColorAdjust(alink2_color,dropdowncolor);
@@ -2309,10 +2029,6 @@ var vlink4color1 = ColorHover(vlink4_color,caret_color);
 			var alink4_color= ColorAdjust(alink4_color,window.ThemingEngine_DesktopColor);
 		}
 		
-var alink2color1 = ColorHover(alink2_color,content_color);
-var alink3color1 = ColorHover(alink3_color,caret_color);
-var alink4color1 = ColorHover(alink4_color,caret_color);
-
 /* Inactive Text */
 		while ( ( !(isSuitableColorFormControls(border2_color, dropdowncolor)) ) && (border2_color !== lightnessDropdown) ) {
 			var border2_color= ColorAdjust(border2_color,dropdowncolor);
@@ -2323,11 +2039,7 @@ var alink4color1 = ColorHover(alink4_color,caret_color);
 		while ( ( !(isSuitableColorFormControls(border4_color, head_color)) ) && (border4_color !== lightnessHead)  ) {
 			var border4_color= ColorAdjust(border4_color,window.ThemingEngine_DesktopColor);
 		}
-		
-var border2color1 = ColorHover(border2_color);
-var border3color1 = ColorHover(border3_color,caret_color); // Ensure Legibility
-var border4color1 = ColorHover(border4_color);
-	
+			
 		
 /* Graphs */
 var g1_color = graphs[0];
@@ -2337,96 +2049,29 @@ var g4_color = graphs[3];
 var g5_color = graphs[4];
 var g6_color = graphs[5];
 
-var g1color1 = ColorHover(g1_color,lightness);
-var g2color1 = ColorHover(g2_color,lightness);
-var g3color1 = ColorHover(g3_color,lightness);
-var g4color1 = ColorHover(g4_color,lightness);
-var g5color1 = ColorHover(g5_color,lightness);
-var g6color1 = ColorHover(g6_color,lightness);
-
-
 var imgfilter = getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--desktop-background-image-filter");
 
 if (imgfilter == 'none') {
 	var imgfilter = 'opacity(1)';
 }
 
-aopacity = getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-acryllic-opacity");
 
 // Gradient Sets
-		// Dledlen
-		var alert_gradient= GetGradientVariable(content_color,'alert');
-		var pause_gradient= GetGradientVariable(content_color,'pause');
-		var warning_gradient = GetGradientVariable(content_color,'warning');
-		var success_gradient = GetGradientVariable(content_color,'success');
-		var progress_gradient = GetGradientVariable(content_color,'progress');
-		var message_gradient = GetGradientVariable(content_color,'message');
-		var dropdowncolor_gradient = GetGradientVariable(content_color,'canvas-secondary');
-		var head_gradient = GetGradientVariable(content_color,'desktop');
-		var link_gradient = GetGradientVariable(content_color,'hyperlink');
-		var vlink_gradient = GetGradientVariable(content_color,'visited-hyperlink');
-		var alink_gradient = GetGradientVariable(content_color,'active-text');
-
-		// Inverted Dledlen
-		var content2_text_gradient = GetGradientVariable(content_text,'canvas-text-secondary');
-		var headertext_gradient = GetGradientVariable(content_text,'desktop-text')
-var content_color_gradient = GetGradientVariable(content_color,'canvas');
-var content_text_gradient = GetGradientVariable(content_text,'canvas-text');
 var button_gradient = GetGradientVariable(button_color,'highlight');
-var buttontext_gradient = GetGradientVariable(buttontext_color,'highlight-text');
+var buttontext_gradient = GetGradientVariable(button_color,'highlight-text',true);
 var border_gradient = GetGradientVariable(border_color,'inactive-text');
 var caret_gradient = GetGradientVariable(caret_color,'active-title');
-var carettext_gradient = GetGradientVariable(caret_color,'active-title-text');
-var caretIT_gradient = GetGradientVariable(caretIT_color,'inactive-title');
-var caretITtext_gradient = GetGradientVariable(caretITtext_color,'inactive-title-text');
+var carettext_gradient = GetGradientVariable(caret_color,'active-title-text',true);
 
 // Foreground texts
-var alert_fg = GetForegroundVariables(alert_color);
-var pause_fg = GetForegroundVariables(pause_color);
-var warning_fg = GetForegroundVariables(warning_color);
-var success_fg = GetForegroundVariables(success_color);
-var progress_fg = GetForegroundVariables(progress_color);
-var message_fg = GetForegroundVariables(message_color);
-var content_color_fg = GetForegroundVariables(content_color);
-var dropdowncolor_fg = GetForegroundVariables(dropdowncolor);
-var content_text_fg = GetForegroundVariables(content_text);
-var content2_text_fg = GetForegroundVariables(content2_text);
+var dropdowncolor_fg = GetForegroundVariables(dropdowncolor); // Still required, as one can have a light canvas but a dark secondary canvas color under certain circumstances
 var button_fg = GetForegroundVariables(button_color);
-var buttontext_fg = GetForegroundVariables(buttontext_color);
-var link_fg = GetForegroundVariables(link_color);
-var vlink_fg = GetForegroundVariables(vlink_color);
-var alink_fg = GetForegroundVariables(alink_color);
 var border_fg = GetForegroundVariables(border_color);
 var head_fg = GetForegroundVariables(head_color);
-var headertext_fg = GetForegroundVariables(headertext_color);
 var caret_fg = GetForegroundVariables(caret_color);
-var carettext_fg = GetForegroundVariables(carettext_color);
-var caretIT_fg = GetForegroundVariables(caretIT_color);
-var caretITtext_fg = GetForegroundVariables(caretITtext_color);
+var caretIT_fg = GetForegroundVariables(caretIT_color); // Still required, as one can have a light canvas but a dark inactive title color under certain circumstances
 
 // Inverted Foreground texts
-var alert_2fg = GetForegroundVariables(alertcolor1);
-var pause_2fg = GetForegroundVariables(pausecolor1);
-var warning_2fg = GetForegroundVariables(warningcolor1);
-var success_2fg = GetForegroundVariables(successcolor1);
-var progress_2fg = GetForegroundVariables(progresscolor1);
-var message_2fg = GetForegroundVariables(messagecolor1);
-var content_color_2fg = GetForegroundVariables(content_color2)
-var dropdowncolor_2fg = GetForegroundVariables(dropdowncolorH)
-var content_text_2fg = GetForegroundVariables(content_text1)
-var content2_text_2fg = GetForegroundVariables(content2_text1)
-var button_2fg = GetForegroundVariables(buttoncolor1)
-var buttontext_2fg = GetForegroundVariables(buttontextcolor1)
-var link_2fg = GetForegroundVariables(linkcolor1)
-var vlink_2fg = GetForegroundVariables(vlinkcolor1)
-var alink_2fg = GetForegroundVariables(alinkcolor1)
-var border_2fg = GetForegroundVariables(bordercolor1)
-var head_2fg = GetForegroundVariables(headcolor1)
-var headertext_2fg = GetForegroundVariables(headertextcolor1);
-var caret_2fg = GetForegroundVariables(caretcolor1);
-var carettext_2fg = GetForegroundVariables(carettextcolor1);
-var caretIT_2fg = GetForegroundVariables(caretITcolor1);
-var caretITtext_2fg = GetForegroundVariables(caretITtextcolor1);
 
 
 	wordfilter2 = getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--icon-filter-hover")
@@ -2460,578 +2105,122 @@ var caretITtext_2fg = GetForegroundVariables(caretITtextcolor1);
 
 
 var invfilters = [
-					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ')',			  					'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')'],						// Sp Dark Mode 0 (Normal)
-					['sepia(1) hue-rotate(' + (320+hue) + 'deg)  grayscale(' + saturation + ')', 	  			'invert(1) sepia(1) hue-rotate(' + (320+hue) + 'deg)  grayscale(' + saturation + ')'],				// Sp Dark Mode 1 (Colorscale)
-					['sepia(1) hue-rotate(' + hue + 'deg) grayscale(' + saturation + ') opacity(0.5)',			'invert(1) sepia(1) hue-rotate(' + hue + 'deg) opacity(0.5) grayscale(' + saturation + ')'], 		// Sp Dark Mode 2 (Hot Temperature)
-					['sepia(1) hue-rotate(' + (180 + hue) + 'deg) grayscale(' + saturation + ') opacity(0.5)',	'invert(1) sepia(1) hue-rotate(' + (180+hue) + 'deg) opacity(0.5) grayscale(' + saturation + ')'],	// Sp Dark Mode 3 (Cold Temperature)
+					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ')',			  					'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')'],								// Mode 0 (Normal)
+					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ') var(--protanopia-filter) ',		'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')  var(--protanopia-filter)'],		// Mode 1 (Protanopia)
+					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ') var(--deuteranopia-filter)',		'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')  var(--deuteranopia-filter)'],	// Mode 2 (Deuteranopia)
+					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ') var(--tritanopia-filter)',		'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')  var(--tritanopia-filter)'],		// Mode 3 (Tritanopia)
+					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ') var(--protanomaly-filter) ',		'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')  var(--protanomaly-filter)'],	// Mode 4 (Protanomaly)
+					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ') var(--deuteranomaly-filter)',	'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')  var(--deuteranomaly-filter)'],	// Mode 5 (Deuteranomaly)
+					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ') var(--tritanomaly-filter)',		'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')  var(--tritanomaly-filter)'],	// Mode 6 (Tritanomaly)
+					['hue-rotate(' + hue + 'deg) grayscale(' + saturation + ') var(--achromatomaly-filter)',	'invert(1) hue-rotate(' + (180+hue) + 'deg)  grayscale(' + saturation + ')  var(--achromatomaly-filter)'],	// Mode 7 (Achromatomaly)
+
 				 ];
 /* Set Values for dynamical variables */
 	var result = 		  colorstyle +
 						  ":root {" +
-						  "--fadeout-opacity:" + fadeouto + ";\n" + 
-						  "--disabled-elements-opacity:" + disabledo + ";\n" + 
-						  "--desktop-alternative-foreground-color:" + head_fg[4] + ";\n" + 
-						  "--desktop-alternative-foreground-color-hover:" + head_fg[6] + ";\n" + 
-						  "--desktop-alternative-foreground-color-rgb:" + head_fg[5] + ";\n" +
-						  "--desktop-alternative-foreground-color-hover-rgb:" + head_fg[7] + ";\n" + 
-						  "--desktop-text-alternative-foreground-color:" + headertext_fg[4] + ";\n" + 
-						  "--desktop-text-alternative-foreground-color-hover:" + headertext_fg[6] + ";\n" + 
-						  "--desktop-text-alternative-foreground-color-rgb:" + headertext_fg[5] + ";\n" +
-						  "--desktop-text-alternative-foreground-color-hover-rgb:" + headertext_fg[7] + ";\n" +
-						  "--hyperlink-alternative-foreground-color:" + link_fg[4] + ";\n" + 
-						  "--hyperlink-alternative-foreground-color-hover:" + link_fg[6] + ";\n" + 
-						  "--hyperlink-alternative-foreground-color-rgb:" + link_fg[5] + ";\n" +
-						  "--hyperlink-alternative-foreground-color-hover-rgb:" + link_fg[7] + ";\n" +
-						  "--visited-hyperlink-alternative-foreground-color:" + vlink_fg[4] + ";\n" + 
-						  "--visited-hyperlink-alternative-foreground-color-hover:" + vlink_fg[6] + ";\n" + 
-						  "--visited-hyperlink-alternative-foreground-color-rgb:" + vlink_fg[5] + ";\n" +
-						  "--visited-hyperlink-alternative-foreground-color-hover-rgb:" + vlink_fg[7] + ";\n" +
-						  "--canvas-alternative-foreground-color:" + content_color_fg[4] + ";\n" + 
-						  "--canvas-alternative-foreground-color-hover:" + content_color_fg[6] + ";\n" + 
-						  "--canvas-alternative-foreground-color-rgb:" + content_color_fg[5] + ";\n" +
-						  "--canvas-alternative-foreground-color-hover-rgb:" + content_color_fg[7] + ";\n" +
-						  "--canvas-secondary-alternative-foreground-color:" + dropdowncolor_fg[4] + ";\n" + 
-						  "--canvas-secondary-alternative-foreground-color-hover:" + dropdowncolor_fg[6] + ";\n" + 
-						  "--canvas-secondary-alternative-foreground-color-rgb:" + dropdowncolor_fg[5] + ";\n" +
-						  "--canvas-secondary-alternative-foreground-color-hover-rgb:" + dropdowncolor_fg[7] + ";\n" +
-						  "--inactive-text-alternative-foreground-color:" + border_fg[4] + ";\n" + 
-						  "--inactive-text-alternative-foreground-color-hover:" + border_fg[6] + ";\n" + 
-						  "--inactive-text-alternative-foreground-color-rgb:" + border_fg[5] + ";\n" +
-						  "--inactive-text-alternative-foreground-color-hover-rgb:" + border_fg[7] + ";\n" +
-						  "--active-text-alternative-foreground-color:" + alink_fg[4] + ";\n" + 
-						  "--active-text-alternative-foreground-color-hover:" + alink_fg[6] + ";\n" + 
-						  "--active-text-alternative-foreground-color-rgb:" + alink_fg[5] + ";\n" +
-						  "--active-text-alternative-foreground-color-hover-rgb:" + alink_fg[7] + ";\n" +
-						  "--canvas-text-alternative-foreground-color:" + content_text_fg[4] + ";\n" + 
-						  "--canvas-text-alternative-foreground-color-hover:" + content_text_fg[6] + ";\n" + 
-						  "--canvas-text-alternative-foreground-color-rgb:" + content_text_fg[5] + ";\n" +
-						  "--canvas-text-alternative-foreground-color-hover-rgb:" + content_text_fg[7] + ";\n" +
-						  "--canvas-text-secondary-alternative-foreground-color:" + content2_text_fg[4] + ";\n" + 
-						  "--canvas-text-secondary-alternative-foreground-color-hover:" + content2_text_fg[6] + ";\n" + 
-						  "--canvas-text-secondary-alternative-foreground-color-rgb:" + content2_text_fg[5] + ";\n" +
-						  "--canvas-text-secondary-alternative-foreground-color-hover-rgb:" + content2_text_fg[7] + ";\n" +
-						  "--highlight-alternative-foreground-color:" + button_fg[4] + ";\n" + 
-						  "--highlight-alternative-foreground-color-hover:" + button_fg[6] + ";\n" + 
-						  "--highlight-alternative-foreground-color-rgb:" + button_fg[5] + ";\n" +
-						  "--highlight-alternative-foreground-color-hover-rgb:" + button_fg[7] + ";\n" +
-						  "--highlight-text-alternative-foreground-color:" + buttontext_fg[4] + ";\n" + 
-						  "--highlight-text-alternative-foreground-color-hover:" + buttontext_fg[6] + ";\n" + 
-						  "--highlight-text-alternative-foreground-color-rgb:" + buttontext_fg[5] + ";\n" +
-						  "--highlight-text-alternative-foreground-color-hover-rgb:" + buttontext_fg[7] + ";\n" +
-						  "--active-title-alternative-foreground-color:" + caret_fg[4] + ";\n" + 
-						  "--active-title-alternative-foreground-color-hover:" + caret_fg[6] + ";\n" + 
-						  "--active-title-alternative-foreground-color-rgb:" + caret_fg[5] + ";\n" +
-						  "--active-title-alternative-foreground-color-hover-rgb:" + caret_fg[7] + ";\n" +
-						  "--active-title-text-alternative-foreground-color:" + carettext_fg[4] + ";\n" + 
-						  "--active-title-text-alternative-foreground-color-hover:" + carettext_fg[6] + ";\n" + 
-						  "--active-title-text-alternative-foreground-color-rgb:" + carettext_fg[5] + ";\n" +
-						  "--active-title-text-alternative-foreground-color-hover-rgb:" + carettext_fg[7] + ";\n" +
-						  "--inactive-title-alternative-foreground-color:" + caretIT_fg[4] + ";\n" + 
-						  "--inactive-title-alternative-foreground-color-hover:" + caretIT_fg[6] + ";\n" + 
-						  "--inactive-title-alternative-foreground-color-rgb:" + caretIT_fg[5] + ";\n" +
-						  "--inactive-title-alternative-foreground-color-hover-rgb:" + caretIT_fg[7] + ";\n" +
-						  "--inactive-title-text-alternative-foreground-color:" + caretITtext_fg[4] + ";\n" + 
-						  "--inactive-title-text-alternative-foreground-color-hover:" + caretITtext_fg[6] + ";\n" + 
-						  "--inactive-title-text-alternative-foreground-color-rgb:" + caretITtext_fg[5] + ";\n" +
-						  "--inactive-title-text-alternative-foreground-color-hover-rgb:" + caretITtext_fg[7] + ";\n" +
-						  "--alert-alternative-foreground-color:" + alert_fg[4] + "!important;\n" + 
-						  "--alert-alternative-foreground-color-hover:" + alert_fg[6] + "!important;\n" + 
-						  "--alert-alternative-foreground-color-rgb:" + alert_fg[5] + "!important;\n" +
-						  "--alert-alternative-foreground-color-hover-rgb:" + alert_fg[7] + "!important;\n" +
-						  "--pause-alternative-foreground-color:" + pause_fg[4] + "!important;\n" + 
-						  "--pause-alternative-foreground-color-hover:" + pause_fg[6] + "!important;\n" + 
-						  "--pause-alternative-foreground-color-rgb:" + pause_fg[5] + "!important;\n" +
-						  "--pause-alternative-foreground-color-hover-rgb:" + pause_fg[7] + "!important;\n" +
-						  "--warning-alternative-foreground-color:" + warning_fg[4] + "!important;\n" + 
-						  "--warning-alternative-foreground-color-hover:" + warning_fg[6] + "!important;\n" + 
-						  "--warning-alternative-foreground-color-rgb:" + warning_fg[5] + "!important;\n" +
-						  "--warning-alternative-foreground-color-hover-rgb:" + warning_fg[7] + "!important;\n" +
-						  "--success-alternative-foreground-color:" + success_fg[4] + "!important;\n" + 
-						  "--success-alternative-foreground-color-hover:" + success_fg[6] + "!important;\n" + 
-						  "--success-alternative-foreground-color-rgb:" + success_fg[5] + "!important;\n" +
-						  "--success-alternative-foreground-color-hover-rgb:" + success_fg[7] + "!important;\n" +
-						  "--progress-alternative-foreground-color:" + progress_fg[4] + "!important;\n" + 
-						  "--progress-alternative-foreground-color-hover:" + progress_fg[6] + "!important;\n" + 
-						  "--progress-alternative-foreground-color-rgb:" + progress_fg[5] + "!important;\n" +
-						  "--progress-alternative-foreground-color-hover-rgb:" + progress_fg[7] + "!important;\n" +
-						  "--message-alternative-foreground-color:" + message_fg[4] + "!important;\n" + 
-						  "--message-alternative-foreground-color-hover:" + message_fg[6] + "!important;\n" + 
-						  "--message-alternative-foreground-color-rgb:" + message_fg[5] + "!important;\n" +
-						  "--message-alternative-foreground-color-hover-rgb:" + message_fg[7] + "!important;\n" +
-						  "--desktop-fadeout-color:rgb(var(--desktop-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--desktop-text-fadeout-color:rgb(var(--desktop-text-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--hyperlink-fadeout-color:rgb(var(--hyperlink-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--hyperlink-secondary-fadeout-color:rgb(var(--hyperlink-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--hyperlink-tertiary-fadeout-color:rgb(var(--hyperlink-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--hyperlink-quaternary-fadeout-color:rgb(var(--hyperlink-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--visited-hyperlink-fadeout-color:rgb(var(--visited-hyperlink-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--visited-hyperlink-secondary-fadeout-color:rgb(var(--visited-hyperlink-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--visited-hyperlink-tertiary-fadeout-color:rgb(var(--visited-hyperlink-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--visited-hyperlink-quaternary-fadeout-color:rgb(var(--visited-hyperlink-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--canvas-fadeout-color:rgb(var(--canvas-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--canvas-secondary-fadeout-color:rgb(var(--canvas-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--inactive-text-fadeout-color:rgb(var(--inactive-text-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--inactive-text-secondary-fadeout-color:rgb(var(--inactive-text-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--inactive-text-tertiary-fadeout-color:rgb(var(--inactive-text-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--inactive-text-quaternary-fadeout-color:rgb(var(--inactive-text-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-text-fadeout-color:rgb(var(--active-text-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-text-secondary-fadeout-color:rgb(var(--active-text-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-text-tertiary-fadeout-color:rgb(var(--active-text-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-text-quaternary-fadeout-color:rgb(var(--active-text-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--canvas-text-fadeout-color:rgb(var(--canvas-text-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--canvas-text-secondary-fadeout-color:rgb(var(--canvas-text-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--highlight-fadeout-color:rgb(var(--highlight-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--highlight-text-fadeout-color:rgb(var(--highlight-text-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--highlight-secondary-fadeout-color:rgb(var(--highlight-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--highlight-tertiary-fadeout-color:rgb(var(--highlight-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--highlight-quaternary-fadeout-color:rgb(var(--highlight-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-title-fadeout-color:rgb(var(--active-title-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-title-text-fadeout-color:rgb(var(--active-title-text-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-title-secondary-fadeout-color:rgb(var(--active-title-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-title-tertiary-fadeout-color:rgb(var(--active-title-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--active-title-quaternary-fadeout-color:rgb(var(--active-title-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--inactive-title-fadeout-color:rgb(var(--inactive-title-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--inactive-title-text-fadeout-color:rgb(var(--inactive-title-text-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--alert-fadeout-color:rgb(var(--alert-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--alert-secondary-fadeout-color:rgb(var(--alert-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--alert-tertiary-fadeout-color:rgb(var(--alert-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--alert-quaternary-fadeout-color:rgb(var(--alert-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--pause-fadeout-color:rgb(var(--pause-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--pause-secondary-fadeout-color:rgb(var(--pause-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--pause-tertiary-fadeout-color:rgb(var(--pause-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--pause-quaternary-fadeout-color:rgb(var(--pause-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--warning-fadeout-color:rgb(var(--warning-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--warning-secondary-fadeout-color:rgb(var(--warning-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--warning-tertiary-fadeout-color:rgb(var(--warning-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--warning-quaternary-fadeout-color:rgb(var(--warning-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--success-fadeout-color:rgb(var(--success-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--success-secondary-fadeout-color:rgb(var(--success-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--success-tertiary-fadeout-color:rgb(var(--success-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--success-quaternary-fadeout-color:rgb(var(--success-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--progress-fadeout-color:rgb(var(--progress-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--progress-secondary-fadeout-color:rgb(var(--progress-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--progress-tertiary-fadeout-color:rgb(var(--progress-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--progress-quaternary-fadeout-color:rgb(var(--progress-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--message-fadeout-color:rgb(var(--message-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--message-secondary-fadeout-color:rgb(var(--message-secondary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--message-tertiary-fadeout-color:rgb(var(--message-tertiary-background-color-rgb) / var(--fadeout-opacity));" +
-						  "--message-quaternary-fadeout-color:rgb(var(--message-quaternary-background-color-rgb) / var(--fadeout-opacity));" +
 						  "--canvas-secondary-background-color:" + dropdowncolor + ";\n" + 
-						  "--canvas-secondary-background-color-hover:" + dropdowncolorH + ";\n" + 
-						  "--canvas-secondary-gradient-color:" + dropdowncolor_gradient[0] + ";\n" +
-						  "--canvas-secondary-gradient-color-hover:" + dropdowncolor_gradient[1] + ";\n" +
 						  "--canvas-secondary-foreground-color:" + dropdowncolor_fg[0] + ";\n" +
 						  "--canvas-secondary-foreground-color-hover:" +  dropdowncolor_fg[1] + ";\n" + 
-						  "--canvas-secondary-foreground-color-inverted:" + dropdowncolor_2fg[0] + ";\n" +
 						  "--canvas-background-color:" + content_color + ";\n" +
-						  "--canvas-background-color-hover:" + content_color2 + ";\n" +
-						  "--canvas-gradient-color:" + content_color_gradient[0] + ";\n" +
-						  "--canvas-gradient-color-hover:" + content_color_gradient[1] + ";\n" +
-						  "--canvas-foreground-color:" + content_color_fg[0] + ";\n" +
-						  "--canvas-foreground-color-hover:" +  content_color_fg[1] + ";\n" + 
-						  "--canvas-foreground-color-inverted:" + content_color_2fg[0] + ";\n" +
-						  "--canvas-secondary-background-color-rgb:" + ColorRGB(dropdowncolor) + ";\n" + 
-						  "--canvas-secondary-background-color-hover-rgb:" + ColorRGB(dropdowncolorH) + ";\n" +
-						  "--canvas-secondary-foreground-color-rgb:" + dropdowncolor_fg[2] + ";\n" +
-						  "--canvas-secondary-foreground-color-hover-rgb:" +  dropdowncolor_fg[3] + ";\n" + 
-						  "--canvas-secondary-foreground-color-inverted-rgb:" + dropdowncolor_2fg[2] + ";\n" +
+						  "--canvas-background-color-hover-ratio:" + content_colorR + ";\n" +
 						  "--canvas-tabs-background-color:" + tabscPage  + ";\n" +
-						  "--canvas-tabs-opacity:" + (tabsoPage * 0.5)  + ";\n" +
 						  "--canvas-active-tabs-opacity:" + tabsoPage  + ";\n" +
-						  "--canvas-background-color-rgb:" + ColorRGB( content_color ) + ";\n" +
-						  "--canvas-background-color-hover-rgb:" + ColorRGB(content_color2) + ";\n" +
-						  "--canvas-foreground-color-rgb:" +  content_color_fg[2] + ";\n" +
-						  "--canvas-foreground-color-hover-rgb:" +  content_color_fg[3] + ";\n" + 
-						  "--canvas-foreground-color-inverted-rgb:" + content_color_2fg[2] + ";\n" +
 						  "--canvas-text-background-color:" + content_text + ";\n" +
-						  "--canvas-text-background-color-hover:" + content_text1 + ";\n" +
-						  "--canvas-text-gradient-color:" + content_text_gradient[0] + ";\n" +
-						  "--canvas-text-gradient-color-hover:" + content_text_gradient[1] + ";\n" +
-						  "--canvas-text-foreground-color:" + content_text_fg[0] + ";\n" +
-						  "--canvas-text-foreground-color-hover:" + content_text_fg[1] + ";\n" +
-						  "--canvas-text-foreground-color-inverted:" + content_text_2fg[0] + ";\n" +
-						  "--canvas-text-background-color-rgb:" + ColorRGB( content_text ) + ";\n" +
-						  "--canvas-text-background-color-hover-rgb:" + ColorRGB(content_text1) + ";\n" +
-						  "--canvas-text-foreground-color-rgb:" + content_text_fg[2] + ";\n" +
-						  "--canvas-text-foreground-color-hover-rgb:" + content_text_fg[3] + ";\n" +
-						  "--canvas-text-foreground-color-inverted-rgb:" + content_text_2fg[2] + ";\n" +
 						  "--canvas-text-secondary-background-color:" + content2_text + ";\n" +
-						  "--canvas-text-secondary-background-color-hover:" + content2_text1 + ";\n" +
-						  "--canvas-text-secondary-gradient-color:" + content2_text_gradient[0] + ";\n" +
-						  "--canvas-text-secondary-gradient-color-hover:" + content2_text_gradient[1] + ";\n" +
-						  "--canvas-text-secondary-gradient-color:" + content2_text_gradient[0] + ";\n" +
-						  "--canvas-text-secondary-gradient-color-hover:" + content2_text_gradient[1] + ";\n" +
-						  "--canvas-text-secondary-foreground-color:" + content2_text_fg[0] + ";\n" +
-						  "--canvas-text-secondary-foreground-color-hover:" + content2_text_fg[1] + ";\n" +
-						  "--canvas-text-secondary-foreground-color-inverted:" + content2_text_2fg[0] + ";\n" +
-						  "--canvas-text-secondary-background-color-rgb:" + ColorRGB( content2_text ) + ";\n" +
-						  "--canvas-text-secondary-background-color-hover-rgb:" + ColorRGB(content2_text1) + ";\n" +
-						  "--canvas-text-secondary-foreground-color-rgb:" + content2_text_fg[2] + ";\n" +
-						  "--canvas-text-secondary-foreground-color-hover-rgb:" + content2_text_fg[3] + ";\n" +
-						  "--canvas-text-secondary-foreground-color-inverted-rgb:" + content2_text_2fg[2] + ";\n" +
 						  "--highlight-background-color:" + button_color + ";\n" +
-						  "--highlight-background-color-hover:" + buttoncolor1 + ";\n" +
+						  "--highlight-background-color-hover-ratio:" + buttoncolorR + ";\n" +
 						  "--highlight-gradient-color:" + button_gradient[0] + ";\n" +
 						  "--highlight-gradient-color-hover:" + button_gradient[1] + ";\n" +
 						  "--highlight-foreground-color:" + button_fg[0] + ";\n" +
 						  "--highlight-foreground-color-hover:" + button_fg[1] + ";\n" +
-						  "--highlight-foreground-color-inverted:" + button_2fg[0] + ";\n" +
-						  "--highlight-background-color-rgb:" + ColorRGB(button_color) + ";\n" +
-						  "--highlight-background-color-hover-rgb:" + ColorRGB(buttoncolor1) + ";\n" +
-						  "--highlight-foreground-color-rgb:" + button_fg[2] + ";\n" +
-						  "--highlight-foreground-color-hover-rgb:" + button_fg[3] + ";\n" +
-						  "--highlight-foreground-color-inverted-rgb:" + button_2fg[2] + ";\n" +
 						  "--highlight-text-background-color:" + buttontext_color + ";\n" +
-						  "--highlight-text-background-color-hover:" + buttontextcolor1 + ";\n" +
 						  "--highlight-text-gradient-color:" + buttontext_gradient[0] + ";\n" +
 						  "--highlight-text-gradient-color-hover:" + buttontext_gradient[1] + ";\n" +
-						  "--highlight-text-foreground-color:" + buttontext_fg[0] + ";\n" +
-						  "--highlight-text-foreground-color-hover:" + buttontext_fg[1] + ";\n" +
-						  "--highlight-text-foreground-color-inverted:" + buttontext_2fg[0] + ";\n" +
-						  "--highlight-text-background-color-rgb:" + ColorRGB(buttontext_color) + ";\n" +
-						  "--highlight-text-background-color-hover-rgb:" + ColorRGB(buttontextcolor1) + ";\n" +
-						  "--highlight-text-foreground-color-rgb:" + buttontext_fg[2] + ";\n" +
-						  "--highlight-text-foreground-color-hover-rgb:" + buttontext_fg[3] + ";\n" +
-						  "--highlight-text-foreground-color-inverted-rgb:" + buttontext_2fg[2] + ";\n" +
 						  "--highlight-secondary-background-color:" + button2_color + ";\n" +
-						  "--highlight-secondary-background-color-hover:" + button2color1 + ";\n" +
-						  "--highlight-secondary-background-color-rgb:" + ColorRGB(button2_color) + ";\n" +
 						  "--highlight-tertiary-background-color:" + button3_color + ";\n" +
-						  "--highlight-tertiary-background-color-hover:" + button3color1 + ";\n" +
-						  "--highlight-tertiary-background-color-rgb:" + ColorRGB(button3_color) + ";\n" +
 						  "--highlight-quaternary-background-color:" + button4_color + ";\n" +
-						  "--highlight-quaternary-background-color-hover:" + button4color1 + ";\n" +
-						  "--highlight-quaternary-background-color-rgb:" + ColorRGB(button4_color) + ";\n" +
 						  "--hyperlink-background-color:" + link_color + ";\n" +
-						  "--hyperlink-background-color-hover:" + linkcolor1 + ";\n" +
-						  "--hyperlink-gradient-color:" + link_gradient[0] + ";\n" +
-						  "--hyperlink-gradient-color-hover:" + link_gradient[1] + ";\n" +
-						  "--hyperlink-foreground-color:" + link_fg[0] + ";\n" +
-						  "--hyperlink-foreground-color-hover:" + link_fg[1] + ";\n" +
-						  "--hyperlink-foreground-color-inverted:" + link_2fg[0] + ";\n" +
-						  "--hyperlink-background-color-rgb:" + ColorRGB(link_color) + ";\n" +
-						  "--hyperlink-background-color-hover-rgb:" + ColorRGB(linkcolor1) + ";\n" +
-						  "--hyperlink-foreground-color-rgb:" + link_fg[2] + ";\n" +
-						  "--hyperlink-foreground-color-hover-rgb:" + link_fg[3] + ";\n" +
-						  "--hyperlink-foreground-color-inverted-rgb:" + link_2fg[2] + ";\n" +
 						  "--hyperlink-default-text-decoration:" + getDefaultHyperlinkTextDecoration(link_color,content_text) + ";\n" +
 						  "--hyperlink-tabs-background-color:" + tabscLink  + ";\n" +
-						  "--hyperlink-tabs-opacity:" + (tabsoLink * 0.5)  + ";\n" +
 						  "--hyperlink-active-tabs-opacity:" + tabsoLink  + ";\n" +
 						  "--hyperlink-secondary-background-color:" + link2_color + ";\n" +
-						  "--hyperlink-secondary-background-color-hover:" + link2color1 + ";\n" +
-						  "--hyperlink-secondary-background-color-rgb:" + ColorRGB(link2_color) + ";\n" +
 						  "--hyperlink-secondary-default-text-decoration:" + getDefaultHyperlinkTextDecoration(link2_color,content2_text) + ";\n" +
 						  "--hyperlink-tertiary-background-color:" + link3_color + ";\n" +
-						  "--hyperlink-tertiary-background-color-hover:" + link3color1 + ";\n" +
-						  "--hyperlink-tertiary-background-color-rgb:" + ColorRGB(link3_color) + ";\n" +
 						  "--hyperlink-tertiary-default-text-decoration:" + getDefaultHyperlinkTextDecoration(link3_color,carettext_color) + ";\n" +
 						  "--hyperlink-quaternary-background-color:" + link4_color + ";\n" +
-						  "--hyperlink-quaternary-background-color-hover:" + link4color1 + ";\n" +
-						  "--hyperlink-quaternary-background-color-rgb:" + ColorRGB(link4_color) + ";\n" +
 						  "--hyperlink-quaternary-default-text-decoration:" + getDefaultHyperlinkTextDecoration(link4_color,headertext_color) + ";\n" +
 						  "--visited-hyperlink-background-color:" + vlink_color + ";\n" +
-						  "--visited-hyperlink-background-color-hover:" + vlinkcolor1 + ";\n" +
-						  "--visited-hyperlink-gradient-color:" + vlink_gradient[0] + ";\n" +
-						  "--visited-hyperlink-gradient-color-hover:" + vlink_gradient[1] + ";\n" +
-						  "--visited-hyperlink-foreground-color:" + vlink_fg[0] + ";\n" +
-						  "--visited-hyperlink-foreground-color-hover:" + vlink_fg[1] + ";\n" +
-						  "--visited-hyperlink-foreground-color-inverted:" + vlink_2fg[0] + ";\n" +
-						  "--visited-hyperlink-background-color-rgb:" + ColorRGB(vlink_color) + ";\n" +
-						  "--visited-hyperlink-background-color-hover-rgb:" + ColorRGB(vlinkcolor1) + ";\n" +
-						  "--visited-hyperlink-foreground-color-rgb:" + vlink_fg[2] + ";\n" +
-						  "--visited-hyperlink-foreground-color-hover-rgb:" + vlink_fg[3] + ";\n" +
-						  "--visited-hyperlink-foreground-color-inverted-rgb:" + vlink_2fg[2] + ";\n" +
 						  "--visited-hyperlink-secondary-background-color:" + vlink2_color + ";\n" +
-						  "--visited-hyperlink-secondary-background-color-hover:" + vlink2color1 + ";\n" +
-						  "--visited-hyperlink-secondary-background-color-rgb:" + ColorRGB(vlink2_color) + ";\n" +
 						  "--visited-hyperlink-tertiary-background-color:" + vlink3_color + ";\n" +
-						  "--visited-hyperlink-tertiary-background-color-hover:" + vlink3color1 + ";\n" +
-						  "--visited-hyperlink-tertiary-background-color-rgb:" + ColorRGB(vlink3_color) + ";\n" +
 						  "--visited-hyperlink-quaternary-background-color:" + vlink4_color + ";\n" +
-						  "--visited-hyperlink-quaternary-background-color-hover:" + vlink4color1 + ";\n" +
-						  "--visited-hyperlink-quaternary-background-color-rgb:" + ColorRGB(vlink4_color) + ";\n" +
 						  "--active-text-background-color:" + alink_color + ";\n" +
-						  "--active-text-background-color-hover:" + alinkcolor1 + ";\n" +
-						  "--active-text-gradient-color:" + alink_gradient[0] + ";\n" +
-						  "--active-text-gradient-color-hover:" + alink_gradient[1] + ";\n" +
-						  "--active-text-foreground-color:" + alink_fg[0] + ";\n" +
-						  "--active-text-foreground-color-hover:" + alink_fg[1] + ";\n" +
-						  "--active-text-foreground-color-inverted:" + alink_2fg[0] + ";\n" +
-						  "--active-text-background-color-rgb:" + ColorRGB(alink_color) + ";\n" +
-						  "--active-text-background-color-hover-rgb:" + ColorRGB(alinkcolor1) + ";\n" +
-						  "--active-text-foreground-color-rgb:" + alink_fg[2] + ";\n" +
-						  "--active-text-foreground-color-hover-rgb:" + alink_fg[3] + ";\n" +
-						  "--active-text-foreground-color-inverted-rgb:" + alink_2fg[2] + ";\n" +
 						  "--active-text-secondary-background-color:" + alink2_color + ";\n" +
-						  "--active-text-secondary-background-color-hover:" + alink2color1 + ";\n" +
-						  "--active-text-secondary-background-color-rgb:" + ColorRGB(alink2_color) + ";\n" +
 						  "--active-text-tertiary-background-color:" + alink3_color + ";\n" +
-						  "--active-text-tertiary-background-color-hover:" + alink3color1 + ";\n" +
-						  "--active-text-tertiary-background-color-rgb:" + ColorRGB(alink3_color) + ";\n" +
 						  "--active-text-quaternary-background-color:" + alink4_color + ";\n" +
-						  "--active-text-quaternary-background-color-hover:" + alink4color1 + ";\n" +
-						  "--active-text-quaternary-background-color-rgb:" + ColorRGB(alink4_color) + ";\n" +
 						  "--inactive-text-background-color:" + border_color + ";\n" +
-						  "--inactive-text-background-color-hover:" + bordercolor1 + ";\n" +
+						  "--inactive-text-background-color-hover-ratio:" + bordercolorR + ";\n" +
 						  "--inactive-text-gradient-color:" + border_gradient[0] + ";\n" +
 						  "--inactive-text-gradient-color-hover:" + border_gradient[1] + ";\n" +
 						  "--inactive-text-foreground-color:" + border_fg[0] + ";\n" +
 						  "--inactive-text-foreground-color-hover:" + border_fg[1] + ";\n" +
-						  "--inactive-text-foreground-color-inverted:" + border_2fg[0] + ";\n" +
-						  "--inactive-text-background-color-rgb:" + ColorRGB(border_color) + ";\n" +
-						  "--inactive-text-background-color-hover-rgb:" + ColorRGB(bordercolor1) + ";\n" +
-						  "--inactive-text-foreground-color-rgb:" + border_fg[2] + ";\n" +
-						  "--inactive-text-foreground-color-hover-rgb:" + border_fg[3] + ";\n" +
-						  "--inactive-text-foreground-color-inverted-rgb:" + border_2fg[2] + ";\n" +
 						  "--inactive-text-secondary-background-color:" + border2_color + ";\n" +
-						  "--inactive-text-secondary-background-color-hover:" + border2color1 + ";\n" +
-						  "--inactive-text-secondary-background-color-rgb:" + ColorRGB(border2_color) + ";\n" +
 						  "--inactive-text-tertiary-background-color:" + border3_color + ";\n" +
-						  "--inactive-text-tertiary-background-color-hover:" + border3color1 + ";\n" +
-						  "--inactive-text-tertiary-background-color-rgb:" + ColorRGB(border3_color) + ";\n" +
 						  "--inactive-text-quaternary-background-color:" + border4_color + ";\n" +
-						  "--inactive-text-quaternary-background-color-hover:" + border4color1 + ";\n" +
-						  "--inactive-text-quaternary-background-color-rgb:" + ColorRGB(border4_color) + ";\n" +
 						  "--desktop-background-color:" + head_color + ";\n" +
-						  "--desktop-background-color-hover:" + headcolor1 + ";\n" +
-						  "--desktop-gradient-color:" + head_gradient[0] + ";\n" +
-						  "--desktop-gradient-color-hover:" + head_gradient[1] + ";\n" +
 						  "--desktop-foreground-color:" + head_fg[0] + ";\n" +
 						  "--desktop-foreground-color-hover:" + head_fg[1] + ";\n" +
-						  "--desktop-foreground-color-inverted:" + head_2fg[0] + ";\n" +
-						  "--desktop-background-color-rgb:" + ColorRGB(head_color) + ";\n" +
-						  "--desktop-background-color-hover-rgb:" + ColorRGB(headcolor1) + ";\n" +
-						  "--desktop-foreground-color-rgb:" + head_fg[2] + ";\n" +
-						  "--desktop-foreground-color-hover-rgb:" + head_fg[3] + ";\n" +
-						  "--desktop-foreground-color-inverted-rgb:" + head_2fg[2] + ";\n" +
 						  "--desktop-text-background-color:" + headertext_color + ";\n" +
-						  "--desktop-text-background-color-hover:" + headertextcolor1 + ";\n" +
-						  "--desktop-text-gradient-color:" + headertext_gradient[0] + ";\n" +
-						  "--desktop-text-gradient-color-hover:" + headertext_gradient[1] + ";\n" +
-						  "--desktop-text-foreground-color:" + headertext_fg[0] + ";\n" +
-						  "--desktop-text-foreground-color-hover:" + headertext_fg[1] + ";\n" +
-						  "--desktop-text-foreground-color-inverted:" + headertext_2fg[0] + ";\n" +
-						  "--desktop-text-background-color-rgb:" + ColorRGB( headertext_color ) + ";\n" +
-						  "--desktop-text-background-color-hover-rgb:" + ColorRGB(headertextcolor1) + ";\n" +
-						  "--desktop-text-foreground-color-rgb:" + headertext_fg[2] + ";\n" +
-						  "--desktop-text-foreground-color-hover-rgb:" + headertext_fg[3] + ";\n" +
-						  "--desktop-text-foreground-color-inverted-rgb:" + headertext_2fg[2] + ";\n" +
 						  "--active-title-background-color:" + caret_color + ";\n" +
-						  "--active-title-background-color-hover:" + caretcolor1 + ";\n" +
+						  "--active-title-background-color-hover-ratio:" + caretcolorR + ";\n" +
 						  "--active-title-gradient-color:" + caret_gradient[0] + ";\n" +
 						  "--active-title-gradient-color-hover:" + caret_gradient[1] + ";\n" +
 						  "--active-title-foreground-color:" + caret_fg[0] + ";\n" +
 						  "--active-title-foreground-color-hover:" + caret_fg[1] + ";\n" +
-						  "--active-title-foreground-color-inverted:" + caret_2fg[0] + ";\n" +
-						  "--active-title-background-color-rgb:" + ColorRGB( caret_color ) + ";\n" +
-						  "--active-title-background-color-hover-rgb:" + ColorRGB(caretcolor1) + ";\n" +
-						  "--active-title-foreground-color-rgb:" + caret_fg[2] + ";\n" +
-						  "--active-title-foreground-color-hover-rgb:" + caret_fg[3] + ";\n" +
-						  "--active-title-foreground-color-inverted-rgb:" + caret_2fg[2] + ";\n" +
 						  "--active-title-tabs-background-color:" + tabscCaret  + ";\n" +
-						  "--active-title-tabs-opacity:" + (tabsoCaret * 0.5)  + ";\n" +
 						  "--active-title-active-tabs-opacity:" + tabsoCaret  + ";\n" +
 						  "--active-title-text-background-color:" + carettext_color + ";\n" +
-						  "--active-title-text-background-color-hover:" + carettextcolor1 + ";\n" +
 						  "--active-title-text-gradient-color:" + carettext_gradient[0] + ";\n" +
 						  "--active-title-text-gradient-color-hover:" + carettext_gradient[1] + ";\n" +
-						  "--active-title-text-foreground-color:" + carettext_fg[0] + ";\n" +
-						  "--active-title-text-foreground-color-hover:" + carettext_fg[1] + ";\n" +
-						  "--active-title-text-foreground-color-inverted:" + carettext_2fg[0] + ";\n" +
-						  "--active-title-text-background-color-rgb:" + ColorRGB( carettext_color ) + ";\n" +
-						  "--active-title-text-background-color-hover-rgb:" + ColorRGB( carettextcolor1 ) + ";\n" +
-						  "--active-title-text-foreground-color-rgb:" + carettext_fg[2] + ";\n" +
-						  "--active-title-text-foreground-color-hover-rgb:" + carettext_fg[3] + ";\n" +
-						  "--active-title-text-foreground-color-inverted-rgb:" + carettext_2fg[2] + ";\n" +
 						  "--active-title-secondary-background-color:" + caret2_color + ";\n" +
-						  "--active-title-secondary-background-color-hover:" + caret2color1 + ";\n" +
-						  "--active-title-secondary-background-color-rgb:" + ColorRGB(caret2_color) + ";\n" +
 						  "--active-title-tertiary-background-color:" + caret3_color + ";\n" +
-						  "--active-title-tertiary-background-color-hover:" + caret3color1 + ";\n" +
-						  "--active-title-tertiary-background-color-rgb:" + ColorRGB(caret3_color) + ";\n" +
 						  "--active-title-quaternary-background-color:" + caret4_color + ";\n" +
-						  "--active-title-quaternary-background-color-hover:" + caret4color1 + ";\n" +
-						  "--active-title-quaternary-background-color-rgb:" + ColorRGB(caret4_color) + ";\n" +
 						  "--inactive-title-background-color:" + caretIT_color + ";\n" +
-						  "--inactive-title-background-color-hover:" + caretITcolor1 + ";\n" +
-						  "--inactive-title-gradient-color:" + caretIT_gradient[0] + ";\n" +
-						  "--inactive-title-gradient-color-hover:" + caretIT_gradient[1] + ";\n" +
 						  "--inactive-title-foreground-color:" + caretIT_fg[0] + ";\n" +
 						  "--inactive-title-foreground-color-hover:" + caretIT_fg[1] + ";\n" +
-						  "--inactive-title-foreground-color-inverted:" + caretIT_fg[0] + ";\n" +
-						  "--inactive-title-background-color-rgb:" + ColorRGB( caretIT_color ) + ";\n" +
-						  "--inactive-title-background-color-hover-rgb:" + ColorRGB(caretITcolor1) + ";\n" +
-						  "--inactive-title-foreground-color-rgb:" + caretIT_fg[2] + ";\n" +
-						  "--inactive-title-foreground-color-hover-rgb:" + caretIT_fg[3] + ";\n" +
-						  "--inactive-title-foreground-color-inverted-rgb:" + caretIT_fg[2] + ";\n" +
 						  "--inactive-title-tabs-background-color:" + tabscCaretIT  + ";\n" +
-						  "--inactive-title-tabs-opacity:" + (tabsoCaretIT * 0.5)  + ";\n" +
 						  "--inactive-title-active-tabs-opacity:" + tabsoCaretIT  + ";\n" +
 						  "--inactive-title-text-background-color:" + caretITtext_color + ";\n" +
-						  "--inactive-title-text-background-color-hover:" + caretITtextcolor1 + ";\n" +
-						  "--inactive-title-text-gradient-color:" + caretITtext_gradient[0] + ";\n" +
-						  "--inactive-title-text-gradient-color-hover:" + caretITtext_gradient[1] + ";\n" +
-						  "--inactive-title-text-foreground-color:" + caretITtext_fg[0] + ";\n" +
-						  "--inactive-title-text-foreground-color-hover:" + caretITtext_fg[1] + ";\n" +
-						  "--inactive-title-text-foreground-color-inverted:" + caretITtext_2fg[0] + ";\n" +
-						  "--inactive-title-text-background-color-rgb:" + ColorRGB( caretITtext_color ) + ";\n" +
-						  "--inactive-title-text-background-color-hover-rgb:" + ColorRGB( caretITtextcolor1 ) + ";\n" +
-						  "--inactive-title-text-foreground-color-rgb:" + caretITtext_fg[2] + ";\n" +
-						  "--inactive-title-text-foreground-color-hover-rgb:" + caretITtext_fg[3] + ";\n" +
-						  "--inactive-title-text-foreground-color-inverted-rgb:" + caretITtext_2fg[2] + ";\n" +
 						  "--alert-background-color:" + alert_color + "!important;\n" +
-						  "--alert-background-color-hover:" + alertcolor1 + "!important;\n" +
-						  "--alert-background-color-hover-2:" + alertcolor2 + "!important;\n" +
-						  "--alert-gradient-color:" + alert_gradient[0] + "!important;\n" +
-						  "--alert-gradient-color-hover:" + alert_gradient[1] + "!important;\n" +
-						  "--alert-foreground-color:" + alert_fg[0] + "!important;\n" +
-						  "--alert-foreground-color-hover:" + alert_fg[1] + "!important;\n" +
-						  "--alert-foreground-color-inverted:" + alert_2fg[0] + "!important;\n" +
-						  "--alert-background-color-rgb:" + ColorRGB(alert_color) + "!important;\n" +
-						  "--alert-foreground-color-rgb:" + alert_fg[2] + "!important;\n" +
-						  "--alert-foreground-color-hover-rgb:" + alert_fg[3] + "!important;\n" +
-						  "--alert-foreground-color-inverted-rgb:" + alert_2fg[2] + "!important;\n" +
 						  "--alert-secondary-background-color:" + alert2_color + "!important;\n" +
-						  "--alert-secondary-background-color-hover:" + alert2color1 + "!important;\n" +
-						  "--alert-secondary-background-color-rgb:" + ColorRGB(alert2_color) + "!important;\n" +
 						  "--alert-tertiary-background-color:" + alert3_color + "!important;\n" +
-						  "--alert-tertiary-background-color-hover:" + alert3color1 + "!important;\n" +
-						  "--alert-tertiary-background-color-rgb:" + ColorRGB(alert3_color) + "!important;\n" +
 						  "--alert-quaternary-background-color:" + alert4_color + "!important;\n" +
-						  "--alert-quaternary-background-color-hover:" + alert4color1 + "!important;\n" +
-						  "--alert-quaternary-background-color-rgb:" + ColorRGB(alert4_color) + "!important;\n" +
 						  "--pause-background-color:" + pause_color + "!important;\n" +
-						  "--pause-background-color-hover:" + pausecolor1 + "!important;\n" +
-						  "--pause-background-color-hover-2:" + pausecolor2 + "!important;\n" +
-						  "--pause-gradient-color:" + pause_gradient[0] + "!important;\n" +
-						  "--pause-gradient-color-hover:" + pause_gradient[1] + "!important;\n" +
-						  "--pause-foreground-color:" + pause_fg[0] + "!important;\n" +
-						  "--pause-foreground-color-hover:" + pause_fg[1] + "!important;\n" +
-						  "--pause-foreground-color-inverted:" + pause_2fg[0] + "!important;\n" +
-						  "--pause-background-color-rgb:" + ColorRGB(pause_color) + "!important;\n" +
-						  "--pause-foreground-color-rgb:" + pause_fg[2] + "!important;\n" +
-						  "--pause-foreground-color-hover-rgb:" + pause_fg[3] + "!important;\n" +
-						  "--pause-foreground-color-inverted-rgb:" + pause_2fg[2] + "!important;\n" +
 						  "--pause-secondary-background-color:" + pause2_color + "!important;\n" +
-						  "--pause-secondary-background-color-hover:" + pause2color1 + "!important;\n" +
-						  "--pause-secondary-background-color-rgb:" + ColorRGB(pause2_color) + "!important;\n" +
 						  "--pause-tertiary-background-color:" + pause3_color + "!important;\n" +
-						  "--pause-tertiary-background-color-hover:" + pause3color1 + "!important;\n" +
-						  "--pause-tertiary-background-color-rgb:" + ColorRGB(pause3_color) + "!important;\n" +
 						  "--pause-quaternary-background-color:" + pause4_color + "!important;\n" +
-						  "--pause-quaternary-background-color-hover:" + pause4color1 + "!important;\n" +
-						  "--pause-quaternary-background-color-rgb:" + ColorRGB(pause4_color) + "!important;\n" +
 						  "--warning-background-color:" + warning_color + "!important;\n" +
-						  "--warning-background-color-hover:" + warningcolor1 + "!important;\n" +
-						  "--warning-background-color-hover-2:" + warningcolor2 + "!important;\n" +
-						  "--warning-gradient-color:" + warning_gradient[0] + "!important;\n" +
-						  "--warning-gradient-color-hover:" + warning_gradient[1] + "!important;\n" +
-						  "--warning-foreground-color:" + warning_fg[0] + "!important;\n" +
-						  "--warning-foreground-color-hover:" + warning_fg[1] + "!important;\n" +
-						  "--warning-foreground-color-inverted:" + warning_2fg[0] + "!important;\n" +
-						  "--warning-background-color-rgb:" + ColorRGB(warning_color) + "!important;\n" +
-						  "--warning-foreground-color-rgb:" + warning_fg[2] + "!important;\n" +
-						  "--warning-foreground-color-hover-rgb:" + warning_fg[3] + "!important;\n" +
-						  "--warning-foreground-color-inverted-rgb:" + warning_2fg[2] + "!important;\n" +
 						  "--warning-secondary-background-color:" + warning2_color + "!important;\n" +
-						  "--warning-secondary-background-color-hover:" + warning2color1 + "!important;\n" +
-						  "--warning-secondary-background-color-rgb:" + ColorRGB(warning2_color) + "!important;\n" +
 						  "--warning-tertiary-background-color:" + warning3_color + "!important;\n" +
-						  "--warning-tertiary-background-color-hover:" + warning3color1 + "!important;\n" +
-						  "--warning-tertiary-background-color-rgb:" + ColorRGB(warning3_color) + "!important;\n" +
 						  "--warning-quaternary-background-color:" + warning4_color + "!important;\n" +
-						  "--warning-quaternary-background-color-hover:" + warning4color1 + "!important;\n" +
-						  "--warning-quaternary-background-color-rgb:" + ColorRGB(warning4_color) + "!important;\n" +
 						  "--success-background-color:" + success_color + "!important;\n" +
-						  "--success-background-color-hover:" + successcolor1 + "!important;\n" +
-						  "--success-background-color-hover-2:" + successcolor2 + "!important;\n" +
-						  "--success-gradient-color:" + success_gradient[0] + "!important;\n" +
-						  "--success-gradient-color-hover:" + success_gradient[1] + "!important;\n" +
-						  "--success-foreground-color:" + success_fg[0] + "!important;\n" +
-						  "--success-foreground-color-hover:" + success_fg[1] + "!important;\n" +
-						  "--success-foreground-color-inverted:" + success_2fg[0] + "!important;\n" +
-						  "--success-background-color-rgb:" + ColorRGB(success_color) + "!important;\n" +
-						  "--success-foreground-color-rgb:" + success_fg[2] + "!important;\n" +
-						  "--success-foreground-color-hover-rgb:" + success_fg[3] + "!important;\n" +
-						  "--success-foreground-color-inverted-rgb:" + success_2fg[2] + "!important;\n" +
 						  "--success-secondary-background-color:" + success2_color + "!important;\n" +
-						  "--success-secondary-background-color-hover:" + success2color1 + "!important;\n" +
-						  "--success-secondary-background-color-rgb:" + ColorRGB(success2_color) + "!important;\n" +
 						  "--success-tertiary-background-color:" + success3_color + "!important;\n" +
-						  "--success-tertiary-background-color-hover:" + success3color1 + "!important;\n" +
-						  "--success-tertiary-background-color-rgb:" + ColorRGB(success3_color) + "!important;\n" +
 						  "--success-quaternary-background-color:" + success4_color + "!important;\n" +
-						  "--success-quaternary-background-color-hover:" + success4color1 + "!important;\n" +
-						  "--success-quaternary-background-color-rgb:" + ColorRGB(success4_color) + "!important;\n" +
 						  "--progress-background-color:" + progress_color + "!important;\n" +
-						  "--progress-background-color-hover:" + progresscolor1 + "!important;\n" +
-						  "--progress-background-color-hover-2:" + progresscolor2 + "!important;\n" +
-						  "--progress-gradient-color:" + progress_gradient[0] + "!important;\n" +
-						  "--progress-gradient-color-hover:" + progress_gradient[1] + "!important;\n" +
-						  "--progress-foreground-color:" + progress_fg[0] + "!important;\n" +
-						  "--progress-foreground-color-hover:" + progress_fg[1] + "!important;\n" +
-						  "--progress-foreground-color-inverted:" + progress_2fg[0] + "!important;\n" +
-						  "--progress-background-color-rgb:" + ColorRGB(progress_color) + "!important;\n" +
-						  "--progress-foreground-color-rgb:" + progress_fg[2] + "!important;\n" +
-						  "--progress-foreground-color-hover-rgb:" + progress_fg[3] + "!important;\n" +
-						  "--progress-foreground-color-inverted-rgb:" + progress_2fg[2] + "!important;\n" +
 						  "--progress-secondary-background-color:" + progress2_color + "!important;\n" +
-						  "--progress-secondary-background-color-hover:" + progress2color1 + "!important;\n" +
-						  "--progress-secondary-background-color-rgb:" + ColorRGB(progress2_color) + "!important;\n" +
 						  "--progress-tertiary-background-color:" + progress3_color + "!important;\n" +
-						  "--progress-tertiary-background-color-hover:" + progress3color1 + "!important;\n" +
-						  "--progress-tertiary-background-color-rgb:" + ColorRGB(progress3_color) + "!important;\n" +
 						  "--progress-quaternary-background-color:" + progress4_color + "!important;\n" +
-						  "--progress-quaternary-background-color-hover:" + progress4color1 + "!important;\n" +
-						  "--progress-quaternary-background-color-rgb:" + ColorRGB(progress4_color) + "!important;\n" +
 						  "--message-background-color:" + message_color + "!important;\n" +
-						  "--message-background-color-hover:" + messagecolor1 + "!important;\n" +
-						  "--message-background-color-hover-2:" + messagecolor2 + "!important;\n" +
-						  "--message-gradient-color:" + message_gradient[0] + "!important;\n" +
-						  "--message-gradient-color-hover:" + message_gradient[1] + "!important;\n" +
-						  "--message-foreground-color:" + message_fg[0] + "!important;\n" +
-						  "--message-foreground-color-hover:" + message_fg[1] + "!important;\n" +
-						  "--message-foreground-color-inverted:" + message_2fg[0] + "!important;\n" +
-						  "--message-background-color-rgb:" + ColorRGB(message_color) + "!important;\n" +
-						  "--message-foreground-color-rgb:" + message_fg[2] + "!important;\n" +
-						  "--message-foreground-color-hover-rgb:" + message_fg[3] + "!important;\n" +
-						  "--message-foreground-color-inverted-rgb:" + message_2fg[2] + "!important;\n" +
 						  "--message-secondary-background-color:" + message2_color + "!important;\n" +
-						  "--message-secondary-background-color-hover:" + message2color1 + "!important;\n" +
-						  "--message-secondary-background-color-rgb:" + ColorRGB(message2_color) + "!important;\n" +
 						  "--message-tertiary-background-color:" + message3_color + "!important;\n" +
-						  "--message-tertiary-background-color-hover:" + message3color1 + "!important;\n" +
-						  "--message-tertiary-background-color-rgb:" + ColorRGB(message3_color) + "!important;\n" +
 						  "--message-quaternary-background-color:" + message4_color + "!important;\n" +
-						  "--message-quaternary-background-color-hover:" + message4color1 + "!important;\n" +
-						  "--message-quaternary-background-color-rgb:" + ColorRGB(message4_color) + "!important;\n" +
 // Graphs
 						  "--cpu-graph-background-color:" + g1_color + "!important;\n" +
-						  "--cpu-graph-background-color-hover:" + g1color1 + "!important;\n" +
 						  "--ram-graph-background-color:" + g2_color + "!important;\n" +
-						  "--ram-graph-background-color-hover:" + g2color1 + "!important;\n" +
 						  "--disk-graph-background-color:" + g3_color + "!important;\n" +
-						  "--disk-graph-background-color-hover:" + g3color1 + "!important;\n" +
 						  "--network-graph-background-color:" + g4_color + "!important;\n" +
-						  "--network-graph-background-color-hover:" + g4color1 + "!important;\n" +
 						  "--gpu-graph-background-color:" + g5_color + "!important;\n" +
-						  "--gpu-graph-background-color-hover:" + g5color1 + "!important;\n" +
 						  "--npu-graph-background-color:" + g6_color + "!important;\n" +
-						  "--npu-graph-background-color-hover:" + g6color1 + "!important;\n" +
-// Graphs (RGB)
-						  "--cpu-graph-background-color-rgb:" + ColorRGB(g1_color) + "!important;\n" +
-						  "--cpu-graph-background-color-hover-rgb:" + ColorRGB(g1color1) + "!important;\n" +
-						  "--ram-graph-background-color-rgb:" + ColorRGB(g2_color) + "!important;\n" +
-						  "--ram-graph-background-color-hover-rgb:" + ColorRGB(g2color1) + "!important;\n" +
-						  "--disk-graph-background-color-rgb:" + ColorRGB(g3_color) + "!important;\n" +
-						  "--disk-graph-background-color-hover-rgb:" + ColorRGB(g3color1) + "!important;\n" +
-						  "--network-graph-background-color-rgb:" + ColorRGB(g4_color) + "!important;\n" +
-						  "--network-graph-background-color-hover-rgb:" + ColorRGB(g4color1) + "!important;\n" +
-						  "--gpu-graph-background-color-rgb:" + ColorRGB(g5_color) + "!important;\n" +
-						  "--gpu-graph-background-color-hover-rgb:" + ColorRGB(g5color1) + "!important;\n" +
-						  "--npu-graph-background-color-rgb:" + ColorRGB(g6_color) + "!important;\n" +
-						  "--npu-graph-background-color-hover-rgb:" + ColorRGB(g6color1) + "!important;\n" +
 // Luna Levit
 						  "--mica-background-color:" + micabg[0] + ";\n" +
 // Misc Variables
@@ -3048,14 +2237,10 @@ var invfilters = [
 						 '--custom-rounded-font:' + fon3  + ';\n' +
 						 '--custom-monospace-font:' + fon4  + ';\n' +
 						 '--border-radius:' + brad  + 'px;\n' +
-						 '--window-border-radius:' + (brad * 2)  + 'px;\n' +
-						 '--menu-border-radius:' + (brad * 0.6)  + 'px;\n' +
 						 '--icon-filter:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--icon-filter")  + ';\n' +
 						 '--icon-filter-hover:' + wordfilter2  + ';\n' +
 						 '--icon-filter-duration:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--icon-filter-duration")  + ';\n' +
 						 '--icon-filter-delay:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--icon-filter-delay")  + ';\n' +
-						 '--system-acryllic-opacity:' + aopacity  + ';\n' +
-						 '--system-mica-opacity:' + (1 - aopacity)  + ';\n' +
 						 '--system-generic-color-hue-shift:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-generic-color-hue-shift")  + ';\n' +
 						 '--system-generic-color-saturation:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-generic-color-saturation")  + ';\n' +
 						 '--system-icon-style:' + getComputedStyle(GetActiveThemeConfiguration()).getPropertyValue("--system-icon-style")  + ';\n' +

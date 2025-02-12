@@ -76,6 +76,7 @@
 		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-custom_3"></div>
 		<div class="cpe-theming visualcolors-nocolormanagement dcmmode-custom_4"></div>
 	</div>
+	<div class="filter-overlay"></div>
 	<div tabindex="-1" class="focus-overlay" style="pointer-events:none;"></div>
 	<div id="LunaLevit" style=" pointer-events: none; position: fixed; z-index: -2; width: 100%; height: 100%;">
 		<div class="invertion-on" style=" pointer-events: none; position: fixed; z-index: -2; width: 100%; height: 100%;">
@@ -90,6 +91,7 @@
 		<!--Begin Content-->
 		<div style="z-index:1; position:relative; padding:5px; background-color:var(--canvas-background-color); color:var(--canvas-text-background-color);">
 		  This page describes all components available found in CentralProcessingEnd Language for use
+		<!--Buttons-->
 		  <h2>Buttons</h2>
 		  In CPE, all buttons are made out of round corners and should not contain any gradient at all. We use 3 types. Primary, Secondary and Text
 		  <h3>Primary Buttons</h3>
@@ -97,10 +99,7 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button"><span>Primary Button</span></button>
 			  <button class="cpe-button">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button">
 			  <span>Primary Button</span></a>
@@ -110,36 +109,47 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary">
 			  <span>Secondary Button</span></a>
+		  </div>
+		  <h3>Hybrid Secondary Buttons</h3>
+		  To Inject a secondary button that becomes primary when focused, put the <code>is-primary-when-selected</code> class in it alongside <code>cpe-button</code> and <code>is-secondary</code> classes.
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <h3>Tertiary Buttons</h3>
+		  To Inject a tertiary button, use an element and put the <code>cpe-button</code> and <code>is-tertiary</code> class in it. Tertiary buttons take advantage of Hyperlink Background Color:
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary">
+			  <span>Tertiary Button</span></a>
 		  </div>
 		  <h3>Frameless Buttons</h3>
 		  To Inject a Frameless button, use an element and put the <code>cpe-button</code> and <code>is-text</code> class in it. Frameless buttons take advantage of Anchor Background Color:
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text">
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Unaccented Color</h3>
-		  To Inject a button that takes advantage of Inactive Text and Canvas Text Background Colors instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-unaccented</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Inactive Text and Canvas Text Background Colors instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-unaccented</code> classes in it. Opitionally, the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-unaccented"><span>Primary Button</span></button>
 			  <button class="cpe-button is-unaccented">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-unaccented">
 			  <span>Primary Button</span></a>
@@ -147,34 +157,41 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary is-unaccented"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary is-unaccented">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-unaccented">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-unaccented is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-unaccented is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-unaccented is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary is-unaccented"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary is-unaccented">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary is-unaccented">
+			  <span>Tertiary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text is-unaccented"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text is-unaccented">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text is-unaccented">
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Alternate Color</h3>
-		  To Inject a button that takes advantage of Active Title and Active Text Background Colors instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-alternate</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Active Title and Active Text Background Colors instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-alternate</code> classes in it. Opitionally, the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-alternate"><span>Primary Button</span></button>
 			  <button class="cpe-button is-alternate">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-alternate">
 			  <span>Primary Button</span></a>
@@ -182,34 +199,41 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary is-alternate"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary is-alternate">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-alternate">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-alternate is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-alternate is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-alternate is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary is-alternate"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary is-alternate">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary is-alternate">
+			  <span>Tertiary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text is-alternate"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text is-alternate">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text is-alternate">
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Alert Color</h3>
-		  To Inject a button that takes advantage of Alert Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-alert-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Alert Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-alert-color</code> classes in it. Opitionally, the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-alert-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-alert-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-alert-color">
 			  <span>Primary Button</span></a>
@@ -217,34 +241,41 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary is-alert-color"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary is-alert-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-alert-color">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-alert-color is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-alert-color is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-alert-color is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary is-alert-color"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary is-alert-color">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary is-alert-color">
+			  <span>Tertiary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text is-alert-color"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text is-alert-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text is-alert-color">
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Pause Color</h3>
-		  To Inject a button that takes advantage of Pause Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-pause-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Pause Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-pause-color</code> classes in it. Opitionally, the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-pause-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-pause-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-pause-color">
 			  <span>Primary Button</span></a>
@@ -252,34 +283,41 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary is-pause-color"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary is-pause-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-pause-color">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-pause-color is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-pause-color is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-pause-color is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary is-pause-color"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary is-pause-color">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary is-pause-color">
+			  <span>Tertiary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text is-pause-color"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text is-pause-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text is-pause-color">
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Warning Color</h3>
-		  To Inject a button that takes advantage of Warning Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-warning-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Warning Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-warning-color</code> classes in it. Opitionally, the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-warning-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-warning-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-warning-color">
 			  <span>Primary Button</span></a>
@@ -287,34 +325,42 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary is-warning-color"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary is-warning-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-warning-color">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-warning-color is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-warning-color is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-warning-color is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary is-warning-color"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary is-warning-color">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary is-warning-color">
+			  <span>Tertiary Button</span></a>
+		  </div>
+
+		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text is-warning-color"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text is-warning-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text is-warning-color">
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Success Color</h3>
-		  To Inject a button that takes advantage of Success Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-success-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Success Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-success-color</code> classes in it. Opitionally, the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-success-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-success-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-success-color">
 			  <span>Primary Button</span></a>
@@ -322,34 +368,41 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary is-success-color"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary is-success-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-success-color">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-success-color is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-success-color is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-success-color is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary is-success-color"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary is-success-color">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary is-success-color">
+			  <span>Tertiary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text is-success-color"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text is-success-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text is-success-color">
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Progress Color</h3>
-		  To Inject a button that takes advantage of Progress Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-progress-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Progress Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-progress-color</code> classes in it. Opitionally, the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-progress-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-progress-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-progress-color">
 			  <span>Primary Button</span></a>
@@ -357,34 +410,41 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary is-progress-color"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary is-progress-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-progress-color">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-progress-color is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-progress-color is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-progress-color is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary is-progress-color"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary is-progress-color">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary is-progress-color">
+			  <span>Tertiary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text is-progress-color"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text is-progress-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text is-progress-color">
 			  <span>Frameless Button</span></a>
 		  </div>
 		  <h3>Message Color</h3>
-		  To Inject a button that takes advantage of Message Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-message-color</code> classes in it. Opitionally, the <code>is-secondary</code> or <code>is-text</code> classes may be added as well.
+		  To Inject a button that takes advantage of Message Background Color instead of Highlight and Hyperlink, use an element and put the <code>cpe-button</code> and <code>is-message-color</code> classes in it. Opitionally, the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> classes may be added as well.
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-message-color"><span>Primary Button</span></button>
 			  <button class="cpe-button is-message-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Primary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-message-color">
 			  <span>Primary Button</span></a>
@@ -392,31 +452,280 @@
 		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-secondary is-message-color"><span>Secondary Button</span></button>
 			  <button class="cpe-button is-secondary is-message-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Secondary Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-message-color">
 			  <span>Secondary Button</span></a>
 		  </div>
 		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-secondary is-message-color is-primary-when-selected"><span>Hybrid Secondary Button</span></button>
+			  <button class="cpe-button is-secondary is-message-color is-primary-when-selected">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Hybrid Secondary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-secondary is-message-color is-primary-when-selected">
+			  <span>Hybrid Secondary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
+			  <button class="cpe-button is-tertiary is-message-color"><span>Tertiary Button</span></button>
+			  <button class="cpe-button is-tertiary is-message-color">
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
+			  <span>Tertiary Button</span></button>
+			  <a href="https://github.com/AWikia" class="cpe-button is-tertiary is-message-color">
+			  <span>Tertiary Button</span></a>
+		  </div>
+		  <div style="margin:10px 0 0;">
 			  <button class="cpe-button is-text is-message-color"><span>Frameless Button</span></button>
 			  <button class="cpe-button is-text is-message-color">
-			  <svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+			  <span class="cpe-icon cpe-icon-small material-icons">star</span>
 			  <span>Frameless Button</span></button>
 			  <a href="https://github.com/AWikia" class="cpe-button is-text is-message-color">
 			  <span>Frameless Button</span></a>
 		  </div>
+		  <h3>Squared Buttons</h3>
+		  To Inject a button that has a square size, use an element and put the <code>cpe-button</code> and <code>is-square</code> classes in it. Opitionally, other classes like the <code>is-secondary</code>, <code>is-tertiary</code> or <code>is-text</code> ones may be added as well.
+		  
+		  <div style="margin:10px 0 0;">
+						<button class="cpe-button is-square">
+				<span class="cpe-icon material-icons">
+					star
+				</span>
+					</button>
+					<button class="cpe-button is-square is-unaccented">
+				<span class="cpe-icon material-icons">
+					edit
+				</span>	
+					</button>
+					<button class="cpe-button is-square is-alternate">
+				<span class="cpe-icon material-icons">
+					description
+				</span>
+					</button>
+					<button class="cpe-button is-square is-alert-color">
+				<span class="cpe-icon material-icons">
+					report
+				</span>
+					</button>
+					<button class="cpe-button is-square is-pause-color">
+				<span class="cpe-icon material-icons">
+					pause
+				</span>
+					</button>
+					<button class="cpe-button is-square is-warning-color">
+				<span class="cpe-icon material-icons">
+					report_problem
+				</span>
+					</button>
+					<button class="cpe-button is-square is-success-color">
+				<span class="cpe-icon material-icons">
+					done
+				</span>
+					</button>
+					<button class="cpe-button is-square is-progress-color">
+				<span class="cpe-icon material-icons">
+					pending
+				</span>
+					</button>
+					<button class="cpe-button is-square is-message-color">
+				<span class="cpe-icon material-icons">
+					info
+				</span>
+					</button>
+		  </div>
+		  <div style="margin:10px 0 0;">
+						<button class="cpe-button is-secondary is-square">
+				<span class="cpe-icon material-icons">
+					star
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-unaccented">
+				<span class="cpe-icon material-icons">
+					edit
+				</span>	
+					</button>
+					<button class="cpe-button is-secondary is-square is-alternate">
+				<span class="cpe-icon material-icons">
+					description
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-alert-color">
+				<span class="cpe-icon material-icons">
+					report
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-pause-color">
+				<span class="cpe-icon material-icons">
+					pause
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-warning-color">
+				<span class="cpe-icon material-icons">
+					report_problem
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-success-color">
+				<span class="cpe-icon material-icons">
+					done
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-progress-color">
+				<span class="cpe-icon material-icons">
+					pending
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-message-color">
+				<span class="cpe-icon material-icons">
+					info
+				</span>
+					</button>
+		  </div>
+		  <div style="margin:10px 0 0;">
+						<button class="cpe-button is-secondary is-square is-primary-when-selected">
+				<span class="cpe-icon material-icons">
+					star
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-primary-when-selected is-unaccented">
+				<span class="cpe-icon material-icons">
+					edit
+				</span>	
+					</button>
+					<button class="cpe-button is-secondary is-square is-primary-when-selected is-alternate">
+				<span class="cpe-icon material-icons">
+					description
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-primary-when-selected is-alert-color">
+				<span class="cpe-icon material-icons">
+					report
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-primary-when-selected is-pause-color">
+				<span class="cpe-icon material-icons">
+					pause
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-primary-when-selected is-warning-color">
+				<span class="cpe-icon material-icons">
+					report_problem
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-primary-when-selected is-success-color">
+				<span class="cpe-icon material-icons">
+					done
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-primary-when-selected is-progress-color">
+				<span class="cpe-icon material-icons">
+					pending
+				</span>
+					</button>
+					<button class="cpe-button is-secondary is-square is-primary-when-selected is-message-color">
+				<span class="cpe-icon material-icons">
+					info
+				</span>
+					</button>
+		  </div>
+		  <div style="margin:10px 0 0;">
+						<button class="cpe-button is-tertiary is-square">
+				<span class="cpe-icon material-icons">
+					star
+				</span>
+					</button>
+					<button class="cpe-button is-tertiary is-square is-unaccented">
+				<span class="cpe-icon material-icons">
+					edit
+				</span>	
+					</button>
+					<button class="cpe-button is-tertiary is-square is-alternate">
+				<span class="cpe-icon material-icons">
+					description
+				</span>
+					</button>
+					<button class="cpe-button is-tertiary is-square is-alert-color">
+				<span class="cpe-icon material-icons">
+					report
+				</span>
+					</button>
+					<button class="cpe-button is-tertiary is-square is-pause-color">
+				<span class="cpe-icon material-icons">
+					pause
+				</span>
+					</button>
+					<button class="cpe-button is-tertiary is-square is-warning-color">
+				<span class="cpe-icon material-icons">
+					report_problem
+				</span>
+					</button>
+					<button class="cpe-button is-tertiary is-square is-success-color">
+				<span class="cpe-icon material-icons">
+					done
+				</span>
+					</button>
+					<button class="cpe-button is-tertiary is-square is-progress-color">
+				<span class="cpe-icon material-icons">
+					pending
+				</span>
+					</button>
+					<button class="cpe-button is-tertiary is-square is-message-color">
+				<span class="cpe-icon material-icons">
+					info
+				</span>
+					</button>
+		  </div>
+		  <div style="margin:10px 0 0;">
+						<button class="cpe-button is-text is-square">
+				<span class="cpe-icon material-icons">
+					star
+				</span>
+					</button>
+					<button class="cpe-button is-text is-square is-unaccented">
+				<span class="cpe-icon material-icons">
+					edit
+				</span>	
+					</button>
+					<button class="cpe-button is-text is-square is-alternate">
+				<span class="cpe-icon material-icons">
+					description
+				</span>
+					</button>
+					<button class="cpe-button is-text is-square is-alert-color">
+				<span class="cpe-icon material-icons">
+					report
+				</span>
+					</button>
+					<button class="cpe-button is-text is-square is-pause-color">
+				<span class="cpe-icon material-icons">
+					pause
+				</span>
+					</button>
+					<button class="cpe-button is-text is-square is-warning-color">
+				<span class="cpe-icon material-icons">
+					report_problem
+				</span>
+					</button>
+					<button class="cpe-button is-text is-square is-success-color">
+				<span class="cpe-icon material-icons">
+					done
+				</span>
+					</button>
+					<button class="cpe-button is-text is-square is-progress-color">
+				<span class="cpe-icon material-icons">
+					pending
+				</span>
+					</button>
+					<button class="cpe-button is-text is-square is-message-color">
+				<span class="cpe-icon material-icons">
+					info
+				</span>
+					</button>
+		  </div>
+		<!--Dropdowns-->
 		<h2>Dropdowns</h2>
-		In CPE, all dropdowns are hoverable and may contain shadows (Always with Shadow on Global Navigation)
+		In CPE, all dropdowns are clickable (Hoverable for nested levels) and may contain shadows (Always with Shadow on Global Navigation)
 		<h3>Regular</h3>
-		You use a div with <code>cpe-dropdown</code> any container you want, preferably <code>cpe-button</code> with a dropdown chevron but other containers should work as well. Then use <code>cpe-dropdown__content</code> class on the div inside the dropdown container. You use a ul with the class <code>cpe-list</code>, preferably with the <code>is-linked</code> as well. Then you add li and an anchor tag
+		You use a div with <code>cpe-dropdown</code> any container you want, preferably <code>cpe-button</code> with a dropdown chevron but other containers should work as well. Then use <code>cpe-dropdown__content</code> class on the div inside the dropdown container. You use a ul with the class <code>cpe-list</code>, preferably with the <code>is-linked</code> as well. Then you add li and an anchor tag. By putting the <code>is-flipped</code> class to the <code>cpe-dropdown</code> element, dropdown will open from the opposite direction as seen in some examples.
 		<div style="margin:10px 0 0;">
-			<div class="cpe-dropdown">
+			<div class="cpe-dropdown" tabindex="-1">
 				<div class="cpe-button"><span>Dropdown</span> 
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -465,7 +774,7 @@
 		<h3>No Scrolling</h3>
 			To force dropdown to appear all links at once, you may add inside the <code>cpe-dropdown__content</code> class the <code>is-not-scrollable</code> class.
 		<div style="margin:10px 0 0;">
-			<div class="cpe-dropdown">
+			<div class="cpe-dropdown" tabindex="-1">
 				<div class="cpe-button"><span>Non-Scrolling Dropdown</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -514,7 +823,7 @@
 		<h3>Left and Right Aligments</h3>
 		To force dropdown to align to the left, add the <code>is-left-aligned</code> to the dropdown content class. The opposite can happen by using <code>is-right-aligned</code> class
 		<div style="margin:10px 0 0;">
-			<div class="cpe-dropdown">
+			<div class="cpe-dropdown" tabindex="-1">
 				<div class="cpe-button"><span>Left Aligned Dropdown</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -559,7 +868,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="cpe-dropdown">
+			<div class="cpe-dropdown" tabindex="-1">
 				<div class="cpe-button is-unaccented"><span>Right Aligned Dropdown</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -606,10 +915,106 @@
 			</div>
 
 		</div>
+		<h3>Landscape Menus</h3>
+		You can set the <code>cpe-orient</code> attribute to <code>land</code> in <code>cpe-dropdown</code> element to make dropdown open from the right. If that dropdown has the <code>is-flipped</code> class as well, it will open from the left
+		<div style="margin:10px 0 0;">
+			<div class="cpe-dropdown" cpe-orient="land" tabindex="-1">
+				<div class="cpe-button"><span>Landscape Dropdown</span> 
+				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
+					arrow_drop_down
+				</span>
+				</div>
+				<div class="cpe-dropdown__content">
+					<ul class="cpe-list is-linked">
+						<li>
+							<a>Item A</a>
+						</li>
+						<li>
+							<a>Item B</a>
+						</li>
+						<li>
+							<a>Item C</a>
+						</li>
+						<li>
+							<a>Item D</a>
+						</li>
+						<li>
+							<a>Item E</a>
+						</li>
+						<li>
+							<a>Item F</a>
+						</li>
+						<li>
+							<a>Item G</a>
+						</li>
+						<li>
+							<a>Item H</a>
+						</li>
+						<li>
+							<a>Item I</a>
+						</li>
+						<li>
+							<a>Item J</a>
+						</li>
+						<li>
+							<a>Item K</a>
+						</li>
+
+					</ul>
+				</div>
+			</div>
+
+			<div class="cpe-dropdown is-flipped" cpe-orient="land" tabindex="-1">
+				<div class="cpe-button is-unaccented"><span>Flipped Landscape Dropdown</span> 
+				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
+					arrow_drop_down
+				</span>
+				</div>
+				<div class="cpe-dropdown__content">
+					<ul class="cpe-list is-linked">
+						<li>
+							<a>Item A</a>
+						</li>
+						<li>
+							<a>Item B</a>
+						</li>
+						<li>
+							<a>Item C</a>
+						</li>
+						<li>
+							<a>Item D</a>
+						</li>
+						<li>
+							<a>Item E</a>
+						</li>
+						<li>
+							<a>Item F</a>
+						</li>
+						<li>
+							<a>Item G</a>
+						</li>
+						<li>
+							<a>Item H</a>
+						</li>
+						<li>
+							<a>Item I</a>
+						</li>
+						<li>
+							<a>Item J</a>
+						</li>
+						<li>
+							<a>Item K</a>
+						</li>
+
+					</ul>
+				</div>
+			</div>
+
+		</div>
 		<h3>No Chevron Dropdown</h3>
 		You can add the <code>cpe-no-chevron</code> class to <code>cpe-dropdown</code> to make dropdown chevrons invisible
 		<div style="margin:10px 0 0;">
-			<div class="cpe-dropdown cpe-no-chevron">
+			<div class="cpe-dropdown cpe-no-chevron" tabindex="-1">
 				<div class="cpe-button"><span>Non-Chevron present Dropdown</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -659,7 +1064,7 @@
 		You can place extra shadow without any border by adding either <code>has-shadow</code> or <code>has-dark-shadow</code> class to <code>cpe-dropdown</code> class
 
 		<div style="margin:10px 0 0;">
-			<div class="cpe-dropdown has-shadow">
+			<div class="cpe-dropdown has-shadow" tabindex="-1">
 				<div class="cpe-button"><span>Dropdown with Shadow</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -704,7 +1109,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="cpe-dropdown has-dark-shadow">
+			<div class="cpe-dropdown has-dark-shadow" tabindex="-1">
 				<div class="cpe-button is-unaccented"><span>Dropdown with Thick Shadow</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -750,10 +1155,10 @@
 				</div>
 			</div>
 		</div>
-		<h3>2 levels</h3>
-		Dropdowns may have 2-levels. Inside a dropdown-link, you must use the <code>cpe-dropdown-level-2</code>. And another div with the class <code>cpe-dropdown-level-2__content</code>, then following the same procedures as the level 1 version minus this one. Note that the 2nd level menu is aligned to the top of 1st level dropdown by default, but it doesn"t work for shorter list so we need to add class <code>is-sticked-to-parent</code> to elements that contains shorter level 2 menu. Note that scrolling version and thick shadows are not recommended.
+		<h3>2+ levels</h3>
+		Dropdowns may have 2 or more levels. Inside a dropdown-link, you must use the <code>cpe-dropdown-level-nested</code>. And another div with the class <code>cpe-dropdown-level-nested__content</code>, then following the same procedures as the level 1 version minus this one. Note that the 2nd level menu is aligned to the top of 1st level dropdown by default, but it doesn"t work for shorter list so we need to add class <code>is-sticked-to-parent</code> to elements that contains shorter level 2 menu. Note that scrolling version and thick shadows are not recommended.
 		<div style="margin:10px 0 0;">
-			<div class="cpe-dropdown">
+			<div class="cpe-dropdown is-flipped" tabindex="-1">
 				<div class="cpe-button"><span>Advanced Dropdown</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -761,13 +1166,13 @@
 				</div>
 				<div class="cpe-dropdown__content is-not-scrollable">
 					<ul class="cpe-list is-linked">
-						<li class="cpe-dropdown-level-2">
+						<li class="cpe-dropdown-level-nested">
 							<a><span>Item A</span>
 								<span class="cpe-icon cpe-icon-tiny cpe-icon-large cpe-dropdown-chevron material-icons">
 									expand_more
 								</span>
 							</a>
-							<div class="cpe-dropdown-level-2__content">
+							<div class="cpe-dropdown-level-nested__content">
 								<ul class="cpe-list is-linked">
 									<li>
 										<a>Item B</a>
@@ -790,13 +1195,13 @@
 						<li>
 							<a>Item G</a>
 						</li>
-						<li class="cpe-dropdown-level-2 is-sticked-to-parent">
+						<li class="cpe-dropdown-level-nested is-sticked-to-parent">
 							<a><span>Item H</span>
 								<span class="cpe-icon cpe-icon-tiny cpe-icon-large cpe-dropdown-chevron material-icons">
 									expand_more
 								</span>
 							</a>
-							<div class="cpe-dropdown-level-2__content">
+							<div class="cpe-dropdown-level-nested__content">
 								<ul class="cpe-list is-linked">
 									<li>
 										<a>Item I</a>
@@ -818,7 +1223,7 @@
 		<h3>Buttons in Menu</h3>
 		It is also possible to have buttons inside the dropdown (Usually one as the last one)
 		<div style="margin:10px 0 0;">
-			<div class="cpe-dropdown">
+			<div class="cpe-dropdown is-flipped" tabindex="-1">
 				<div class="cpe-button"><span>Dropdown with Button</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -846,7 +1251,7 @@
 				</div>
 			</div>
 
-			<div class="cpe-dropdown">
+			<div class="cpe-dropdown is-flipped" tabindex="-1">
 				<div class="cpe-button is-unaccented"><span>Dropdown with Primary Button</span>
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -874,8 +1279,9 @@
 				</div>
 			</div>
 		</div>
+	<!--Button Group-->
 	<h2>Button Group</h2>
-	You can make a group of buttons as well. You can mix colors like having altenate and regular button color but not types (Having text and primary button is prohibited althought button preview in theme designer does it)
+	You can make a group of buttons as well. You can mix colors like having altenate and regular button color but not types (Having text and primary button is not recommended althought button preview in theme designer does it)
 		<h3>Regular</h3>
 		You add <code>cpe-button-group</code> and series of <code>cpe-button</code>
 			<div style="margin:10px 0 0">
@@ -982,6 +1388,323 @@
 					</button>
 				</div>
 			</div>
+		<h3>Multiple Button Groups</h3>
+		It is also possible to have nested button groups. Just wrap all <code>cpe-button-group</code> elements into a <code>cpe-button-groups</code> element as seen in the following example
+			<div style="margin:10px 0 0">
+				<div class="cpe-button-groups">
+					<div class="cpe-button-group">
+						<button class="cpe-button">
+							1
+						</button>
+						<button class="cpe-button">
+							2
+						</button>
+						<button class="cpe-button">
+							3
+						</button>
+						<button class="cpe-button">
+							4
+						</button>
+						<button class="cpe-button">
+							5
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary">
+							6
+						</button>
+						<button class="cpe-button is-secondary">
+							7
+						</button>
+						<button class="cpe-button is-secondary">
+							8
+						</button>
+						<button class="cpe-button is-secondary">
+							9
+						</button>
+						<button class="cpe-button is-secondary">
+							10
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-unaccented">
+							11
+						</button>
+						<button class="cpe-button is-unaccented">
+							12
+						</button>
+						<button class="cpe-button is-unaccented">
+							13
+						</button>
+						<button class="cpe-button is-unaccented">
+							14
+						</button>
+						<button class="cpe-button is-unaccented">
+							15
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary is-unaccented">
+							16
+						</button>
+						<button class="cpe-button is-secondary is-unaccented">
+							17
+						</button>
+						<button class="cpe-button is-secondary is-unaccented">
+							18
+						</button>
+						<button class="cpe-button is-secondary is-unaccented">
+							19
+						</button>
+						<button class="cpe-button is-secondary is-unaccented">
+							20
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-alternate">
+							21
+						</button>
+						<button class="cpe-button is-alternate">
+							22
+						</button>
+						<button class="cpe-button is-alternate">
+							23
+						</button>
+						<button class="cpe-button is-alternate">
+							24
+						</button>
+						<button class="cpe-button is-alternate">
+							25
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary is-alternate">
+							26
+						</button>
+						<button class="cpe-button is-secondary is-alternate">
+							27
+						</button>
+						<button class="cpe-button is-secondary is-alternate">
+							28
+						</button>
+						<button class="cpe-button is-secondary is-alternate">
+							29
+						</button>
+						<button class="cpe-button is-secondary is-alternate">
+							30
+						</button>
+					</div>
+				</div>
+				<div class="cpe-button-groups">
+					<div class="cpe-button-group">
+						<button class="cpe-button is-alert-color">
+							31
+						</button>
+						<button class="cpe-button is-alert-color">
+							32
+						</button>
+						<button class="cpe-button is-alert-color">
+							33
+						</button>
+						<button class="cpe-button is-alert-color">
+							34
+						</button>
+						<button class="cpe-button is-alert-color">
+							35
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-pause-color">
+							36
+						</button>
+						<button class="cpe-button is-pause-color">
+							37
+						</button>
+						<button class="cpe-button is-pause-color">
+							38
+						</button>
+						<button class="cpe-button is-pause-color">
+							39
+						</button>
+						<button class="cpe-button is-pause-color">
+							40
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-warning-color">
+							41
+						</button>
+						<button class="cpe-button is-warning-color">
+							42
+						</button>
+						<button class="cpe-button is-warning-color">
+							43
+						</button>
+						<button class="cpe-button is-warning-color">
+							44
+						</button>
+						<button class="cpe-button is-warning-color">
+							45
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-success-color">
+							46
+						</button>
+						<button class="cpe-button is-success-color">
+							47
+						</button>
+						<button class="cpe-button is-success-color">
+							48
+						</button>
+						<button class="cpe-button is-success-color">
+							49
+						</button>
+						<button class="cpe-button is-success-color">
+							50
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-progress-color">
+							51
+						</button>
+						<button class="cpe-button is-progress-color">
+							52
+						</button>
+						<button class="cpe-button is-progress-color">
+							53
+						</button>
+						<button class="cpe-button is-progress-color">
+							54
+						</button>
+						<button class="cpe-button is-progress-color">
+							55
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-message-color">
+							56
+						</button>
+						<button class="cpe-button is-message-color">
+							57
+						</button>
+						<button class="cpe-button is-message-color">
+							58
+						</button>
+						<button class="cpe-button is-message-color">
+							59
+						</button>
+						<button class="cpe-button is-message-color">
+							60
+						</button>
+					</div>
+				</div>
+				<div class="cpe-button-groups">
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary is-alert-color">
+							61
+						</button>
+						<button class="cpe-button is-secondary is-alert-color">
+							62
+						</button>
+						<button class="cpe-button is-secondary is-alert-color">
+							63
+						</button>
+						<button class="cpe-button is-secondary is-alert-color">
+							64
+						</button>
+						<button class="cpe-button is-secondary is-alert-color">
+							65
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary is-pause-color">
+							66
+						</button>
+						<button class="cpe-button is-secondary is-pause-color">
+							67
+						</button>
+						<button class="cpe-button is-secondary is-pause-color">
+							68
+						</button>
+						<button class="cpe-button is-secondary is-pause-color">
+							69
+						</button>
+						<button class="cpe-button is-secondary is-pause-color">
+							70
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary is-warning-color">
+							71
+						</button>
+						<button class="cpe-button is-secondary is-warning-color">
+							72
+						</button>
+						<button class="cpe-button is-secondary is-warning-color">
+							73
+						</button>
+						<button class="cpe-button is-secondary is-warning-color">
+							74
+						</button>
+						<button class="cpe-button is-secondary is-warning-color">
+							75
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary is-success-color">
+							76
+						</button>
+						<button class="cpe-button is-secondary is-success-color">
+							77
+						</button>
+						<button class="cpe-button is-secondary is-success-color">
+							78
+						</button>
+						<button class="cpe-button is-secondary is-success-color">
+							79
+						</button>
+						<button class="cpe-button is-secondary is-success-color">
+							80
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary is-progress-color">
+							81
+						</button>
+						<button class="cpe-button is-secondary is-progress-color">
+							82
+						</button>
+						<button class="cpe-button is-secondary is-progress-color">
+							83
+						</button>
+						<button class="cpe-button is-secondary is-progress-color">
+							84
+						</button>
+						<button class="cpe-button is-secondary is-progress-color">
+							85
+						</button>
+					</div>
+					<div class="cpe-button-group">
+						<button class="cpe-button is-secondary is-message-color">
+							86
+						</button>
+						<button class="cpe-button is-secondary is-message-color">
+							87
+						</button>
+						<button class="cpe-button is-secondary is-message-color">
+							88
+						</button>
+						<button class="cpe-button is-secondary is-message-color">
+							89
+						</button>
+						<button class="cpe-button is-secondary is-message-color">
+							90
+						</button>
+					</div>
+				</div>
+			</div>
+
 		<h3>Button Group with Dropdown</h3>
 			It is also possible to do button group with a dropdown
 			<div style="margin:10px 0 0">
@@ -992,7 +1715,7 @@
 				</span>			
 					<span>Edit</span>
 					</a>
-				  <div class="cpe-dropdown">				
+				  <div class="cpe-dropdown" tabindex="-1">				
 					<div class="cpe-button is-squished cpe-dropdown__toggle">	
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -1013,7 +1736,7 @@
 				</span>			
 					<span>Edit</span>
 					</a>
-				  <div class="cpe-dropdown">				
+				  <div class="cpe-dropdown" tabindex="-1">				
 					<div class="cpe-button is-unaccented is-squished cpe-dropdown__toggle">	
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -1034,7 +1757,7 @@
 				</span>			
 					<span>Edit</span>
 					</a>
-				  <div class="cpe-dropdown">				
+				  <div class="cpe-dropdown" tabindex="-1">				
 					<div class="cpe-button is-alternate is-squished cpe-dropdown__toggle">	
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -1055,7 +1778,7 @@
 				</span>				
 					<span>Edit</span>
 					</a>
-				  <div class="cpe-dropdown">				
+				  <div class="cpe-dropdown" tabindex="-1">				
 					<div class="cpe-button is-secondary is-squished cpe-dropdown__toggle">	
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -1076,7 +1799,7 @@
 				</span>				
 					<span>Edit</span>
 					</a>
-				  <div class="cpe-dropdown">				
+				  <div class="cpe-dropdown" tabindex="-1">				
 					<div class="cpe-button is-secondary is-unaccented is-squished cpe-dropdown__toggle">	
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -1097,7 +1820,7 @@
 				</span>			
 					<span>Edit</span>
 					</a>
-				  <div class="cpe-dropdown">				
+				  <div class="cpe-dropdown" tabindex="-1">				
 					<div class="cpe-button is-secondary is-alternate is-squished cpe-dropdown__toggle">	
 				<span class="cpe-icon cpe-icon-large cpe-icon-tiny cpe-dropdown__toggle-chevron material-icons">
 					arrow_drop_down
@@ -1112,13 +1835,73 @@
 				  </div>		
 				</div>
 			</div>
+		<h3>Button Group with Input Boxes</h3>
+			It is also possible to do button group with an input box
+			<div style="margin:10px 0 0">
+				<div class="cpe-button-group">
+				  <input class="cpe-input" placeholder="Search...">
+				  <button class="is-squished cpe-button">				
+				<span class="cpe-icon cpe-icon-small material-icons">
+					search
+				</span>			
+					</button>
+				</div>
+				<div class="cpe-button-group">
+				  <input class="cpe-input is-unaccented" placeholder="Search...">
+				  <button class="is-squished is-unaccented cpe-button">				
+				<span class="cpe-icon cpe-icon-small material-icons">
+					search
+				</span>			
+					</button>
+				</div>
+				<div class="cpe-button-group">
+				  <input class="cpe-input is-alternate" placeholder="Search...">
+				  <button class="is-squished is-alternate cpe-button">				
+				<span class="cpe-icon cpe-icon-small material-icons">
+					search
+				</span>			
+					</button>
+				</div>
+
+				<div class="cpe-button-group">
+				  <input class="cpe-input is-secondary" placeholder="Search...">
+				  <button class="is-squished cpe-button is-secondary">				
+				<span class="cpe-icon cpe-icon-small material-icons">
+					search
+				</span>			
+					</button>
+				</div>
+				<div class="cpe-button-group">
+				  <input class="cpe-input is-unaccented is-secondary" placeholder="Search...">
+				  <button class="is-squished is-unaccented cpe-button is-secondary">				
+				<span class="cpe-icon cpe-icon-small material-icons">
+					search
+				</span>			
+					</button>
+				</div>
+				<div class="cpe-button-group">
+				  <input class="cpe-input is-alternate is-secondary" placeholder="Search...">
+				  <button class="is-squished is-alternate is-secondary cpe-button">				
+				<span class="cpe-icon cpe-icon-small material-icons">
+					search
+				</span>			
+					</button>
+				</div>
+
+			</div>
+			<!--Tabs-->
 			<h2>Tabs</h2>
 			Tabs can be made by using a ul element of <code>cpe-tabs</code>. Use a li with a class of <code>cpe-tabs__tab</code> which a <code>is-alternate</code> can be used as well for alternation of color. Then inside it, use an anchor or a div with the class <code>cpe-tabs__tab-label</code>
 			<h3>Regular</h3>
-			Following the above procedure will produce these two tabs
+			Following the above procedure will produce these three tabs
 			<div style="margin:10px 0 0">
 				<ul class="cpe-tabs">
 					<li class="cpe-tabs__tab">
+						<div class="cpe-tabs__tab-label">
+							<span>Simple Tab</span>
+						</div>
+					</li>
+					<li class="cpe-tabs__tab is-unaccented">
 						<div class="cpe-tabs__tab-label">
 							<span>Simple Tab</span>
 						</div>
@@ -1135,7 +1918,7 @@
 			<div style="margin:10px 0 0">
 				<ul class="cpe-tabs">
 					<li class="cpe-tabs__tab">
-						<div class="cpe-dropdown">
+						<div class="cpe-dropdown" tabindex="-1">
 							<div class="cpe-tabs__tab-label">
 								<span>Dropdown Tab</span>
 							</div>
@@ -1179,8 +1962,53 @@
 							</div>
 						</div>
 					</li>
+					<li class="cpe-tabs__tab is-unaccented">
+						<div class="cpe-dropdown" tabindex="-1">
+							<div class="cpe-tabs__tab-label">
+								<span>Dropdown Tab</span>
+							</div>
+							<div class="cpe-dropdown__content">
+								<ul class="cpe-list is-linked">
+									<li>
+										<a>Item A</a>
+									</li>
+									<li>
+										<a>Item B</a>
+									</li>
+									<li>
+										<a>Item C</a>
+									</li>
+									<li>
+										<a>Item D</a>
+									</li>
+									<li>
+										<a>Item E</a>
+									</li>
+									<li>
+										<a>Item F</a>
+									</li>
+									<li>
+										<a>Item G</a>
+									</li>
+									<li>
+										<a>Item H</a>
+									</li>
+									<li>
+										<a>Item I</a>
+									</li>
+									<li>
+										<a>Item J</a>
+									</li>
+									<li>
+										<a>Item K</a>
+									</li>
+
+								</ul>
+							</div>
+						</div>
+					</li>
 					<li class="cpe-tabs__tab is-alternate">
-						<div class="cpe-dropdown">
+						<div class="cpe-dropdown" tabindex="-1">
 							<div class="cpe-tabs__tab-label">
 								<span>Dropdown Tab</span>
 							</div>
@@ -1235,6 +2063,11 @@
 							<span>Current Tab</span>
 						</div>
 					</li>
+					<li class="cpe-tabs__tab is-unaccented is-current">
+						<div class="cpe-tabs__tab-label">
+							<span>Current Tab</span>
+						</div>
+					</li>
 					<li class="cpe-tabs__tab is-alternate is-current">
 						<div class="cpe-tabs__tab-label">
 							<span>Current Tab</span>
@@ -1252,6 +2085,11 @@
 							<a href="https://github.com/Awikia">Linked Tab</a>
 						</div>
 					</li>
+					<li class="cpe-tabs__tab is-unaccented">
+						<div class="cpe-tabs__tab-label">
+							<a href="https://github.com/Awikia">Linked Tab</a>
+						</div>
+					</li>
 					<li class="cpe-tabs__tab is-alternate">
 						<div class="cpe-tabs__tab-label">
 							<a href="https://github.com/Awikia">Linked Tab</a>
@@ -1259,14 +2097,14 @@
 					</li>
 				</ul>
 			</div>
+		<!--Floating buttons-->
 		<h2>Floating buttons</h2>
 		You can make floating buttons with the use of <code>cpe-floating-button</code>. Only one icon is allowed
 		<div style="margin:10px 0 0">
 			<button class="cpe-floating-button">
-			<svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-		  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-		</svg>
+				<span class="cpe-icon material-icons">
+					star
+				</span>
 		</button>
 	</div>
 		<h3>Button Group</h3>
@@ -1275,44 +2113,108 @@
 				<div style="margin:10px 0 0">
 					<div class="cpe-floating-button-group">
 						<button class="cpe-floating-button">
-						<svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-					  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-					  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-					</svg>
+				<span class="cpe-icon material-icons">
+					star
+				</span>
 					</button>
-					<button class="cpe-floating-button accent">
-				<span class="cpe-icon cpe-icon-small material-icons">
+					<button class="cpe-floating-button is-unaccented">
+				<span class="cpe-icon material-icons">
 					edit
 				</span>	
 					</button>
-					<button class="cpe-floating-button critical">
-				<span class="cpe-icon cpe-icon-small material-icons">
+					<button class="cpe-floating-button is-alternate">
+				<span class="cpe-icon material-icons">
 					description
+				</span>
+					</button>
+					<button class="cpe-floating-button is-alert-color">
+				<span class="cpe-icon material-icons">
+					report
+				</span>
+					</button>
+					<button class="cpe-floating-button is-pause-color">
+				<span class="cpe-icon material-icons">
+					pause
+				</span>
+					</button>
+					<button class="cpe-floating-button is-warning-color">
+				<span class="cpe-icon material-icons">
+					report_problem
+				</span>
+					</button>
+					<button class="cpe-floating-button is-success-color">
+				<span class="cpe-icon material-icons">
+					done
+				</span>
+					</button>
+					<button class="cpe-floating-button is-progress-color">
+				<span class="cpe-icon material-icons">
+					pending
+				</span>
+					</button>
+					<button class="cpe-floating-button is-message-color">
+				<span class="cpe-icon material-icons">
+					info
 				</span>
 					</button>
 				</div>
+				<hr>
 					<div class="cpe-floating-button-group is-vertical">
 						<button class="cpe-floating-button">
-						<svg version="1.1" width="55" height="55" class="cpe-icon cpe-icon-small" viewBox="-1 -1 55 55" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-					  <path id="ID0.06426620716229081" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.850 189.850 L 229.150 181.350 L 229.950 175.850 L 234.400 171.800 L 237.250 168.500 L 241.750 163.150 L 248 169.250 L 250.200 171.700 L 253.950 176 L 254.500 180.450 L 253.500 189.500 " transform="matrix(1.82266104221344, 0, 0, 1.82266104221344, -414.25, -294.45)"></path>
-					  <path id="ID0.0372769720852375" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M 230.600 181.900 L 232.100 180.200 L 241.800 180.250 L 251.700 180.250 L 253.750 182.150 " transform="matrix(1.7334266901016235, 0, 0, -3.7820217609405518, -392.45, 715.9)"></path>
-					</svg>
+				<span class="cpe-icon material-icons">
+					star
+				</span>
 					</button>
-					<button class="cpe-floating-button accent">
-				<span class="cpe-icon cpe-icon-small material-icons">
+					<button class="cpe-floating-button is-unaccented">
+				<span class="cpe-icon material-icons">
 					edit
 				</span>
 					</button>
-					<button class="cpe-floating-button critical">
-				<span class="cpe-icon cpe-icon-small material-icons">
+					<button class="cpe-floating-button is-alternate">
+				<span class="cpe-icon material-icons">
 					description
+				</span>
+					</button>
+					</div>
+					<div class="cpe-floating-button-group is-vertical">
+					<button class="cpe-floating-button is-alert-color">
+				<span class="cpe-icon material-icons">
+					report
+				</span>
+					</button>
+					<button class="cpe-floating-button is-pause-color">
+				<span class="cpe-icon material-icons">
+					pause
+				</span>
+					</button>
+					<button class="cpe-floating-button is-warning-color">
+				<span class="cpe-icon material-icons">
+					report_problem
+				</span>
+					</button>
+					</div>
+					<div class="cpe-floating-button-group is-vertical">
+					<button class="cpe-floating-button is-success-color">
+				<span class="cpe-icon material-icons">
+					done
+				</span>
+					</button>
+					<button class="cpe-floating-button is-progress-color">
+				<span class="cpe-icon material-icons">
+					pending
+				</span>
+					</button>
+					<button class="cpe-floating-button is-message-color">
+				<span class="cpe-icon material-icons">
+					info
 				</span>
 					</button>
 				</div>
 
 			</div>
+			<!--Banner Notifications-->
 			<h2>Banner Notifications</h2>
-			Banners can be made by the use of <code>cpe-banner-notification</code> class. For more detailed information, look on the same component page on <a href="https://fandomdesignsystem.com/components/banner-notifications">Fandom Design System</a> documentation
+			Banners can be made by the use of <code>cpe-banner-notification</code> class.
 	<div class="cpe-banner-notification__container">
 		<div class="cpe-banner-notification is-message">
 			<div class="cpe-banner-notification__icon">	
@@ -1360,7 +2262,7 @@
 			  <span class="cpe-banner-notification__close">
 				<span class="cpe-icon cpe-icon-tiny cpe-icon-large material-icons">close</span>
 			  </span>
-			</span>
+			
 		</div>
 		<div class="cpe-banner-notification is-pause">
 			<div class="cpe-banner-notification__icon">	
@@ -1373,7 +2275,7 @@
 			  <span class="cpe-banner-notification__close">
 				<span class="cpe-icon cpe-icon-tiny cpe-icon-large material-icons">close</span>
 			  </span>
-			</span>
+			
 		</div>
 		<div class="cpe-banner-notification is-alert">
 			<div class="cpe-banner-notification__icon">	
@@ -1387,11 +2289,26 @@
 			  </span>
 		</div>
 	</div>
+	<!--Toggle Inputs-->
 	<h2>Toggle Inputs</h2>
-	Toggle is a control that is used to quickly switch between two possible states. All toggles require a label due to fact that styling inputs is tricky cross browser. All toggle inputs should have a unique id for label to work correctly. See <a href="https://fandomdesignsystem.com/components/toggles">Fandom Design System page</a> for more examples
+	Toggle is a control that is used to quickly switch between two possible states. All toggles require a label due to fact that styling inputs is tricky cross browser. All toggle inputs should have a unique id for label to work correctly
 			<div style="margin:10px 0 0;">    
-				<input class="cpe-toggle__input" id="toggleB" type="checkbox">
-				<label class="cpe-toggle__label" for="toggleB">      Slide me if you wish    </label>  
+				<input class="cpe-toggle__input" id="toggleA" type="checkbox">
+				<label class="cpe-toggle__label" for="toggleA">      Slide me if you wish    </label>  
+			</div>
+			<div style="margin:10px 0 0;">    
+				<input class="cpe-toggle__input" id="toggleB" type="checkbox" checked="">
+				<label class="cpe-toggle__label" for="toggleB">      I'm checked by default    </label>  
+			</div>
+			<h3>Disabled Toggles</h3>
+			To make toggles disabled, put the <code>disabled</code> attribute on both the input and the label as seen in the following examples
+			<div style="margin:10px 0 0;">    
+				<input class="cpe-toggle__input" id="toggleC" type="checkbox" disabled="">
+				<label class="cpe-toggle__label is-disabled" for="toggleC" disabled="">      You can't slide me </label>  
+			</div>
+			<div style="margin:10px 0 0;">    
+				<input class="cpe-toggle__input" id="toggleD" type="checkbox" checked="" disabled="">
+				<label class="cpe-toggle__label is-disabled" for="toggleD" disabled="">      I'm checked by default though you can't slide me    </label>  
 			</div>
 			  <!--Stop Article-->
 			  
